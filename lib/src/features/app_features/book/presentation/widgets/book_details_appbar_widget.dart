@@ -10,7 +10,7 @@ class BookDetailsAppbarWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.only( left:  16.0, right: 16),
 
       child: Column(
         children: [
@@ -40,7 +40,7 @@ class BookDetailsAppbarWidget extends StatelessWidget {
                 enableAspectRatio: true,
                 borderColor: Colors.white,
               ),
-              const SizedBox(width: 16),
+               16.width,
 
               // 2. Book Info Details
               Expanded(
@@ -49,7 +49,7 @@ class BookDetailsAppbarWidget extends StatelessWidget {
                   children: [
                     Text(
                       '• Elena Nightshade',
-                      style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 14),
+                      style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 14.sp),
                     ),
                     6.height,
 
@@ -58,26 +58,26 @@ class BookDetailsAppbarWidget extends StatelessWidget {
                       child: Row(
                         children: [
                           _buildStatChip(Icons.star, '4.8', const Color(0xFF3B1E99)),
-                          const SizedBox(width: 8),
+                           8.width,
                           _buildStatChip(
                             Icons.people_outline,
                             '1.2M reviews',
                             const Color(0xFF3B1E99),
                           ),
-                          const SizedBox(width: 8),
+                          8.width,
                           _buildStatChip(null, 'Age Demand: 18+', const Color(0xFF3B1E99)),
                         ],
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    10.height,
 
                     // 4. Genre Tags
                     Row(
                       children: [
                         _buildGenreTag('Fantasy'),
-                        const SizedBox(width: 8),
+                        8.width,
                         _buildGenreTag('Romance'),
-                        const SizedBox(width: 8),
+                        8.width,
                         _buildGenreTag('Magic'),
                       ],
                     ),
@@ -94,15 +94,15 @@ class BookDetailsAppbarWidget extends StatelessWidget {
   // Helper for the dark stat chips
   Widget _buildStatChip(IconData? icon, String label, Color bgColor) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(color: bgColor, borderRadius: BorderRadius.circular(20)),
+      padding:   EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+      decoration: BoxDecoration(color: bgColor, borderRadius: BorderRadius.circular(20.r)),
       child: Row(
         children: [
           if (icon != null) ...[
-            Icon(icon, color: icon == Icons.star ? Colors.amber : Colors.white, size: 16),
-            const SizedBox(width: 4),
+            Icon(icon, color: icon == Icons.star ? Colors.amber : Colors.white, size: 16.w),
+             4.width,
           ],
-          Text(label, style: const TextStyle(color: Colors.white, fontSize: 12)),
+          Text(label, style:   TextStyle(color: Colors.white, fontSize: 12.sp)),
         ],
       ),
     );
@@ -111,14 +111,14 @@ class BookDetailsAppbarWidget extends StatelessWidget {
   // Helper for the light genre tags
   Widget _buildGenreTag(String label) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+      padding:   EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.9),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(20.r),
       ),
       child: Text(
         label,
-        style: const TextStyle(color: Colors.deepPurple, fontSize: 12, fontWeight: FontWeight.w500),
+        style:   TextStyle(color: Colors.deepPurple, fontSize: 12.sp, fontWeight: FontWeight.w500),
       ),
     );
   }

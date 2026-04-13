@@ -206,5 +206,10 @@ class _AppString {
   final String Comments = 'Comments';
   final String discussions = 'discussions';
   final String comments_require_admin_approval = 'Comments require admin approval';
+  final String login_as_guest = 'Login as Guest';
+  final top_short_stories = "Top Short Stories";
+  final trending_short_stories  ="Trending Short Stories";
+
+
 }
  

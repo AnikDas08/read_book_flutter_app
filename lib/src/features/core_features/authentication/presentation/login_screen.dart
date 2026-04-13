@@ -69,6 +69,18 @@ class LoginScreen extends ConsumerWidget {
                 },
               ),
               24.height,
+              GestureDetector(
+                onTap: (){
+                  authNotifier.loginAsGuest();
+                },
+                child: CommonText(
+                  text:  AppString.login_as_guest,
+                  fontSize: 16, fontWeight: .bold,
+                  textColor: context.color.buttonTextWhite,
+                  style: const TextStyle(decoration: .underline, decorationColor: Colors.white),
+                ).center,
+              ),
+              10.height,
               Text.rich(
                 TextSpan(
                   children: [

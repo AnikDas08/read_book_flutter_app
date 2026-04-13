@@ -25,6 +25,11 @@ class AuthNotifier extends _$AuthNotifier {
     }
   }
 
+  loginAsGuest()async{
+    state = state.copyWith(isLoading: false, isAuthenticated: true);
+    appRouter.replaceAll([const NavigationRoute()]);
+  }
+
   Future<void> signup(String name, String email, String password) async {
     state = state.copyWith(isLoading: true, error: null);
 

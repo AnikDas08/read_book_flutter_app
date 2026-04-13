@@ -22,7 +22,7 @@ class RankingScreen extends ConsumerWidget {
         hideBack: true,
         disableBack: true,
         titleWidget: _appbarBuilder(context, ref),
-        appbarConfig: AppbarConfig(height: 140),
+        appbarConfig: AppbarConfig(height: 104),
       ),
       body: SmartListLoader(
         itemCount: 30,
@@ -73,33 +73,33 @@ class RankingScreen extends ConsumerWidget {
           ),
           8.height,
           const RankingFilterWidget(),
-          8.height,
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: .1),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            alignment: .center,
-            child: RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: '${AppString.Rankings_based_on} ',
-                    style: TextStyle(fontSize: 12.sp, color: Colors.white.withValues(alpha: .8)),
-                  ),
-                  TextSpan(
-                    text: AppString.Power_Stone_Votes,
-                    style: TextStyle(
-                      color: context.color.blue50,
-                      fontWeight: .bold,
-                      fontSize: 12.sp,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+          // 8.height,
+          // Container(
+          //   padding: const EdgeInsets.symmetric(vertical: 10),
+          //   decoration: BoxDecoration(
+          //     color: Colors.white.withValues(alpha: .1),
+          //     borderRadius: BorderRadius.circular(12),
+          //   ),
+          //   alignment: .center,
+          //   child: RichText(
+          //     text: TextSpan(
+          //       children: [
+          //         TextSpan(
+          //           text: '${AppString.Rankings_based_on} ',
+          //           style: TextStyle(fontSize: 12.sp, color: Colors.white.withValues(alpha: .8)),
+          //         ),
+          //         TextSpan(
+          //           text: AppString.Power_Stone_Votes,
+          //           style: TextStyle(
+          //             color: context.color.blue50,
+          //             fontWeight: .bold,
+          //             fontSize: 12.sp,
+          //           ),
+          //         ),
+          //       ],
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );

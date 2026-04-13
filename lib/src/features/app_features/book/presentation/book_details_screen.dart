@@ -24,7 +24,7 @@ class BookDetailsScreen extends ConsumerWidget {
         disableBack: true,
         hideBack: true,
         titleWidget: const BookDetailsAppbarWidget(),
-        appbarConfig: AppbarConfig(height: 158.h),
+        appbarConfig: AppbarConfig(height: 150.h),
       ),
       body: SmartListLoader(
         padding: EdgeInsets.symmetric(horizontal: 16.w),

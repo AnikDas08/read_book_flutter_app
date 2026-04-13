@@ -19,7 +19,7 @@ class StoryScreen extends ConsumerWidget {
         disableBack: true,
         hideBack: true,
         titleWidget: _appbarBuilder(context, ref),
-        appbarConfig: AppbarConfig(height: 152),
+        appbarConfig: AppbarConfig(height: 130),
       ),
       body: SmartListLoader(
         itemCount: 30,
@@ -57,9 +57,9 @@ class StoryScreen extends ConsumerWidget {
           8.height,
           Row(
             children: [
-              Expanded(child: _menu(context, title: AppString.Rankings_based_on, value: 20)),
+              Expanded(child: _menu(context, title: AppString.top_short_stories, value: 20)),
               10.width,
-              Expanded(child: _menu(context, title: AppString.Rankings_based_on, value: 30)),
+              Expanded(child: _menu(context, title: AppString.trending_short_stories, value: 30)),
             ],
           ),
         ],
@@ -75,21 +75,10 @@ class StoryScreen extends ConsumerWidget {
         borderRadius: BorderRadius.circular(12),
       ),
       alignment: .center,
-      child: Column(
-        children: [
-          CommonText(
-            text: value.toString(),
-            style: TextStyle(
-              fontSize: 24,
-              color: Colors.white.withValues(alpha: .8),
-              fontWeight: .bold,
-            ),
-          ),
-          CommonText(
-            text: title,
-            style: TextStyle(fontSize: 14, color: Colors.white.withValues(alpha: .8)),
-          ),
-        ],
+      child: CommonText(
+        text: title,
+        left: 8, right: 8,
+        style: TextStyle(fontSize: 16, color: Colors.white.withValues(alpha: .8)),
       ),
     );
   }
