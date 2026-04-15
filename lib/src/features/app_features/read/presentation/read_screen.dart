@@ -6,6 +6,7 @@ import 'package:riverpod_tamplates/config/theme/app_theme_data.dart';
 import 'package:riverpod_tamplates/src/features/app_features/read/presentation/widgets/action_bar_widget.dart';
 import 'package:riverpod_tamplates/src/features/app_features/read/presentation/widgets/book_audio_reader_widget.dart';
 import 'package:riverpod_tamplates/src/features/app_features/read/presentation/widgets/book_reading_widget.dart';
+import 'package:riverpod_tamplates/src/features/app_features/read/presentation/widgets/chapters_drawer.dart';
 import 'package:riverpod_tamplates/src/features/app_features/read/presentation/widgets/no_book_selected_widget.dart';
 import 'package:riverpod_tamplates/src/features/app_features/read/riverpod/read_notifier.dart';
 import 'package:riverpod_tamplates/src/features/app_features/read/riverpod/read_state.dart';
@@ -17,7 +18,8 @@ class ReadScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final readState = ref.watch(readProvider);
-    return Scaffold( 
+    return Scaffold(
+
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Stack(
@@ -32,7 +34,7 @@ class ReadScreen extends ConsumerWidget {
                   if (readState.slectedBook != null) const Expanded(child: BookReadingWidget()),
               
                   10.height,
-                  _buttons(context, readState),
+                  _buttons(context, readState, ref),
                   16.height,
                   _actionBar(readState, context),
                   5.height,
@@ -69,7 +71,7 @@ class ReadScreen extends ConsumerWidget {
     );
   }
 
-  Row _buttons(BuildContext context, ReadState readState) {
+  Row _buttons(BuildContext context, ReadState readState, WidgetRef ref) {
     const inactiveGradient = LinearGradient(
       colors: [Color(0xff8f8eff), Color(0xffc2a0ff)],
       begin: Alignment.topCenter,
@@ -86,13 +88,15 @@ class ReadScreen extends ConsumerWidget {
         ? inactiveGradient
         : context.color.ctaGradientBackgroundAccent;
     return Row(
-      mainAxisAlignment: .spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Flexible(
           child: CommonButton(
             titleText: 'Previous',
             borderColor: context.color.bgColor,
-            onTap: () {},
+            onTap: readState.slectedBook != null && readState.slectedBook!.selectedChapter > 0
+                ? () => ref.read(readProvider.notifier).selectChapter(readState.slectedBook!.selectedChapter - 1)
+                : null,
             buttonWidth: 130,
             prefix: Icon(Icons.arrow_back_ios_new, color: context.color.buttonTextWhite),
             gradient: previousActionOpacity,
@@ -102,7 +106,9 @@ class ReadScreen extends ConsumerWidget {
           child: CommonButton(
             titleText: 'Next',
             borderColor: context.color.bgColor,
-            onTap: () {},
+            onTap: readState.slectedBook != null && readState.slectedBook!.selectedChapter < (readState.slectedBook!.chapters.length - 1)
+                ? () => ref.read(readProvider.notifier).selectChapter(readState.slectedBook!.selectedChapter + 1)
+                : null,
             buttonWidth: 130,
             suffix: Icon(Icons.arrow_forward_ios, color: context.color.buttonTextWhite),
             gradient: nextActionOpacity,

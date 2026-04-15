@@ -1,22 +1,35 @@
 import 'package:core_kit/core_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_tamplates/config/constance/app_string.dart';
 import 'package:riverpod_tamplates/config/theme/app_theme_data.dart';
+import 'package:riverpod_tamplates/src/features/app_features/read/riverpod/read_notifier.dart';
 
-class ReadingSettingsModal extends StatefulWidget {
-  const ReadingSettingsModal({super.key, required this.controller});
+class ReadingSettingsModal extends ConsumerStatefulWidget {
+  const ReadingSettingsModal({super.key, required this.controller,  });
   final ScrollController controller;
+
   @override
-  State<ReadingSettingsModal> createState() => _ReadingSettingsModalState();
+  ConsumerState<ReadingSettingsModal> createState() => _ReadingSettingsModalState();
 }
 
-class _ReadingSettingsModalState extends State<ReadingSettingsModal> {
-  double fontSize = 16.0;
-  double lineSpacing = 1.8;
-  int selectedMode = 0;
+class _ReadingSettingsModalState extends ConsumerState<ReadingSettingsModal> {
+  late double fontSize;
+  late double lineSpacing;
+  late int selectedMode;
+
+  @override
+  void initState() {
+    super.initState();
+    final readState = ref.read(readProvider);
+    fontSize = readState.fontSize;
+    lineSpacing = readState.lineSpacing;
+    selectedMode = readState.selectedMode;
+  }
 
   @override
   Widget build(BuildContext context) {
+    final readNotifier = ref.read(readProvider.notifier);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12), 
       decoration: const BoxDecoration(
@@ -42,7 +55,8 @@ class _ReadingSettingsModalState extends State<ReadingSettingsModal> {
  
           _buildSliderRow(AppString.Font_Size, '${fontSize.toInt()}px', fontSize, 12, 30, (val) {
             setState(() => fontSize = val);
-          }), 
+            readNotifier.updateFontSize(val);
+          }),
  
           _buildSliderRow(
             AppString.Line_Spacing,
@@ -50,10 +64,9 @@ class _ReadingSettingsModalState extends State<ReadingSettingsModal> {
             lineSpacing,
             1.0,
             3.0,
-            (
-            val,
-          ) {
-            setState(() => lineSpacing = val);
+            (val) {
+              setState(() => lineSpacing = val);
+              readNotifier.updateLineSpacing(val);
             },
           ), 
  
@@ -72,6 +85,7 @@ class _ReadingSettingsModalState extends State<ReadingSettingsModal> {
                 0,
                 Icons.wb_sunny_outlined,
                 const Color(0xFFF8F9FF),
+                readNotifier: readNotifier
               ),
               _buildModeOption(
                 AppString.Dark,
@@ -79,18 +93,21 @@ class _ReadingSettingsModalState extends State<ReadingSettingsModal> {
                 Icons.nightlight_round_outlined,
                 const Color(0xFF2D2D2D),
                 isDark: true,
+                readNotifier:  readNotifier
               ),
               _buildModeOption(
                 AppString.Sepia,
                 2,
                 Icons.text_fields_rounded,
                 const Color(0xFFF4ECD8),
+                readNotifier: readNotifier
               ),
               _buildModeOption(
                 AppString.Eye_Comfort,
                 3,
                 Icons.auto_awesome_outlined,
                 const Color(0xFFE8F5E9),
+                readNotifier:  readNotifier
               ),
             ],
           ),
@@ -145,10 +162,14 @@ class _ReadingSettingsModalState extends State<ReadingSettingsModal> {
     IconData icon,
     Color previewColor, {
     bool isDark = false,
+        required ReadNotifier readNotifier,
   }) {
     final isSelected = selectedMode == index;
     return GestureDetector(
-      onTap: () => setState(() => selectedMode = index),
+      onTap: () {
+        setState(() => selectedMode = index);
+        readNotifier.updateBackgroundMode(index);
+      },
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,

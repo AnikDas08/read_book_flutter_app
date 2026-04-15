@@ -10,6 +10,7 @@ import 'package:riverpod_tamplates/src/common/notification_button_widget.dart';
 import 'package:riverpod_tamplates/src/features/app_features/explore/presentation/widgets/explore_screen_appbar.dart';
 import 'package:riverpod_tamplates/src/features/app_features/home/presentation/widget/home_screen_appbar.dart';
 import 'package:riverpod_tamplates/src/features/app_features/library/presentation/widgets/library_profile_header.dart';
+import 'package:riverpod_tamplates/src/features/app_features/read/presentation/widgets/chapters_drawer.dart';
 import 'package:riverpod_tamplates/src/features/app_features/read/presentation/widgets/read_screen_appbar.dart';
 
 @RoutePage()
@@ -19,6 +20,8 @@ class NavigationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AutoTabsScaffold(
+      endDrawerEnableOpenDragGesture: false,
+      endDrawer: const ChaptersDrawer(),
       routes: const [ReadRoute(), HomeRoute(), ExploreRoute(), ContestRoute(), LibraryRoute()],
       lazyLoad: false,
       appBarBuilder: (context, tabsRouter) {

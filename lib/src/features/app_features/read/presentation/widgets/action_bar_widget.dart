@@ -31,6 +31,11 @@ class ActionBarWidget extends ConsumerWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
+          _buildActionItem(Icons.list_outlined, AppString.chapters, iconColor, textColor, () {
+            if (isBookSelected) {
+              Scaffold.of(context).openEndDrawer();
+            }
+          }),
           _buildActionItem(Icons.volume_up_outlined, AppString.listen, iconColor, textColor, () {
             if (isBookSelected) {
               ref.read(readProvider.notifier).toggleAudioPlaying();

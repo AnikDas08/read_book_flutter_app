@@ -40,7 +40,11 @@ class ReadScreenAppBar extends StatelessWidget {
 
                 const Spacer(),
                 GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    if (isBookSelected) {
+                      Scaffold.of(context).openEndDrawer();
+                    }
+                  },
                   child: Icon(
                     Icons.list_outlined,
                     size: 30,

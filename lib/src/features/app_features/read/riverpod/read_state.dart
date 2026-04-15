@@ -4,16 +4,34 @@ import 'package:riverpod_tamplates/src/features/app_features/read/data/model/boo
 class ReadState extends Equatable {
   final BookModel? slectedBook;
   final bool isAudioPlaying;
+  final double fontSize;
+  final double lineSpacing;
+  final int selectedMode;
 
-  const ReadState({this.slectedBook, this.isAudioPlaying = false});
+  const ReadState({
+    this.slectedBook,
+    this.isAudioPlaying = false,
+    this.fontSize = 16.0,
+    this.lineSpacing = 1.8,
+    this.selectedMode = 0,
+  });
 
-  ReadState copyWith({BookModel? slectedBook, bool? isAudioPlaying}) {
+  ReadState copyWith({
+    BookModel? slectedBook,
+    bool? isAudioPlaying,
+    double? fontSize,
+    double? lineSpacing,
+    int? selectedMode,
+  }) {
     return ReadState(
       slectedBook: slectedBook ?? this.slectedBook,
       isAudioPlaying: isAudioPlaying ?? this.isAudioPlaying,
+      fontSize: fontSize ?? this.fontSize,
+      lineSpacing: lineSpacing ?? this.lineSpacing,
+      selectedMode: selectedMode ?? this.selectedMode,
     );
   }
 
   @override
-  List<Object?> get props => [slectedBook, isAudioPlaying];
+  List<Object?> get props => [slectedBook, isAudioPlaying, fontSize, lineSpacing, selectedMode];
 }

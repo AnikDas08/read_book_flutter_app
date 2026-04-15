@@ -2,152 +2,148 @@ import 'package:core_kit/text/common_text.dart';
 import 'package:core_kit/utils/core_screen_utils.dart';
 import 'package:core_kit/utils/extension.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_tamplates/config/constance/app_string.dart';
 import 'package:riverpod_tamplates/config/theme/app_theme_data.dart';
+import 'package:riverpod_tamplates/src/features/app_features/read/riverpod/read_notifier.dart';
+import 'package:riverpod_tamplates/src/features/app_features/read/riverpod/read_state.dart';
 
-class BookReadingWidget extends StatelessWidget {
+class BookReadingWidget extends ConsumerStatefulWidget {
   const BookReadingWidget({super.key});
 
   @override
+  ConsumerState<BookReadingWidget> createState() => _BookReadingWidgetState();
+}
+
+class _BookReadingWidgetState extends ConsumerState<BookReadingWidget> {
+  late PageController _pageController;
+
+  @override
+  void initState() {
+    super.initState();
+    final readState = ref.read(readProvider);
+    _pageController = PageController(initialPage: readState.slectedBook?.selectedChapter ?? 0);
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final readState = ref.watch(readProvider);
+    final book = readState.slectedBook;
+    if (book == null) return const SizedBox();
+
+    final totalChapters = book.chapters.length;
+    final currentChapterIndex = book.selectedChapter;
+    if (_pageController.hasClients && (_pageController.page?.round() ?? 0) != currentChapterIndex) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _pageController.jumpToPage(currentChapterIndex);
+      });
+    }
+    final chapter = book.chapters[currentChapterIndex];
+    final wordCount = _countWords(chapter.content ?? '');
+    final backgroundColors = [
+        Colors.white, // White
+      const Color(0xFF2D2D2D), // Dark
+      const Color(0xFFF4ECD8), // Sepia
+      const Color(0xFFE8F5E9), // Eye Comfort
+    ];
+    final textColors = [
+      Colors.black,
+      Colors.white,
+      Colors.black,
+      Colors.black,
+    ];
+
     return Column(
-      crossAxisAlignment: .start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CommonText(
-          text: 'The Beginning',
+          text: chapter.title ?? 'Chapter',
           fontSize: 24,
-          fontWeight: .w700,
-          textColor: context.color.bodyText,
+          fontWeight: FontWeight.w700,
+          // textColor: textColors[readState.selectedMode],
         ),
         8.height,
-        CommonText(text: '500 ${AppString.words}', textColor: context.color.iconClr, fontSize: 14),
-        Expanded(child: contentWidget(context)),
-        CommonText(text: '1 of 10', textColor: context.color.iconClr, fontSize: 14).end,
+        CommonText(
+          text: '$wordCount ${AppString.words}',
+          // textColor: textColors[readState.selectedMode].withOpacity(0.7),
+          fontSize: 14,
+        ),
+        Expanded(
+          child: PageView.builder(
+            controller: _pageController,
+            onPageChanged: (index) {
+              ref.read(readProvider.notifier).selectChapter(index);
+            },
+            itemCount: totalChapters,
+            itemBuilder: (context, index) {
+              final chap = book.chapters[index];
+              final htmlContent = _wrapInHtml(chap.content ?? '', readState);
+              return Container(
+                margin: const EdgeInsets.symmetric(vertical: 8),
+                decoration: BoxDecoration(
+                  color: backgroundColors[readState.selectedMode],
+                  borderRadius: BorderRadius.circular(16.r),
+                  border: Border.all(color: context.color.subtleOverlaysShadows, width: 1.2.w),
+                ),
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(16),
+                  child: CommonText(
+                    isDescription: true,
+                    textAlign: TextAlign.start,
+                    text: htmlContent,
+                    fontSize: readState.fontSize,
+                    style: TextStyle(
+                      height: readState.lineSpacing,
+                    ),
+                    textColor: textColors[readState.selectedMode],
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+        CommonText(
+          text: '${currentChapterIndex + 1} of $totalChapters',
+          textColor: textColors[readState.selectedMode].withOpacity(0.7),
+          fontSize: 14,
+        ).end,
       ],
     );
   }
 
-  Widget contentWidget(BuildContext context) {
-    return SingleChildScrollView(
-      child: Container(
-        alignment: .topStart,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16.r),
-          border: Border.all(color: context.color.subtleOverlaysShadows, width: 1.2.w),
-        ),
-        child: const CommonText(
-          isDescription: true,
-          textAlign: .start,
-          left: 10,
-          right: 10,
-          top: 10,
-          bottom: 10,
-          text: sampleHtmlText,
-        ),
-      ),
-    );
+  int _countWords(String text) {
+    return text.split(RegExp(r'\s+')).where((word) => word.isNotEmpty).length;
   }
-}
 
-const sampleHtmlText = '''<!DOCTYPE html>
-<html lang="en">
+  String _wrapInHtml(String content, ReadState readState) {
+    final paragraphs = content.split('\n').map((p) => '<p>$p</p>').join('');
+    return '''
+<!DOCTYPE html>
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Book Page</title>
-
+  <meta charset="UTF-8">
   <style>
     body {
+      font-size: ${readState.fontSize}px;
+      line-height: ${readState.lineSpacing};
       margin: 0;
-      background: #f4f1ea;
-      font-family: "Georgia", serif;
-      color: #2c2c2c;
+      padding: 0;
     }
-
-    .page {
-      margin: 0 auto;
-      padding: 0 50px;
-      background: #fffdf8;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-      border-radius: 8px;
-      line-height: 1.8;
-      font-size: 18px;
-    }
-
-    .chapter {
-      text-align: center;
-      font-size: 14px;
-      letter-spacing: 2px;
-      margin-bottom: 30px;
-      color: #888;
-    }
-
-    .title {
-      text-align: center;
-      font-size: 28px;
-      margin-bottom: 0;
-    }
-
     p {
-      text-indent: 0;
-      margin: 0 0 20px 0;
-    }
-
-    p:first-of-type {
-      text-indent: 0;
-      font-size: 20px;
-      line-height: 1.6;
-    }
-
-    .dialogue {
-      text-indent: 0;
-      margin-left: 0;
-      font-style: italic;
+      margin: 0 0 16px 0;
     }
   </style>
 </head>
-
 <body>
-  <div class="page">
-    <p>
-      The night was darker than usual. Violet stepped out of her apartment, unaware that her life was about to change forever.
-    </p>
-    <p>
-      The city lights flickered in the distance, casting long shadows across the empty streets. She pulled her coat tighter around her shoulders, feeling a chill that had nothing to do with the weather.
-    </p>
-
-    <p class="dialogue">
-      "You're late," a voice said from the shadows.
-    </p>
-
-    <p>
-      Violet froze. She knew that voice. It had haunted her dreams for years.
-    </p>
-
-    <p class="dialogue">
-      "I didn't think you'd come," she replied, her voice steadier than she felt.
-    </p>
-
-    <p>
-      A figure emerged from the darkness. Tall, imposing, with eyes that seemed to glow in the dim light. This was the man who had changed everything. The man who had awakened powers within her that she never knew existed.
-    </p>
-
-    <p class="dialogue">
-      "We need to talk," he said simply. "About what you are. About what you're meant to become."
-    </p>
-
-    <p>
-      Violet's hands trembled. She had spent her entire life running from the truth. But tonight, there would be no more running.
-    </p>
-
-    <p class="dialogue">
-      "I'm listening," she said.
-    </p>
-
-    <p>
-      And with those two words, her destiny began to unfold.
-    </p>
-
-  </div>
+$paragraphs
 </body>
-</html>''';
+</html>
+''';
+  }
+}

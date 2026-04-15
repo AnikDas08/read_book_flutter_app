@@ -54,4 +54,16 @@ class ReadNotifier extends _$ReadNotifier {
   void selectChapter(int index) {
     state = state.copyWith(slectedBook: state.slectedBook?.copyWith(selectedChapter: index));
   }
+
+  void updateFontSize(double size) {
+    state = state.copyWith(fontSize: size);
+  }
+
+  void updateLineSpacing(double spacing) {
+    state = state.copyWith(lineSpacing: spacing);
+  }
+
+  void updateBackgroundMode(int mode) {
+    state = state.copyWith(selectedMode: mode);
+  }
 }
