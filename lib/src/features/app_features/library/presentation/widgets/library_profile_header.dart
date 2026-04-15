@@ -2,6 +2,7 @@ import 'package:core_kit/core_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_tamplates/config/constance/app_string.dart';
 import 'package:riverpod_tamplates/config/constance/constants.dart';
+import 'package:riverpod_tamplates/config/route/app_router.dart';
 import 'package:riverpod_tamplates/config/theme/app_theme_data.dart';
 import 'package:riverpod_tamplates/src/common/setting_icon_widget.dart';
 
@@ -36,6 +37,9 @@ class LibraryProfileHeader extends StatelessWidget {
                   ),
                   8.height,
                   CommonButton(
+                    onTap: (){
+                      appRouter.push(const EditProfileRoute());
+                    },
                     buttonColor: context.color.blue300.withValues(alpha: 0.5),
                     titleText: AppString.edit_profile,
                     borderColor: Colors.transparent,

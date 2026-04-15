@@ -1,5 +1,6 @@
 import 'package:core_kit/app_bar/common_app_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:riverpod_tamplates/config/corekit/back_button.dart';
 import 'package:riverpod_tamplates/config/theme/app_theme_data.dart';
 
 class AuthBackground extends StatelessWidget {
@@ -12,8 +13,10 @@ class AuthBackground extends StatelessWidget {
       appBar: CommonAppBar(
         hideBack: hideBack,
         disableBack: hideBack,
+
         appbarConfig: AppbarConfig(
-          decoration: () => const BoxDecoration(color: Colors.transparent),
+          backButton: const BackButtonWidget(isDark: false),
+          decoration: () => const BoxDecoration(color: Colors.white),
         ),
       ),
       body: Stack(

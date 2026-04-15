@@ -3,6 +3,7 @@ import 'package:core_kit/core_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_tamplates/config/constance/app_string.dart';
+import 'package:riverpod_tamplates/config/theme/app_theme_data.dart';
 import 'package:riverpod_tamplates/src/constants/app_ui_constants.dart';
 import 'package:riverpod_tamplates/src/features/core_features/profile/application/profile_notifier.dart';
 
@@ -23,7 +24,14 @@ class EditProfileScreen extends ConsumerWidget {
             padding: EdgeInsets.all(AppUiConstants.main_screen_padding),
             child: Column(
               children: [
-                const Center(child: CommonImagePicker(width: 120, height: 120, borderRadius: 60)),
+                  Container(
+
+                      decoration: BoxDecoration(
+                        border: Border.all(color: context.color.subtext.withValues(alpha: .5), width: 2),
+                        shape: .circle
+                      ),
+                      child: const CommonImagePicker(
+                    width: 120, height: 120, borderRadius: 60)).center,
                 20.height,
                 CommonTextField(
                   hintText: 'Full Name',

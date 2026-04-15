@@ -16,136 +16,139 @@ class ProfileScreen extends ConsumerWidget {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 40),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 10),
+            
+                // --- Account Section ---
+                _buildSectionTitle('Account'),
+                _buildSettingsCard(
+                  child: _buildListTile(
+                    icon: Icons.lock_outline,
+                    title: 'Change Password',
+                    onTap: () {
+                      appRouter.push(const ChangePasswordRoute());
+                    },
+                  ),
+                ),
+            
+                const SizedBox(height: 25),
+            
+                // --- Preferences Section ---
+                _buildSectionTitle('Preferences'),
+                _buildSettingsCard(
+                  child: ListTile(
+                    leading: _buildIconContainer(
+                      Icons.notifications_none,
+                      Colors.purple.shade50,
+                      Colors.purple,
+                    ),
+                    title: const Text(
+                      'Notificastions',
+                      style: TextStyle(fontWeight: FontWeight.w500),
+                    ),
+                    subtitle: const Text(
+                      'Push notifications and alerts',
+                      style: TextStyle(fontSize: 12),
+                    ),
+                    trailing: Switch(
+                      value: true,
+                      onChanged: (val) {},
+                      activeColor: Colors.white,
+                      activeTrackColor: Colors.purple,
+                    ),
+                  ),
+                ),
+            
+                const SizedBox(height: 25),
+            
+                // --- Support Section ---
+                _buildSectionTitle('Support'),
+                _buildSettingsCard(
+                  child: Column(
+                    children: [
+                      _buildListTile(
+                        icon: Icons.info_outline,
+                        title: 'Terms & conditions',
+                        onTap: () {
+                          appRouter.push(const TermsRoute());
+                        },
+                      ),
+                      const Divider(height: 1, indent: 70),
+                      _buildListTile(
+                        icon: Icons.info_outline,
+                        title: 'Privacy Policy',
+                        onTap: () {
+                          appRouter.push(const PrivacyRoute());
+                        },
+                      ),
+                      const Divider(height: 1, indent: 70),
+                      _buildListTile(
+                        icon: Icons.info_outline,
+                        title: 'About Us',
+                        onTap: () {},
+                      ),
+                      const Divider(height: 1, indent: 70),
+                      _buildListTile(
+                        icon: Icons.description_outlined,
+                        title: "FAQ's",
+                        onTap: () {
+                          appRouter.push(const FaqRoute());
+                        },
+                      ),
+                    ],
+                  ),
+                ),
 
-              // --- Account Section ---
-              _buildSectionTitle('Account'),
-              _buildSettingsCard(
-                child: _buildListTile(
-                  icon: Icons.lock_outline,
-                  title: 'Change Password',
-                  onTap: () {
-                    appRouter.push(const ChangePasswordRoute());
+                30.height,
+
+            
+                // --- Buttons ---
+                _buildOutlineButton(
+                  label: 'Sign Out',
+                  icon: Icons.logout,
+                  color: Colors.redAccent,
+                  onPressed: () {
+                    appRouter.replaceAll([const LoginRoute()]);
                   },
                 ),
-              ),
-
-              const SizedBox(height: 25),
-
-              // --- Preferences Section ---
-              _buildSectionTitle('Preferences'),
-              _buildSettingsCard(
-                child: ListTile(
-                  leading: _buildIconContainer(
-                    Icons.notifications_none,
-                    Colors.purple.shade50,
-                    Colors.purple,
-                  ),
-                  title: const Text(
-                    'Notificastions',
-                    style: TextStyle(fontWeight: FontWeight.w500),
-                  ),
-                  subtitle: const Text(
-                    'Push notifications and alerts',
-                    style: TextStyle(fontSize: 12),
-                  ),
-                  trailing: Switch(
-                    value: true,
-                    onChanged: (val) {},
-                    activeColor: Colors.white,
-                    activeTrackColor: Colors.purple,
-                  ),
+                const SizedBox(height: 15),
+                _buildOutlineButton(
+                  label: 'Delete Account',
+                  icon: Icons.delete_outline,
+                  color: Colors.redAccent,
+                  onPressed: () {},
                 ),
-              ),
-
-              const SizedBox(height: 25),
-
-              // --- Support Section ---
-              _buildSectionTitle('Support'),
-              _buildSettingsCard(
-                child: Column(
-                  children: [
-                    _buildListTile(
-                      icon: Icons.info_outline,
-                      title: 'Terms & conditions',
-                      onTap: () {
-                        appRouter.push(const TermsRoute());
-                      },
-                    ),
-                    const Divider(height: 1, indent: 70),
-                    _buildListTile(
-                      icon: Icons.info_outline,
-                      title: 'Privacy Policy',
-                      onTap: () {
-                        appRouter.push(const PrivacyRoute());
-                      },
-                    ),
-                    const Divider(height: 1, indent: 70),
-                    _buildListTile(
-                      icon: Icons.info_outline,
-                      title: 'About Us',
-                      onTap: () {},
-                    ),
-                    const Divider(height: 1, indent: 70),
-                    _buildListTile(
-                      icon: Icons.description_outlined,
-                      title: "FAQ's",
-                      onTap: () {
-                        appRouter.push(const FaqRoute());
-                      },
-                    ),
-                  ],
-                ),
-              ),
-
-              const Spacer(),
-
-              // --- Buttons ---
-              _buildOutlineButton(
-                label: 'Sign Out',
-                icon: Icons.logout,
-                color: Colors.redAccent,
-                onPressed: () {
-                  appRouter.replaceAll([const LoginRoute()]);
-                },
-              ),
-              const SizedBox(height: 15),
-              _buildOutlineButton(
-                label: 'Delete Account',
-                icon: Icons.delete_outline,
-                color: Colors.redAccent,
-                onPressed: () {},
-              ),
-
-              const SizedBox(height: 40),
-
-              // --- Footer ---
-              Center(
-                child: Column(
-                  children: [
-                    Text(
-                      '© 2026 Rinik Tech Company Limited.',
-                      style: TextStyle(
-                        color: Colors.grey.shade600,
-                        fontSize: 12,
+            
+                const SizedBox(height: 25),
+            
+                // --- Footer ---
+                Center(
+                  child: Column(
+                    children: [
+                      Text(
+                        '© 2026 Rinik Tech Company Limited.',
+                        style: TextStyle(
+                          color: Colors.grey.shade600,
+                          fontSize: 12,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      'Version 1.0.0 (Build 100)',
-                      style: TextStyle(
-                        color: Colors.grey.shade500,
-                        fontSize: 11,
+                      const SizedBox(height: 4),
+                      Text(
+                        'Version 1.0.0 (Build 100)',
+                        style: TextStyle(
+                          color: Colors.grey.shade500,
+                          fontSize: 11,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(height: 20),
-            ],
+                const SizedBox(height: 20),
+              ],
+            ),
           ),
         ),
       ),

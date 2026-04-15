@@ -6,7 +6,6 @@ import 'package:riverpod_tamplates/config/route/app_router.dart';
 import 'package:riverpod_tamplates/config/theme/app_theme_data.dart';
 
 class GenreCard extends StatelessWidget {
-  final String icon;
   final String genere;
   final Color color;
   final bool isChip;
@@ -14,7 +13,6 @@ class GenreCard extends StatelessWidget {
 
   const GenreCard({
     super.key,
-    required this.icon,
     required this.genere,
     required this.color,
     this.isChip = false,
@@ -47,7 +45,6 @@ class GenreCard extends StatelessWidget {
         textColor: selectedGenre == genere ? context.color.buttonTextWhite : context.color.subtext,
         right: 10,
         top: 5,
-        preffix: Text(icon, style: const TextStyle(fontSize: 14)),
         borderColor: Colors.white,
         bottom: 5,
         fontWeight: .w500,
@@ -57,27 +54,23 @@ class GenreCard extends StatelessWidget {
 
   Container _normal() {
     return Container(
+      alignment: .center,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withOpacity(0.08),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
         ],
       ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(icon, style: const TextStyle(fontSize: 32)),
-          const SizedBox(height: 8),
-          Text(
-            genere,
-            style: TextStyle(color: color, fontWeight: FontWeight.w600, fontSize: 16),
-          ),
-        ],
+      child:  CommonText(
+        text:  genere,
+        alignment:  .center,
+        textAlign: .center,
+        style: TextStyle(color: color, fontWeight: FontWeight.w600, fontSize: 16),
       ),
     );
   }

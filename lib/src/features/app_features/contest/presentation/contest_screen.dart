@@ -78,9 +78,9 @@ class ContestScreen extends StatelessWidget {
   Widget _onColupse(BuildContext context, ContestType state, WidgetRef ref) {
     return Container(
       color: context.color.bgColor,
-      padding: const .symmetric(horizontal: Constants.padding),
+      padding: const .only(left: 16, right: 16, top: 4),
       child: Column(
-        children: [_sigmentedButton(state, ref, context), 10.height, _search(context), 5.height],
+        children: [_sigmentedButton(state, ref, context), 4.height, _search(context), 5.height],
       ),
     );
   }
@@ -90,28 +90,28 @@ class ContestScreen extends StatelessWidget {
       padding: const .symmetric(horizontal: Constants.padding),
       child: Column(
         children: [
-          10.height,
+          4.height,
           _sigmentedButton(state, ref, context),
-          10.height,
-          RichText(
-            text: TextSpan(
-              children: [
-                TextSpan(
-                  text: 'Rankings based on ',
-                  style: TextStyle(color: context.color.subtext, fontSize: 12),
-                ),
-                TextSpan(
-                  text: 'Power Stone Votes',
-                  style: TextStyle(
-                    color: context.color.ctaButtonsText,
-                    fontSize: 12,
-                    fontWeight: .bold,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          10.height,
+          // 10.height,
+          // RichText(
+          //   text: TextSpan(
+          //     children: [
+          //       TextSpan(
+          //         text: 'Rankings based on ',
+          //         style: TextStyle(color: context.color.subtext, fontSize: 12),
+          //       ),
+          //       TextSpan(
+          //         text: 'Power Stone Votes',
+          //         style: TextStyle(
+          //           color: context.color.ctaButtonsText,
+          //           fontSize: 12,
+          //           fontWeight: .bold,
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
+          4.height,
           _search(context),
           10.height,
           Row(

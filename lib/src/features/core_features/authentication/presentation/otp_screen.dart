@@ -96,7 +96,7 @@ class OtpScreen extends ConsumerWidget {
                 titleText: AppString.verify,
                 isLoading: authState.isLoading,
                 onTap: () {
-                  appRouter.push(const OtpRoute());
+                   appRouter.pop();
                 },
               ),
             ],

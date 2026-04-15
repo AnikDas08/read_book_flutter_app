@@ -31,11 +31,7 @@ class ActionBarWidget extends ConsumerWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          _buildActionItem(Icons.list_outlined, AppString.chapters, iconColor, textColor, () {
-            if (isBookSelected) {
-              Scaffold.of(context).openEndDrawer();
-            }
-          }),
+
           _buildActionItem(Icons.volume_up_outlined, AppString.listen, iconColor, textColor, () {
             if (isBookSelected) {
               ref.read(readProvider.notifier).toggleAudioPlaying();
@@ -108,16 +104,19 @@ class ActionBarWidget extends ConsumerWidget {
   ) {
     return InkWell(
       onTap: onTap,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, color: iconColor, size: 28),
-          const SizedBox(height: 8),
-          Text(
-            label,
-            style: TextStyle(color: textColor, fontSize: 14, fontWeight: FontWeight.w500),
-          ),
-        ],
+      child: Container(
+        padding: const .symmetric(vertical: 6, horizontal: 6),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, color: iconColor, size: 28),
+            const SizedBox(height: 8),
+            Text(
+              label,
+              style: TextStyle(color: textColor, fontSize: 14, fontWeight: FontWeight.w500),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -66,7 +66,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                         children: [
                           CommonImage(
                             height: CoreScreenUtils.deviceSize.height * 0.35,
-                            width: CoreScreenUtils.deviceSize.width,
+                            width: .infinity,
                             fill: BoxFit.cover,
                             src: images[index].path,
                             borderRadiusCustom: const BorderRadius.only(
