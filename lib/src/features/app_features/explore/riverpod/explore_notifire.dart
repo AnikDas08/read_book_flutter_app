@@ -13,4 +13,12 @@ class ExploreNotifire extends _$ExploreNotifire {
   void onSearchChanged(String value) {
     state = state.copyWith(searchText: value);
   }
+
+  void selectTag(String value) {
+    state = state.copyWith(selectedTag: value);
+  }
+
+  void selectGenre(String value) {
+    state = state.copyWith(selectedGenre: value);
+  }
 }

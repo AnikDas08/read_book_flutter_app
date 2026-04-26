@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_tamplates/config/constance/app_string.dart';
 import 'package:riverpod_tamplates/config/theme/app_theme_data.dart';
 import 'package:riverpod_tamplates/src/common/notification_button_widget.dart';
+import 'package:riverpod_tamplates/src/constants/app_font_sizes.dart';
 import 'package:riverpod_tamplates/src/features/app_features/explore/riverpod/explore_notifire.dart';
 
 class ExploreScreenAppbar extends StatelessWidget {
@@ -17,13 +18,16 @@ class ExploreScreenAppbar extends StatelessWidget {
       builder: (context, ref, child) {
         final notifier = ref.read(exploreNotifireProvider.notifier);
         return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
+           const Spacer(),
+            18.height,
             Row(
               children: [
                 16.width,
                 CommonText(
                   text: AppString.Explore,
-                  fontSize: 24,
+                  fontSize: AppFontSizes.heading,
                   fontWeight: .bold,
                   textColor: context.color.buttonTextWhite,
                 ),
@@ -32,39 +36,51 @@ class ExploreScreenAppbar extends StatelessWidget {
                 16.width,
               ],
             ),
-            8.height,
+            12.height,
             Row(
               children: [
                 16.width,
                 Expanded(
                   child: SizedBox(
-                    height: 40,
+                    height: 36,
                     child: CommonTextField(
                       onChanged: (value) {
                         notifier.onSearchChanged(value);
                       },
                       validationType: .notRequired,
-                      backgroundColor: context.color.blue300.withValues(alpha: 0.4),
+                      backgroundColor: context.color.blue300.withValues(
+                        alpha: 0.4,
+                      ),
                       borderWidth: 1.2,
-                      borderColor: context.color.cardsInputFields.withValues(alpha: 0.5),
+                      borderColor: context.color.cardsInputFields.withValues(
+                        alpha: 0.5,
+                      ),
                       hintText: AppString.search_by_title_author_or_genre,
                       borderRadius: 40,
-                      textStyle: const TextStyle(color: Colors.white),
+                      textStyle: const TextStyle(
+                        color: Colors.white,
+                        fontSize: AppFontSizes.small,
+                      ),
                       hintStyle: TextStyle(
-                        fontSize: 12,
-                        color: context.color.buttonTextWhite.withValues(alpha: 0.6),
+                        fontSize: AppFontSizes.small,
+                        color: context.color.buttonTextWhite.withValues(
+                          alpha: 0.6,
+                        ),
                       ),
                       prefixIcon: Icon(
                         Icons.search,
-                        color: context.color.buttonTextWhite.withValues(alpha: 0.6),
+                        color: context.color.buttonTextWhite.withValues(
+                          alpha: 0.6,
+                        ),
+                        size: 30,
                       ),
                     ),
                   ),
                 ),
-                10.width,
+                16.width,
               ],
             ),
-            5.height,
+           const Spacer()
           ],
         );
       },

@@ -1,107 +1,364 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:core_kit/core_kit_internal.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_tamplates/config/constance/app_string.dart';
-import 'package:riverpod_tamplates/config/constance/headline_widget.dart';
+import 'package:riverpod_tamplates/config/constance/constants.dart';
 import 'package:riverpod_tamplates/config/route/app_router.dart';
 import 'package:riverpod_tamplates/config/theme/app_theme_data.dart';
-import 'package:riverpod_tamplates/src/features/app_features/explore/presentation/widgets/genere_card_widget.dart';
-import 'package:riverpod_tamplates/src/features/app_features/library/presentation/widgets/book_widget.dart';
-import 'package:riverpod_tamplates/src/features/app_features/library/presentation/widgets/no_books_found.dart';
+import 'package:riverpod_tamplates/src/constants/app_font_sizes.dart';
+import 'package:riverpod_tamplates/src/features/app_features/explore/riverpod/explore_notifire.dart';
 
-class ExploreResultWidget extends StatelessWidget {
-  const ExploreResultWidget({super.key, this.itemCount = 0, this.selectedGenre});
-  final int itemCount;
+class ExploreResultWidget extends ConsumerWidget {
+  const ExploreResultWidget({super.key, this.itemCount, this.selectedGenre});
+
+  final int? itemCount;
   final String? selectedGenre;
 
-  @override
-  Widget build(BuildContext context) {
-    return SmartStaggeredLoader(
-      topWidget: _appbar(context),
-      onColapsAppbar: context.router.current.route.name != NavigationRoute.name
-          ? Container(color: context.color.bgColor, child: _search(context))
-          : null,
-      appbar: context.router.current.route.name != NavigationRoute.name
-          ? Column(children: [10.height, _search(context), 10.height])
-          : null,
-      itemCount: itemCount,
-      itemBuilder: (context, index) {
-        return const BookWidget();
-      },
-      gridConfig: GridConfig(aspectRatio: .68, itemInRow: 2),
-      emptyWidget: const NoBooksFoundWidget(),
-    );
-  }
+  static const _tags = ['#Enemies to Lovers', '#Mafia Romance', '#Revenge'];
+  static const _genres = [
+    _GenreItem('All', Color(0xFF151515)),
+    _GenreItem('Romance', Colors.red),
+    _GenreItem('CEO', Color(0xFF5D4037)),
+    _GenreItem('Fantasy', Colors.orange),
+    _GenreItem('Werewolf', Color(0xFF444444)),
+    _GenreItem('Mystery', Color(0xFF8AA7CB)),
+    _GenreItem('Sci-Fi', Color(0xFFFF5A00)),
+    _GenreItem('Historical', Color(0xFFC58A42)),
+    _GenreItem('Adventure', Color(0xFF795F5F)),
+    _GenreItem('Billionaire', Color(0xFFC319C9)),
+    _GenreItem('Contemporary', Color(0xFF5364DA)),
+    _GenreItem('Revenge', Color(0xFF19B313)),
+    _GenreItem('Mafia', Color(0xFFA0A210)),
+  ];
 
-  Column _appbar(BuildContext context) {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(exploreNotifireProvider);
+    final activeGenre = selectedGenre ?? state.selectedGenre;
+    final hasBooks =
+        state.searchText.trim().isEmpty && activeGenre != 'Mystery';
+
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        HeadlineWidget(title: AppString.genre).start,
-        Wrap(
-          spacing: 5.0,
-          runSpacing: 1.0,
-          children: [
-            GenreCard(
-              genere: 'Romance',
-              color: Colors.red,
-              isChip: true,
-              selectedGenre: selectedGenre,
-            ),
-            GenreCard(
-              genere: 'Fantasy',
-              color: Colors.orange,
-              isChip: true,
-              selectedGenre: selectedGenre,
-            ),
-            GenreCard(
-              genere: 'CEO',
-              color: Colors.brown,
-              isChip: true,
-              selectedGenre: selectedGenre,
-            ),
-            GenreCard(
-              genere: 'Werewolf',
-              color: Colors.grey,
-              isChip: true,
-              selectedGenre: selectedGenre,
-            ),
-            GenreCard(
-              genere: 'Mystery',
-              color: Colors.blue,
-              isChip: true,
-              selectedGenre: selectedGenre,
-            ),
-            GenreCard(
-              genere: 'Sci-Fi',
-              color: Colors.deepOrange,
-              isChip: true,
-              selectedGenre: selectedGenre,
-            ),
-            GenreCard(
-              genere: 'Historical',
-              color: Colors.brown,
-              isChip: true,
-              selectedGenre: selectedGenre,
-            ),
-            GenreCard(
-              genere: 'Adventure',
-              color: Colors.blueGrey,
-              isChip: true,
-              selectedGenre: selectedGenre,
-            ),
-          ],
-        ).start,
         10.height,
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.w),
+          child: CommonText(
+            text: AppString.popular_tags,
+            fontSize: AppFontSizes.extraLarge,
+            fontWeight: FontWeight.w700,
+            textColor: context.color.headingBoldText,
+          ),
+        ),
+        12.height,
+        const _TagRow(tags: _tags),
+        22.height,
+        Expanded(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const _GenreRail(genres: _genres),
+              Expanded(
+                child: hasBooks
+                    ? _BookResultsList(itemCount: itemCount ?? 6)
+                    : const _ExploreEmptyState(),
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }
+}
 
-  Widget _search(BuildContext context) {
-    return CommonTextField(
-      borderRadius: 40,
-      validationType: .notRequired,
-      hintText: AppString.search_by_title_author_or_genre,
-      prefixIcon: Icon(Icons.search, color: context.color.subtext),
+class _TagRow extends ConsumerWidget {
+  const _TagRow({required this.tags});
+
+  final List<String> tags;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(exploreNotifireProvider);
+    final notifier = ref.read(exploreNotifireProvider.notifier);
+
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: tags.map((tag) {
+          final isSelected = state.selectedTag == tag;
+          return GestureDetector(
+            onTap: () => notifier.selectTag(tag),
+            child: Container(
+              height: 36.h,
+              margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 10.h),
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: isSelected ? null : context.color.bgColor,
+                gradient: isSelected
+                    ? context.color.ctaGradientBackgroundAccent
+                    : null,
+                borderRadius: BorderRadius.circular(40),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.14),
+                    blurRadius: 18,
+                    offset: const Offset(0, 9),
+                  ),
+                ],
+              ),
+              child: CommonText(
+                text: tag,
+                fontSize: AppFontSizes.small,
+                fontWeight: .w400,
+                textColor: isSelected
+                    ? context.color.buttonTextWhite
+                    : const Color(0xFF364153),
+              ),
+            ),
+          );
+        }).toList(),
+      ),
     );
   }
+}
+
+class _GenreRail extends ConsumerWidget {
+  const _GenreRail({required this.genres});
+
+  final List<_GenreItem> genres;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final selectedGenre = ref.watch(exploreNotifireProvider).selectedGenre;
+    final notifier = ref.read(exploreNotifireProvider.notifier);
+
+    return SizedBox(
+      width: 85.w,
+      child: ListView.builder(
+        padding: const EdgeInsets.symmetric(horizontal: 5),
+        itemCount: genres.length,
+        itemBuilder: (context, index) {
+          final genre = genres[index];
+          final isSelected = selectedGenre == genre.label;
+          return GestureDetector(
+            onTap: () => notifier.selectGenre(genre.label),
+            child: Container(
+              height: 31.h,
+              width: double.infinity,
+              margin: const EdgeInsets.only(bottom: 12),
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: isSelected ? null : context.color.bgColor,
+                gradient: isSelected
+                    ? context.color.ctaGradientBackgroundAccent
+                    : null,
+                borderRadius: BorderRadius.circular(8.r),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.13),
+                    blurRadius: 18,
+                    offset: const Offset(0, 9),
+                  ),
+                ],
+              ),
+              child: CommonText(
+                text: genre.label,
+                fontSize: AppFontSizes.small,
+                fontWeight: .w400,
+                textColor: isSelected
+                    ? context.color.buttonTextWhite
+                    : genre.color,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _BookResultsList extends StatelessWidget {
+  const _BookResultsList({required this.itemCount});
+
+  final int itemCount;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.separated(
+      padding: EdgeInsets.only(right: 6.w),
+      itemCount: itemCount,
+      separatorBuilder: (_, _) => 16.height,
+      itemBuilder: (context, index) {
+        return _ExploreBookCard(isCompleted: index.isEven);
+      },
+    );
+  }
+}
+
+class _ExploreBookCard extends StatelessWidget {
+  const _ExploreBookCard({required this.isCompleted});
+
+  final bool isCompleted;
+
+  @override
+  Widget build(BuildContext context) {
+    final statusColor = isCompleted
+        ? const Color(0xFF00C920)
+        : const Color(0xFFFF8700);
+
+    return GestureDetector(
+      onTap: () => context.router.navigate(const BookDetailsRoute()),
+      child: Container(
+        height: 100,
+        padding: const EdgeInsets.all(5),
+        decoration: BoxDecoration(
+          color: context.color.bgColor,
+          borderRadius: BorderRadius.circular(6),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.08),
+              blurRadius: 18,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(6),
+              child: const CommonImage(
+                src: Constants.sampleImage,
+                width: 92,
+                height: 100,
+                fill: BoxFit.cover,
+              ),
+            ),
+            6.width,
+            Expanded(
+              child: Stack(
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: 135.w,
+                        child: const CommonText(
+                          text: 'Echoes of Tomorrow',
+                          fontSize: AppFontSizes.medium,
+                          fontWeight: .w400,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          textColor: Color(0xFF111111),
+                        ),
+                      ),
+                      const CommonText(
+                        text: 'Dr. Sarah Chen',
+                        fontSize: AppFontSizes.small,
+                        maxLines: 1,
+                        fontWeight: FontWeight.w400,
+                        overflow: TextOverflow.ellipsis,
+                        textColor: Color(0xFF6B7280),
+                      ),
+                      const CommonText(
+                        text: 'She was his assistant. He was her..',
+                        fontSize: AppFontSizes.small,
+                        maxLines: 1,
+                        fontWeight: FontWeight.w400,
+                        overflow: TextOverflow.ellipsis,
+                        textColor: Color(0xFF2C2C2C),
+                      ),
+                      const Spacer(),
+                      Row(
+                        children: [
+                          ...List.generate(4, (_) {
+                            return const Icon(
+                              Icons.star,
+                              color: Color(0xFFFFCC00),
+                              size: 12,
+                            );
+                          }),
+                          const Icon(
+                            Icons.star,
+                            color: Color(0xFFC8C8C8),
+                            size: 12,
+                          ),
+                          6.width,
+                          const CommonText(
+                            text: '4.0 / 5',
+                            fontSize: AppFontSizes.small,
+                            fontWeight: FontWeight.w400,
+                            textColor: Color(0xFF111111),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  Positioned(
+                    right: 0,
+                    top: 4,
+                    child: CommonText(
+                      text: isCompleted ? 'Completed' : 'Ongoing',
+                      fontSize: AppFontSizes.caption,
+                      fontWeight: FontWeight.w500,
+                      textColor: statusColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ExploreEmptyState extends StatelessWidget {
+  const _ExploreEmptyState();
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Transform.translate(
+        offset: const Offset(0, -70),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.menu_book_outlined,
+              size: 72,
+              color: context.color.iconClr,
+            ),
+            20.height,
+            CommonText(
+              text: AppString.no_books_found,
+              fontSize: AppFontSizes.heading,
+              fontWeight: .bold,
+              textColor: context.color.headingBoldText,
+            ),
+            12.height,
+            CommonText(
+              text: AppString.try_adjusting_your_search_or_filters,
+              fontSize: AppFontSizes.extraLarge,
+              textColor: context.color.subtext,
+              textAlign: .center,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _GenreItem {
+  const _GenreItem(this.label, this.color);
+
+  final String label;
+  final Color color;
 }

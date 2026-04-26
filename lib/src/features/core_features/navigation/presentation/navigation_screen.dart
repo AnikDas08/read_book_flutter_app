@@ -22,7 +22,13 @@ class NavigationScreen extends StatelessWidget {
     return AutoTabsScaffold(
       endDrawerEnableOpenDragGesture: false,
       endDrawer: const ChaptersDrawer(),
-      routes: const [ReadRoute(), HomeRoute(), ExploreRoute(), ContestRoute(), LibraryRoute()],
+      routes: const [
+        ReadRoute(),
+        HomeRoute(),
+        ExploreRoute(),
+        ContestRoute(),
+        LibraryRoute(),
+      ],
       lazyLoad: false,
       appBarBuilder: (context, tabsRouter) {
         if (tabsRouter.activeIndex == 0) {
@@ -53,7 +59,23 @@ class NavigationScreen extends StatelessWidget {
           return CommonAppBar(
             disableBack: true,
             hideBack: true,
-            appbarConfig: AppbarConfig(height: 90),
+            appbarConfig: AppbarConfig(
+              height: 190,
+              decoration: () => BoxDecoration(
+                gradient: context.color.ctaGradientBackgroundAccent,
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(32.r),
+                  bottomRight: Radius.circular(32.r),
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.25),
+                    blurRadius: 24,
+                    offset: const Offset(0, 12),
+                  ),
+                ],
+              ),
+            ),
             titleWidget: const ExploreScreenAppbar(),
           );
         } else if (tabsRouter.activeIndex == 3) {
@@ -89,9 +111,27 @@ class NavigationScreen extends StatelessWidget {
             items: [
               _navBuilder(context, tabsRouter, Assets.nav.navRead, 'Read', 0),
               _navBuilder(context, tabsRouter, Assets.nav.navHome, 'Home', 1),
-              _navBuilder(context, tabsRouter, Assets.nav.navExplore, 'Explore', 2),
-              _navBuilder(context, tabsRouter, Assets.nav.navContest, 'Contest', 3),
-              _navBuilder(context, tabsRouter, Assets.nav.navLibrary, 'Library', 4),
+              _navBuilder(
+                context,
+                tabsRouter,
+                Assets.nav.navExplore,
+                'Explore',
+                2,
+              ),
+              _navBuilder(
+                context,
+                tabsRouter,
+                Assets.nav.navContest,
+                'Contest',
+                3,
+              ),
+              _navBuilder(
+                context,
+                tabsRouter,
+                Assets.nav.navLibrary,
+                'Library',
+                4,
+              ),
             ],
           ),
         );
@@ -119,7 +159,9 @@ class NavigationScreen extends StatelessWidget {
             textColor: isActive ? null : context.color.navbarIconsUnselected,
             fontSize: isActive ? 14 : 12,
             fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
-            gradient: isActive ? context.color.ctaGradientBackgroundAccent : null,
+            gradient: isActive
+                ? context.color.ctaGradientBackgroundAccent
+                : null,
           ),
         ],
       ),
@@ -130,7 +172,9 @@ class NavigationScreen extends StatelessWidget {
     final icon = CommonImage(
       src: image,
       size: 24 * (isActive ? 1.1 : 1),
-      imageColor: isActive ? context.color.buttonTextWhite : context.color.navbarIconsUnselected,
+      imageColor: isActive
+          ? context.color.buttonTextWhite
+          : context.color.navbarIconsUnselected,
     );
     return isActive
         ? Container(
