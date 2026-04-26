@@ -8,6 +8,7 @@ import 'package:riverpod_tamplates/config/route/app_router.dart';
 import 'package:riverpod_tamplates/config/theme/app_theme_data.dart';
 import 'package:riverpod_tamplates/src/constants/app_font_sizes.dart';
 import 'package:riverpod_tamplates/src/features/app_features/explore/riverpod/explore_notifire.dart';
+import 'package:riverpod_tamplates/src/features/app_features/library/presentation/widgets/no_books_found.dart';
 
 class ExploreResultWidget extends ConsumerWidget {
   const ExploreResultWidget({super.key, this.itemCount, this.selectedGenre});
@@ -324,35 +325,7 @@ class _ExploreEmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Transform.translate(
-        offset: const Offset(0, -70),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              Icons.menu_book_outlined,
-              size: 72,
-              color: context.color.iconClr,
-            ),
-            20.height,
-            CommonText(
-              text: AppString.no_books_found,
-              fontSize: AppFontSizes.heading,
-              fontWeight: .bold,
-              textColor: context.color.headingBoldText,
-            ),
-            12.height,
-            CommonText(
-              text: AppString.try_adjusting_your_search_or_filters,
-              fontSize: AppFontSizes.extraLarge,
-              textColor: context.color.subtext,
-              textAlign: .center,
-            ),
-          ],
-        ),
-      ),
-    );
+    return const NoBooksFoundWidget();
   }
 }
 
