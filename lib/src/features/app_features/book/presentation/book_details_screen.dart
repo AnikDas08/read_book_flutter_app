@@ -92,7 +92,7 @@ class BookDetailsScreen extends ConsumerWidget {
                 children: [
                   Container(
                     width: 94.w,
-                    height: 150.h,
+                    height: 140.h,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(14),
                       border: Border.all(
@@ -171,7 +171,7 @@ class BookDetailsScreen extends ConsumerWidget {
                       textAlign: TextAlign.left,
                       textColor: const Color(0xFF1F2937),
                     ),
-                    10.height
+                    12.height
                   ],
                 ),
               ),
