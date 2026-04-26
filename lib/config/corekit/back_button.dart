@@ -19,7 +19,7 @@ class BackButtonWidget extends StatelessWidget {
           color: isDark ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(40),
         ),
-        child:   Icon(Icons.arrow_back_ios, color: isDark? Colors.white : Colors.black87),
+        child:   Icon(Icons.arrow_back_ios, color: isDark? Colors.white : Colors.black87,size: 24,),
       ),
     );
   }

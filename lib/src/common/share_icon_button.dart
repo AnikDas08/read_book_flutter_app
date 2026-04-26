@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class ShareIconButton extends StatelessWidget {
-  const ShareIconButton({super.key});
+  const ShareIconButton({super.key, this.isDark = true});
+
+  final bool isDark;
 
   @override
   Widget build(BuildContext context) {
@@ -9,10 +11,12 @@ class ShareIconButton extends StatelessWidget {
       height: 40,
       width: 40,
       decoration: BoxDecoration(
-        color: const Color(0xff563fff).withValues(alpha: 0.3),
+        color: isDark
+            ? const Color(0xff563fff).withValues(alpha: 0.3)
+            : Colors.black.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(20),
       ),
-      child: const Icon(Icons.share, color: Colors.white),
+      child: Icon(Icons.share, color: isDark ? Colors.white : Colors.white),
     );
   }
 }

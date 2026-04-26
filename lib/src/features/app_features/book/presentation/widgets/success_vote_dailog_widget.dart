@@ -1,78 +1,88 @@
 import 'package:core_kit/core_kit_internal.dart';
 import 'package:flutter/material.dart';
-import 'package:riverpod_tamplates/config/constance/app_string.dart';
-import 'package:riverpod_tamplates/config/theme/app_theme_data.dart';
+import 'package:riverpod_tamplates/src/constants/app_font_sizes.dart';
 
 class SuccessVoteDialogWidget extends StatelessWidget {
   final int earnedAmount;
   final int totalAmount;
 
-  const SuccessVoteDialogWidget({super.key, this.earnedAmount = 2, this.totalAmount = 7});
+  const SuccessVoteDialogWidget({
+    super.key,
+    this.earnedAmount = 2,
+    this.totalAmount = 5,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: context.color.bgColor,
-        borderRadius: BorderRadius.circular(24),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(28),
       ),
+      padding: EdgeInsets.fromLTRB(24.w, 28.h, 24.w, 28.h),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          40.height,
           Container(
-            width: 80,
-            height: 80,
+            width: 120.w,
+            height: 120.w,
             decoration: const BoxDecoration(
-              color: Color(0xFF00D24B), // Success Green
+              color: Color(0xFF09D04D),
               shape: BoxShape.circle,
             ),
-            child: const Icon(Icons.check_rounded, color: Colors.white, size: 50),
-          ),
-          24.height,
-
-          // 2. Success Title
-          CommonText(
-            text: AppString.vote_success,
-            style: const TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF1A1C1E),
+            child: const Icon(
+              Icons.check_rounded,
+              color: Colors.white,
+              size: 64,
             ),
           ),
+          22.height,
+          const CommonText(
+            text: 'Vote Completed!',
+            fontSize: AppFontSizes.display,
+            fontWeight: FontWeight.w700,
+            textColor: Color(0xFF111111),
+            textAlign: TextAlign.center,
+          ),
           16.height,
-
-          // 3. RichText for Reward Message
           RichText(
             textAlign: TextAlign.center,
             text: TextSpan(
-              style: const TextStyle(color: Color(0xFF5F6368), fontSize: 16),
+              style: const TextStyle(
+                color: Color(0xFF758195),
+                fontSize: AppFontSizes.heading,
+                fontWeight: FontWeight.w400,
+              ),
               children: [
-                TextSpan(text: AppString.you_used),
+                const TextSpan(text: 'You used '),
                 TextSpan(
-                  text: '+$earnedAmount ${AppString.power_stones}',
+                  text: '$earnedAmount Power Stones',
                   style: const TextStyle(
-                    color: Color(0xFFFFC107), // Gold/Yellow
-                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF4D8DFF),
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
               ],
             ),
           ),
           24.height,
-
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.electric_bolt_outlined, color: Color(0xFFFFC107), size: 40),
-              const SizedBox(width: 8),
+              const Icon(
+                Icons.electric_bolt_rounded,
+                color: Color(0xFFFFC700),
+                size: 44,
+              ),
+              8.width,
               CommonText(
                 text: '$totalAmount',
-                style: const TextStyle(fontSize: 32, color: Color(0xFF1A1C1E)),
+                fontSize: AppFontSizes.display,
+                fontWeight: FontWeight.w700,
+                textColor: const Color(0xFF111111),
               ),
             ],
           ),
-          20.height,
         ],
       ),
     );

@@ -394,6 +394,22 @@ class ReadRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [ReviewScreen]
+class ReviewRoute extends PageRouteInfo<void> {
+  const ReviewRoute({List<PageRouteInfo>? children})
+    : super(ReviewRoute.name, initialChildren: children);
+
+  static const String name = 'ReviewRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const ReviewScreen();
+    },
+  );
+}
+
+/// generated route for
 /// [ShowMoreBooksScreen]
 class ShowMoreBooksRoute extends PageRouteInfo<ShowMoreBooksRouteArgs> {
   ShowMoreBooksRoute({
