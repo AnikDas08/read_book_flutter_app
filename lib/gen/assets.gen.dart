@@ -100,6 +100,9 @@ class $AssetsNavGen {
   /// File path: assets/nav/nav_read.svg
   String get navRead => 'assets/nav/nav_read.svg';
 
+  /// File path: assets/nav/profile.svg
+  String get profile => 'assets/nav/profile.svg';
+
   /// List of all assets
   List<String> get values => [
     navContest,
@@ -107,6 +110,7 @@ class $AssetsNavGen {
     navHome,
     navLibrary,
     navRead,
+    profile,
   ];
 }
 

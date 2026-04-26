@@ -25,7 +25,7 @@ import 'package:riverpod_tamplates/src/features/core_features/profile/presentati
 import 'package:riverpod_tamplates/src/features/core_features/profile/presentation/faq_screen.dart';
 import 'package:riverpod_tamplates/src/features/core_features/profile/presentation/notification_screen.dart';
 import 'package:riverpod_tamplates/src/features/core_features/profile/presentation/privacy_screen.dart';
-import 'package:riverpod_tamplates/src/features/core_features/profile/presentation/profile_screen.dart';
+import 'package:riverpod_tamplates/src/features/app_features/profile/presentation/screen/profile_screen.dart';
 import 'package:riverpod_tamplates/src/features/core_features/profile/presentation/terms_screen.dart';
 
 part 'app_router.gr.dart';
@@ -59,6 +59,7 @@ class AppRouter extends RootStackRouter {
         AutoRoute(page: ContestRoute.page),
         AutoRoute(page: LibraryRoute.page),
         AutoRoute(page: ExploreRoute.page),
+        AutoRoute(page: ProfileRoute.page),
       ],
     ),
     AutoRoute(page: EditProfileRoute.page, guards: [AuthGuard(ref)]),

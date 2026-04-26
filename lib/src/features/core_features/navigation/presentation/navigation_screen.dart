@@ -10,6 +10,7 @@ import 'package:riverpod_tamplates/src/common/notification_button_widget.dart';
 import 'package:riverpod_tamplates/src/features/app_features/explore/presentation/widgets/explore_screen_appbar.dart';
 import 'package:riverpod_tamplates/src/features/app_features/home/presentation/widget/home_screen_appbar.dart';
 import 'package:riverpod_tamplates/src/features/app_features/library/presentation/widgets/library_profile_header.dart';
+import 'package:riverpod_tamplates/src/features/app_features/profile/presentation/screen/profile_screen.dart';
 import 'package:riverpod_tamplates/src/features/app_features/read/presentation/widgets/chapters_drawer.dart';
 import 'package:riverpod_tamplates/src/features/app_features/read/presentation/widgets/read_screen_appbar.dart';
 
@@ -23,39 +24,15 @@ class NavigationScreen extends StatelessWidget {
       endDrawerEnableOpenDragGesture: false,
       endDrawer: const ChaptersDrawer(),
       routes: const [
-        ReadRoute(),
-        HomeRoute(),
         ExploreRoute(),
         ContestRoute(),
+        HomeRoute(),
         LibraryRoute(),
+        ProfileRoute(),
       ],
       lazyLoad: false,
       appBarBuilder: (context, tabsRouter) {
         if (tabsRouter.activeIndex == 0) {
-          return CommonAppBar(
-            disableBack: true,
-            hideBack: true,
-            appbarConfig: AppbarConfig(
-              titleSpacing: 16,
-              height: 58,
-              decoration: () => BoxDecoration(
-                gradient: context.color.ctaGradientBackgroundAccent,
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(Constants.appbarRadious.r),
-                  bottomRight: Radius.circular(Constants.appbarRadious.r),
-                ),
-              ),
-            ),
-            titleWidget: const ReadScreenAppBar(),
-          );
-        } else if (tabsRouter.activeIndex == 1) {
-          return CommonAppBar(
-            disableBack: true,
-            hideBack: true,
-            appbarConfig: AppbarConfig(height: 190),
-            titleWidget: const HomeScreenAppBar(),
-          );
-        } else if (tabsRouter.activeIndex == 2) {
           return CommonAppBar(
             disableBack: true,
             hideBack: true,
@@ -78,7 +55,7 @@ class NavigationScreen extends StatelessWidget {
             ),
             titleWidget: const ExploreScreenAppbar(),
           );
-        } else if (tabsRouter.activeIndex == 3) {
+        } else if (tabsRouter.activeIndex == 1) {
           return CommonAppBar(
             disableBack: true,
             hideBack: true,
@@ -88,12 +65,31 @@ class NavigationScreen extends StatelessWidget {
               actions: [const NotificationButtonWidget()],
             ),
           );
-        } else if (tabsRouter.activeIndex == 4) {
+        } else if (tabsRouter.activeIndex == 2) {
+          return CommonAppBar(
+            disableBack: true,
+            hideBack: true,
+            appbarConfig: AppbarConfig(height: 190),
+            titleWidget: const HomeScreenAppBar(),
+          );
+        } else if (tabsRouter.activeIndex == 3) {
           return CommonAppBar(
             disableBack: true,
             hideBack: true,
             titleWidget: const LibraryProfileHeader(),
             appbarConfig: AppbarConfig(height: 150),
+          );
+
+
+        } else if (tabsRouter.activeIndex == 4) {
+          return CommonAppBar(
+            disableBack: true,
+            hideBack: true,
+            title: AppString.contest,
+            appbarConfig: AppbarConfig(
+              titleSpacing: 16,
+              actions: [const NotificationButtonWidget()],
+            ),
           );
         }
         return null;
@@ -109,29 +105,37 @@ class NavigationScreen extends StatelessWidget {
             showUnselectedLabels: false,
             type: BottomNavigationBarType.fixed,
             items: [
-              _navBuilder(context, tabsRouter, Assets.nav.navRead, 'Read', 0),
-              _navBuilder(context, tabsRouter, Assets.nav.navHome, 'Home', 1),
+
               _navBuilder(
                 context,
                 tabsRouter,
                 Assets.nav.navExplore,
                 'Explore',
-                2,
+                0,
               ),
               _navBuilder(
                 context,
                 tabsRouter,
                 Assets.nav.navContest,
                 'Contest',
-                3,
+                1,
               ),
+              _navBuilder(context, tabsRouter, Assets.nav.navHome, 'Home', 2),
               _navBuilder(
                 context,
                 tabsRouter,
                 Assets.nav.navLibrary,
                 'Library',
+                3,
+              ),
+              _navBuilder(
+                context,
+                tabsRouter,
+                Assets.nav.profile,
+                'Profile',
                 4,
               ),
+
             ],
           ),
         );
