@@ -3,6 +3,7 @@ import 'package:core_kit/utils/core_screen_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_tamplates/config/constance/app_string.dart';
 import 'package:riverpod_tamplates/config/theme/app_theme_data.dart';
+import 'package:riverpod_tamplates/src/constants/app_font_sizes.dart';
 
 class PowerStonesCard extends StatelessWidget {
   const PowerStonesCard({super.key});
@@ -10,19 +11,27 @@ class PowerStonesCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+
       width: double.infinity,
+      height: 221,
+      padding: const .all(16),
       decoration: BoxDecoration(
         color: context.color.bgColor,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: context.color.subtleOverlaysShadows),
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.16),
+            blurRadius: 28,
+            offset: const Offset(0, 16),
+          ),
+        ],
       ),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          20.height,
           Container(
-            width: 100,
-            height: 100,
+            width: 95,
+            height: 95,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               gradient: const LinearGradient(
@@ -32,30 +41,36 @@ class PowerStonesCard extends StatelessWidget {
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.orange.withOpacity(0.3),
+                  color: Colors.orange.withValues(alpha: 0.3),
                   blurRadius: 15,
                   offset: const Offset(0, 8),
                 ),
               ],
             ),
-            child: const Icon(Icons.electric_bolt_outlined, color: Colors.white, size: 50),
+            child: const Icon(
+              Icons.electric_bolt_outlined,
+              color: Colors.white,
+              size: 40,
+            ),
           ),
           10.height,
           const CommonText(
-            text: '55',
-            style: TextStyle(fontSize: 36, fontWeight: .bold, color: Colors.black),
+            text: '5',
+            style: TextStyle(
+              fontSize: 36,
+              fontWeight: FontWeight.w700,
+              color: Colors.black,
+            ),
           ),
-
           5.height,
           CommonText(
             text: AppString.available_power_stones,
             style: TextStyle(
-              fontSize: 16,
+              fontSize: AppFontSizes.medium,
               color: Colors.blueGrey.shade400,
               fontWeight: FontWeight.w500,
             ),
           ),
-          10.height,
         ],
       ),
     );

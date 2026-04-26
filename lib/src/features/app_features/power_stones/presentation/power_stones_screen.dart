@@ -1,8 +1,11 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:core_kit/app_bar/common_app_bar.dart';
+import 'package:core_kit/text/common_text.dart';
 import 'package:core_kit/utils/core_screen_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_tamplates/config/constance/app_string.dart';
+import 'package:riverpod_tamplates/config/route/app_router.dart';
+import 'package:riverpod_tamplates/config/theme/app_theme_data.dart';
+import 'package:riverpod_tamplates/src/constants/app_font_sizes.dart';
 import 'package:riverpod_tamplates/src/features/app_features/power_stones/presentation/widgets/daily_reward_claim_widget.dart';
 import 'package:riverpod_tamplates/src/features/app_features/power_stones/presentation/widgets/how_to_use_step_widget.dart';
 import 'package:riverpod_tamplates/src/features/app_features/power_stones/presentation/widgets/power_stone_card.dart';
@@ -15,19 +18,68 @@ class PowerStonesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CommonAppBar(title: AppString.power_stones),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+      backgroundColor: context.color.bgColor,
+      body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              10.height,
-              const PowerStonesCard(),
-              10.height,
-              const SizedBox(height: 100, child: DailyBonusBanner()),
-              15.height,
+              24.height,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: GestureDetector(
+                  onTap: () => context.router.pop(),
+                  child: SizedBox(
+                    width: 40.w,
+                    height: 40.w,
+                    child: Icon(
+                      Icons.arrow_back_ios_new,
+                      color: const Color(0xFF1C1CFF),
+                      size: 24.w,
+                    ),
+                  ),
+                ),
+              ),
+              24.height,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Row(
+                  children: [
+                    CommonText(
+                      text: AppString.power_stones,
+                      fontSize: AppFontSizes.extraLarge,
+                      fontWeight: FontWeight.w500,
+                      textColor: context.color.headingBoldText,
+                    ),
+                    const Spacer(),
+                    GestureDetector(
+                      onTap: () => context.router.push(
+                        const UsedPowerStonesHistoryRoute(),
+                      ),
+                      child: const CommonText(
+                        text: 'View History',
+                        fontSize: AppFontSizes.medium,
+                        textColor: Color(0xFF1C1CFF),
+                        fontWeight: FontWeight.w400,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              34.height,
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: PowerStonesCard(),
+              ),
+              20.height,
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.0),
+                child: SizedBox(height: 108, child: DailyBonusBanner()),
+              ),
+              20.height,
               const WatchAdsCardWidget(),
-              15.height,
+              20.height,
               const HowToUseStepWidget(),
               50.height,
             ],

@@ -23,10 +23,13 @@ import 'package:riverpod_tamplates/src/features/core_features/presentation/splas
 import 'package:riverpod_tamplates/src/features/core_features/profile/presentation/change_password_screen.dart';
 import 'package:riverpod_tamplates/src/features/core_features/profile/presentation/edit_profile_screen.dart';
 import 'package:riverpod_tamplates/src/features/core_features/profile/presentation/faq_screen.dart';
+import 'package:riverpod_tamplates/src/features/core_features/profile/presentation/about_us_screen.dart';
+import 'package:riverpod_tamplates/src/features/core_features/profile/presentation/language_screen.dart';
 import 'package:riverpod_tamplates/src/features/core_features/profile/presentation/notification_screen.dart';
 import 'package:riverpod_tamplates/src/features/core_features/profile/presentation/privacy_screen.dart';
 import 'package:riverpod_tamplates/src/features/app_features/profile/presentation/screen/profile_screen.dart';
 import 'package:riverpod_tamplates/src/features/core_features/profile/presentation/terms_screen.dart';
+import 'package:riverpod_tamplates/src/features/core_features/profile/presentation/used_power_stones_history_screen.dart';
 
 part 'app_router.gr.dart';
 
@@ -67,6 +70,9 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: TermsRoute.page),
     AutoRoute(page: PrivacyRoute.page),
     AutoRoute(page: FaqRoute.page),
+    AutoRoute(page: AboutUsRoute.page),
+    AutoRoute(page: LanguageRoute.page),
+    AutoRoute(page: UsedPowerStonesHistoryRoute.page),
     AutoRoute(page: NotificationRoute.page, guards: [AuthGuard(ref)]),
     AutoRoute(page: ProfileRoute.page, guards: [AuthGuard(ref)]),
     AutoRoute(page: ExploreResultRoute.page, guards: [AuthGuard(ref)]),
