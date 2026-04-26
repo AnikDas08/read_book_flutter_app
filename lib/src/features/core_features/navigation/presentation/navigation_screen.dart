@@ -30,6 +30,7 @@ class NavigationScreen extends StatelessWidget {
         LibraryRoute(),
         ProfileRoute(),
       ],
+      homeIndex: 2,
       lazyLoad: false,
       appBarBuilder: (context, tabsRouter) {
         if (tabsRouter.activeIndex == 0) {
