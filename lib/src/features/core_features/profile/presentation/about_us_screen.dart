@@ -21,22 +21,24 @@ class AboutUsScreen extends StatelessWidget {
       backgroundColor: context.color.bgColor,
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(20, 92, 20, 30),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              24.height,
               const _PlainBackButton(),
-              92.height,
+              12.height,
               CommonText(
                 text: 'About Us',
-                fontSize: AppFontSizes.heading,
-                fontWeight: .bold,
+                fontSize: AppFontSizes.extraLarge,
+                fontWeight: FontWeight.w500,
                 textColor: context.color.headingBoldText,
               ),
-              26.height,
+              12.height,
               const CommonText(
                 text: _body,
-                fontSize: AppFontSizes.extraLarge,
+                fontSize: AppFontSizes.medium,
+                fontWeight: FontWeight.w400,
                 textColor: Color(0xFF6B7280),
                 textAlign: TextAlign.left,
                 isDescription: true,
@@ -57,8 +59,8 @@ class _PlainBackButton extends StatelessWidget {
     return GestureDetector(
       onTap: () => context.router.pop(),
       child: const SizedBox(
-        width: 48,
-        height: 48,
+        width: 40,
+        height: 40,
         child: Icon(
           Icons.arrow_back_ios_new,
           color: Color(0xFF1C1CFF),

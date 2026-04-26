@@ -14,19 +14,20 @@ class UsedPowerStonesHistoryScreen extends StatelessWidget {
       backgroundColor: context.color.bgColor,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 92, 20, 30),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              24.height,
               const _PlainBackButton(),
-              84.height,
+              12.height,
               CommonText(
                 text: 'Used Power Stones History',
-                fontSize: AppFontSizes.heading,
-                fontWeight: .bold,
-                textColor: const Color(0xFF111827),
+                fontSize: AppFontSizes.extraLarge,
+                fontWeight: FontWeight.w500,
+                textColor: context.color.headingBoldText,
               ),
-              34.height,
+              24.height,
               Expanded(
                 child: ListView.separated(
                   padding: EdgeInsets.zero,
@@ -70,13 +71,13 @@ class _HistoryTile extends StatelessWidget {
             children: [
               CommonText(
                 text: 'Shadow of the Moon',
-                fontSize: AppFontSizes.extraLarge,
-                fontWeight: .bold,
+                fontSize: AppFontSizes.medium,
+                fontWeight: FontWeight.w500,
                 textColor: Color(0xFF333333),
               ),
               CommonText(
                 text: 'You used 2 stones',
-                fontSize: AppFontSizes.extraLarge,
+                fontSize: AppFontSizes.small,
                 textColor: Color(0xFF4B5563),
               ),
             ],
@@ -95,8 +96,8 @@ class _PlainBackButton extends StatelessWidget {
     return GestureDetector(
       onTap: () => context.router.pop(),
       child: const SizedBox(
-        width: 48,
-        height: 48,
+        width: 40,
+        height: 40,
         child: Icon(
           Icons.arrow_back_ios_new,
           color: Color(0xFF1C1CFF),

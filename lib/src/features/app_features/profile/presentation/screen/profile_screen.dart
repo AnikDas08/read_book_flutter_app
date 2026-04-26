@@ -586,7 +586,7 @@ class _DialogButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: 58,
+        height: 48,
         alignment: Alignment.center,
         decoration: BoxDecoration(
           color: isDanger ? const Color(0xFFE00000) : Colors.white,
@@ -597,8 +597,8 @@ class _DialogButton extends StatelessWidget {
         ),
         child: CommonText(
           text: title,
-          fontSize: AppFontSizes.heading,
-          fontWeight: .bold,
+          fontSize: AppFontSizes.large,
+          fontWeight: FontWeight.w700,
           textColor: isDanger ? Colors.white : const Color(0xFF6B7280),
         ),
       ),
