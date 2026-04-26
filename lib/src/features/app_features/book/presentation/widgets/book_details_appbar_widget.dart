@@ -19,7 +19,9 @@ class BookDetailsAppbarWidget extends StatelessWidget {
             children: [
               BackButtonWidget(),
               CommonText(
-                text: 'Shadow of the Violet Moon',
+                textAlign: .start,
+                overflow: .ellipsis,
+                text: 'Shadow of the Violet',
                 autoResize: false,
                 style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
               ),

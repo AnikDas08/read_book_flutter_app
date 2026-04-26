@@ -107,19 +107,20 @@ class HomeScreen extends ConsumerWidget {
   }
 
   SizedBox _recommendedBooks(double itemSizeInrow) {
+    final cardWidth = itemSizeInrow * 0.95;
     return SizedBox(
-      height: itemSizeInrow * 1.45,
+      height: cardWidth * 1.5,
       child: SingleChildScrollView(
         scrollDirection: .horizontal,
         child: Row(
           children: [
-            SizedBox(width: itemSizeInrow, child: const BookWidget()),
-            10.width,
-            SizedBox(width: itemSizeInrow, child: const BookWidget()),
-            10.width,
-            SizedBox(width: itemSizeInrow, child: const BookWidget()),
-            10.width,
-            SizedBox(width: itemSizeInrow, child: const BookWidget()),
+            SizedBox(width: cardWidth, child: const BookWidget()),
+            12.width,
+            SizedBox(width: cardWidth, child: const BookWidget()),
+            12.width,
+            SizedBox(width: cardWidth, child: const BookWidget()),
+            12.width,
+            SizedBox(width: cardWidth, child: const BookWidget()),
           ],
         ),
       ),
@@ -127,19 +128,20 @@ class HomeScreen extends ConsumerWidget {
   }
 
   SizedBox _trendingBooks(double itemSizeInrow) {
+    final cardWidth = itemSizeInrow * 0.95;
     return SizedBox(
-      height: itemSizeInrow * 1.45,
+      height: cardWidth * 1.5,
       child: SingleChildScrollView(
         scrollDirection: .horizontal,
         child: Row(
           children: [
-            SizedBox(width: itemSizeInrow, child: const BookWidget(isNew: false, isTrending: true)),
-            10.width,
-            SizedBox(width: itemSizeInrow, child: const BookWidget(isNew: false, isTrending: true)),
-            10.width,
-            SizedBox(width: itemSizeInrow, child: const BookWidget(isNew: false, isTrending: true)),
-            10.width,
-            SizedBox(width: itemSizeInrow, child: const BookWidget(isNew: false, isTrending: true)),
+            SizedBox(width: cardWidth, child: const BookWidget(isNew: false, isTrending: true)),
+            12.width,
+            SizedBox(width: cardWidth, child: const BookWidget(isNew: false, isTrending: true)),
+            12.width,
+            SizedBox(width: cardWidth, child: const BookWidget(isNew: false, isTrending: true)),
+            12.width,
+            SizedBox(width: cardWidth, child: const BookWidget(isNew: false, isTrending: true)),
           ],
         ),
       ),
