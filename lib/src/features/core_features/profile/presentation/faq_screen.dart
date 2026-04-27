@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:core_kit/core_kit_internal.dart';
 import 'package:flutter/material.dart';
+import 'package:riverpod_tamplates/config/corekit/back_button.dart';
 import 'package:riverpod_tamplates/config/theme/app_theme_data.dart';
 import 'package:riverpod_tamplates/src/constants/app_font_sizes.dart';
 
@@ -28,6 +29,15 @@ class _FaqScreenState extends State<FaqScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: CommonAppBar(
+        leading: const BackButtonWidget(isDark: true),
+
+        appbarConfig: AppbarConfig(
+          leadingAlignment: .bottomStart,
+          leadingPadding: .zero,
+          decoration: () => const BoxDecoration(color: Colors.white),
+        ),
+      ),
       backgroundColor: context.color.bgColor,
       body: SafeArea(
         child: SingleChildScrollView(
@@ -35,8 +45,6 @@ class _FaqScreenState extends State<FaqScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              24.height,
-              const _PlainBackButton(),
               12.height,
               CommonText(
                 text: "FAQ's",

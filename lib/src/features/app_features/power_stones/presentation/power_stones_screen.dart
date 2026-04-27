@@ -1,8 +1,10 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:core_kit/app_bar/common_app_bar.dart';
 import 'package:core_kit/text/common_text.dart';
 import 'package:core_kit/utils/core_screen_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_tamplates/config/constance/app_string.dart';
+import 'package:riverpod_tamplates/config/corekit/back_button.dart';
 import 'package:riverpod_tamplates/config/route/app_router.dart';
 import 'package:riverpod_tamplates/config/theme/app_theme_data.dart';
 import 'package:riverpod_tamplates/src/constants/app_font_sizes.dart';
@@ -18,28 +20,21 @@ class PowerStonesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: CommonAppBar(
+        leading: const BackButtonWidget(isDark: true),
+
+        appbarConfig: AppbarConfig(
+          leadingAlignment: .bottomStart,
+          leadingPadding: .zero,
+          decoration: () => const BoxDecoration(color: Colors.white),
+        ),
+      ),
       backgroundColor: context.color.bgColor,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              24.height,
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: GestureDetector(
-                  onTap: () => context.router.pop(),
-                  child: SizedBox(
-                    width: 40.w,
-                    height: 40.w,
-                    child: Icon(
-                      Icons.arrow_back_ios_new,
-                      color: const Color(0xFF1C1CFF),
-                      size: 24.w,
-                    ),
-                  ),
-                ),
-              ),
               24.height,
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),

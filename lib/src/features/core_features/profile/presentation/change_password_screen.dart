@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:core_kit/core_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_tamplates/config/corekit/back_button.dart';
 import 'package:riverpod_tamplates/config/theme/app_theme_data.dart';
 import 'package:riverpod_tamplates/src/constants/app_font_sizes.dart';
 import 'package:riverpod_tamplates/src/features/core_features/profile/application/profile_notifier.dart';
@@ -15,18 +16,26 @@ class ChangePasswordScreen extends ConsumerWidget {
     final profileState = ref.watch(profileNotifierProvider);
 
     return Scaffold(
+      appBar: CommonAppBar(
+        leading: const BackButtonWidget(isDark: true),
+
+        appbarConfig: AppbarConfig(
+          leadingAlignment: .bottomStart,
+          leadingPadding: .zero,
+          decoration: () => const BoxDecoration(color: Colors.white),
+        ),
+      ),
       backgroundColor: context.color.bgColor,
       body: FormBuilder<Map<String, String>>(
         entity: const {'old': '', 'new': '', 'confirm': ''},
         builder: (context, formKey, entity) {
           return SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 92, 20, 40),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const _PlainBackButton(),
-                  12.height,
+                  20.height,
                   CommonText(
                     text: 'Password Changes',
                     fontSize: AppFontSizes.extraLarge,

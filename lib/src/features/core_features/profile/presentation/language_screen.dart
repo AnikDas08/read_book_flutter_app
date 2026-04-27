@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:core_kit/core_kit_internal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_tamplates/config/corekit/back_button.dart';
 import 'package:riverpod_tamplates/config/theme/app_theme_data.dart';
 import 'package:riverpod_tamplates/src/constants/app_font_sizes.dart';
 
@@ -37,6 +38,15 @@ class _LanguageScreenState extends ConsumerState<LanguageScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: CommonAppBar(
+        leading: const BackButtonWidget(isDark: true),
+
+        appbarConfig: AppbarConfig(
+          leadingAlignment: .bottomStart,
+          leadingPadding: .zero,
+          decoration: () => const BoxDecoration(color: Colors.white),
+        ),
+      ),
       backgroundColor: context.color.bgColor,
       body: SafeArea(
         child: Padding(
@@ -44,8 +54,7 @@ class _LanguageScreenState extends ConsumerState<LanguageScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              48.height,
-              const _PlainBackButton(),
+
               24.height,
               CommonText(
                 text: 'Language',
