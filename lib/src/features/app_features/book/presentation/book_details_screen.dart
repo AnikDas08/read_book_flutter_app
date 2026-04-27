@@ -31,16 +31,12 @@ class BookDetailsScreen extends ConsumerWidget {
     return Scaffold(
       appBar: CommonAppBar(
         title: "Book Details",
-        leading: const BackButtonWidget(isDark: false,),
+        leading: const BackButtonWidget(isDark: false),
 
         appbarConfig: AppbarConfig(
-          actions: [
-            ShareIconButton(isDark: false,)
-          ],
+          actions: [ShareIconButton(isDark: false)],
           titleAlignment: .center,
-          decoration: () => BoxDecoration(
-            color: Colors.white
-          )
+          decoration: () => BoxDecoration(color: Colors.white),
         ),
       ),
       backgroundColor: context.color.bgColor,
@@ -263,9 +259,7 @@ class BookDetailsScreen extends ConsumerWidget {
                               maxChildSize: 0.82,
                               expand: false,
                               builder: (_, scrollController) {
-                                return BookmarkModalWidget(
-                                  scrollController: scrollController,
-                                );
+                                return const BookmarkModalWidget();
                               },
                             );
                           },

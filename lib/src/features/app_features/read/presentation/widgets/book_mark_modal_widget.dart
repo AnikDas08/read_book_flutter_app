@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:riverpod_tamplates/src/constants/app_font_sizes.dart';
 
 class BookmarkModalWidget extends StatefulWidget {
-  const BookmarkModalWidget({super.key, required this.scrollController});
-  final ScrollController scrollController;
+  const BookmarkModalWidget({super.key,});
 
   @override
   State<BookmarkModalWidget> createState() => _BookmarkModalWidgetState();
@@ -16,18 +15,18 @@ class _BookmarkModalWidgetState extends State<BookmarkModalWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 18.h),
+      padding: EdgeInsets.fromLTRB(16.w, 5.h, 16.w, 18.h),
       decoration: const BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
       ),
       child: ListView(
-        controller: widget.scrollController,
+        physics:const  ClampingScrollPhysics(),
         children: [
           Center(
             child: Container(
-              width: 84.w,
-              height: 8.h,
+              width: 48.w,
+              height: 4.h,
               decoration: BoxDecoration(
                 color: const Color(0xFFD4D9E2),
                 borderRadius: BorderRadius.circular(10),
@@ -39,14 +38,14 @@ class _BookmarkModalWidgetState extends State<BookmarkModalWidget> {
             children: [
               const Icon(
                 Icons.bookmark_add_outlined,
-                size: 28,
+                size: 20,
                 color: Color(0xFF111111),
               ),
               10.width,
               const CommonText(
                 text: 'Bookmark',
-                fontSize: AppFontSizes.display,
-                fontWeight: FontWeight.w700,
+                fontSize: AppFontSizes.extraLarge,
+                fontWeight: FontWeight.w500,
                 textColor: Color(0xFF111111),
               ),
             ],
@@ -54,7 +53,7 @@ class _BookmarkModalWidgetState extends State<BookmarkModalWidget> {
           10.height,
           const CommonText(
             text: 'Chapter 2: Awakening Powers',
-            fontSize: AppFontSizes.heading,
+            fontSize: AppFontSizes.medium,
             fontWeight: FontWeight.w400,
             textColor: Color(0xFF444444),
           ),
@@ -88,7 +87,7 @@ class _BookmarkModalWidgetState extends State<BookmarkModalWidget> {
           GestureDetector(
             onTap: () => Navigator.of(context).pop(),
             child: Container(
-              height: 74.h,
+              height: 48.h,
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
                   colors: [Color(0xFF2B26FF), Color(0xFF7A3FFF)],
@@ -100,7 +99,7 @@ class _BookmarkModalWidgetState extends State<BookmarkModalWidget> {
               alignment: Alignment.center,
               child: const CommonText(
                 text: 'Done',
-                fontSize: AppFontSizes.heading,
+                fontSize: AppFontSizes.large,
                 fontWeight: FontWeight.w700,
                 textColor: Colors.white,
               ),
@@ -143,11 +142,11 @@ class _BookmarkOption extends StatelessWidget {
         child: Row(
           children: [
             Container(
-              width: 78.w,
-              height: 78.w,
+              width: 48.w,
+              height: 48.w,
               decoration: BoxDecoration(
                 gradient: iconBackground,
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(14),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withValues(alpha: 0.15),
@@ -157,7 +156,7 @@ class _BookmarkOption extends StatelessWidget {
                 ],
               ),
               alignment: Alignment.center,
-              child: Text(emoji, style: const TextStyle(fontSize: 36)),
+              child: Text(emoji, style: const TextStyle(fontSize: 24)),
             ),
             16.width,
             Expanded(
@@ -166,14 +165,14 @@ class _BookmarkOption extends StatelessWidget {
                 children: [
                   CommonText(
                     text: title,
-                    fontSize: AppFontSizes.heading,
+                    fontSize: AppFontSizes.large,
                     fontWeight: FontWeight.w400,
                     textColor: const Color(0xFF111111),
                   ),
                   4.height,
                   CommonText(
                     text: subtitle,
-                    fontSize: AppFontSizes.extraLarge,
+                    fontSize: AppFontSizes.small,
                     fontWeight: FontWeight.w400,
                     textColor: const Color(0xFF758195),
                   ),
@@ -181,13 +180,13 @@ class _BookmarkOption extends StatelessWidget {
               ),
             ),
             Container(
-              width: 54.w,
-              height: 54.w,
+              width: 28.w,
+              height: 28.w,
               decoration: BoxDecoration(
                 color: isSelected
                     ? const Color(0xFF5B34FF)
                     : Colors.transparent,
-                borderRadius: BorderRadius.circular(18),
+                borderRadius: BorderRadius.circular(10),
                 border: Border.all(
                   color: isSelected
                       ? const Color(0xFF5B34FF)
@@ -199,7 +198,7 @@ class _BookmarkOption extends StatelessWidget {
                   ? const Icon(
                       Icons.check_rounded,
                       color: Colors.white,
-                      size: 28,
+                      size: 16,
                     )
                   : null,
             ),
