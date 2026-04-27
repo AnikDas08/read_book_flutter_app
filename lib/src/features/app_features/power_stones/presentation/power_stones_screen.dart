@@ -25,7 +25,6 @@ class PowerStonesScreen extends StatelessWidget {
 
         appbarConfig: AppbarConfig(
           leadingAlignment: .bottomStart,
-          leadingPadding: .zero,
           decoration: () => const BoxDecoration(color: Colors.white),
         ),
       ),

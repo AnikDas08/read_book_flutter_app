@@ -3,6 +3,7 @@ import 'package:core_kit/core_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_tamplates/config/constance/app_string.dart';
+import 'package:riverpod_tamplates/config/corekit/back_button.dart';
 
 @RoutePage()
 class NotificationScreen extends ConsumerWidget {
@@ -12,7 +13,7 @@ class NotificationScreen extends ConsumerWidget {
   Widget build(BuildContext context, _) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: const CommonAppBar(title: "Notifications"),
+      appBar:  CommonAppBar(title: "Notifications",appbarConfig: AppbarConfig(height: 70),leading: const BackButtonWidget(isDark: false,),),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: ListView(
