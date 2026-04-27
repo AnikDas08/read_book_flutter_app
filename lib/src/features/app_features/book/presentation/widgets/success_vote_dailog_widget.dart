@@ -24,8 +24,8 @@ class SuccessVoteDialogWidget extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            width: 120.w,
-            height: 120.w,
+            width: 80.w,
+            height: 80.w,
             decoration: const BoxDecoration(
               color: Color(0xFF09D04D),
               shape: BoxShape.circle,
@@ -39,7 +39,7 @@ class SuccessVoteDialogWidget extends StatelessWidget {
           22.height,
           const CommonText(
             text: 'Vote Completed!',
-            fontSize: AppFontSizes.display,
+            fontSize: AppFontSizes.title,
             fontWeight: FontWeight.w700,
             textColor: Color(0xFF111111),
             textAlign: TextAlign.center,
@@ -50,7 +50,7 @@ class SuccessVoteDialogWidget extends StatelessWidget {
             text: TextSpan(
               style: const TextStyle(
                 color: Color(0xFF758195),
-                fontSize: AppFontSizes.heading,
+                fontSize: AppFontSizes.medium,
                 fontWeight: FontWeight.w400,
               ),
               children: [
@@ -72,7 +72,7 @@ class SuccessVoteDialogWidget extends StatelessWidget {
               const Icon(
                 Icons.electric_bolt_rounded,
                 color: Color(0xFFFFC700),
-                size: 44,
+                size: 24,
               ),
               8.width,
               CommonText(
