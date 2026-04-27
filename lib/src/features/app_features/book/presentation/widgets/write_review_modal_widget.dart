@@ -27,7 +27,7 @@ class _WriteReviewModalWidgetState extends State<WriteReviewModalWidget> {
         children: [
           Container(
             width: double.infinity,
-            padding: EdgeInsets.fromLTRB(22.w, 22.h, 22.w, 18.h),
+            padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
               gradient: context.color.ctaGradientBackgroundAccent,
             ),
@@ -42,14 +42,14 @@ class _WriteReviewModalWidgetState extends State<WriteReviewModalWidget> {
                         children: [
                           CommonText(
                             text: 'Write Your Review',
-                            fontSize: AppFontSizes.heading,
-                            fontWeight: FontWeight.w700,
+                            fontSize: AppFontSizes.extraLarge,
+                            fontWeight: FontWeight.w500,
                             textColor: Colors.white,
                           ),
                           SizedBox(height: 12),
                           CommonText(
                             text: 'Shadow of the Violet Moon',
-                            fontSize: AppFontSizes.extraLarge,
+                            fontSize: AppFontSizes.medium,
                             fontWeight: FontWeight.w400,
                             textColor: Color(0xFFE7D6FF),
                           ),
@@ -59,15 +59,15 @@ class _WriteReviewModalWidgetState extends State<WriteReviewModalWidget> {
                     GestureDetector(
                       onTap: () => Navigator.of(context).pop(),
                       child: Container(
-                        width: 54.w,
-                        height: 54.w,
+                        width: 32.w,
+                        height: 32.w,
                         decoration: BoxDecoration(
                           color: Colors.white.withValues(alpha: 0.2),
                           shape: BoxShape.circle,
                         ),
                         child: const Icon(
                           Icons.close_rounded,
-                          size: 28,
+                          size: 20,
                           color: Colors.white,
                         ),
                       ),
@@ -84,7 +84,7 @@ class _WriteReviewModalWidgetState extends State<WriteReviewModalWidget> {
               children: [
                 const CommonText(
                   text: 'Your Rating',
-                  fontSize: AppFontSizes.heading,
+                  fontSize: AppFontSizes.medium,
                   fontWeight: FontWeight.w400,
                   textColor: Color(0xFF758195),
                 ),
@@ -97,7 +97,7 @@ class _WriteReviewModalWidgetState extends State<WriteReviewModalWidget> {
                   ),
                   decoration: BoxDecoration(
                     color: const Color(0xFFF6F7FB),
-                    borderRadius: BorderRadius.circular(22),
+                    borderRadius: BorderRadius.circular(24),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -121,17 +121,17 @@ class _WriteReviewModalWidgetState extends State<WriteReviewModalWidget> {
                 20.height,
                 const CommonText(
                   text: 'Your Review',
-                  fontSize: AppFontSizes.heading,
+                  fontSize: AppFontSizes.medium,
                   fontWeight: FontWeight.w400,
                   textColor: Color(0xFF758195),
                 ),
                 14.height,
                 CommonMultilineTextField(
-                  height: 164.h,
+                  height: 148.h,
                   hintText: AppString.share_your_thoughts_about_this_book,
                   hintStyle: const TextStyle(
                     color: Color(0xFFB1B8C7),
-                    fontSize: AppFontSizes.title,
+                    fontSize: AppFontSizes.medium,
                   ),
                   validationType: ValidationType.validateRequired,
                 ),
@@ -139,7 +139,7 @@ class _WriteReviewModalWidgetState extends State<WriteReviewModalWidget> {
                 GestureDetector(
                   onTap: () {},
                   child: Container(
-                    height: 74.h,
+                    height: 48.h,
                     decoration: BoxDecoration(
                       gradient: const LinearGradient(
                         colors: [Color(0xFF8C86FF), Color(0xFFA98EF7)],
@@ -149,18 +149,18 @@ class _WriteReviewModalWidgetState extends State<WriteReviewModalWidget> {
                       borderRadius: BorderRadius.circular(24),
                     ),
                     alignment: Alignment.center,
-                    child: Row(
+                    child:const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
+                      children:  [
                         Icon(
                           Icons.send_outlined,
                           color: Colors.white,
-                          size: 28,
+                          size: 20,
                         ),
                         SizedBox(width: 12),
                         CommonText(
                           text: 'Submit Review',
-                          fontSize: AppFontSizes.heading,
+                          fontSize: AppFontSizes.extraLarge,
                           fontWeight: FontWeight.w700,
                           textColor: Colors.white,
                         ),
