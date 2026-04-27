@@ -22,7 +22,7 @@ class RankingScreen extends ConsumerWidget {
         hideBack: true,
         disableBack: true,
         titleWidget: _appbarBuilder(context, ref),
-        appbarConfig: AppbarConfig(height: 104),
+        appbarConfig: AppbarConfig(height: 130),
       ),
       body: SmartListLoader(
         itemCount: 30,
@@ -61,9 +61,10 @@ class RankingScreen extends ConsumerWidget {
       padding: const EdgeInsets.symmetric(horizontal: Constants.padding),
       child: Column(
         children: [
+          12.height,
           Row(
             children: [
-              const BackButtonWidget(),
+              const BackButtonWidget(isDark: false,),
               8.width,
               CommonText(
                 text: AppString.Rankings,
