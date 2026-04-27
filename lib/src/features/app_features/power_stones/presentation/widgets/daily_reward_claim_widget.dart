@@ -2,6 +2,7 @@ import 'package:core_kit/core_kit_internal.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_tamplates/config/constance/app_string.dart';
 import 'package:riverpod_tamplates/gen/assets.gen.dart';
+import 'package:riverpod_tamplates/src/constants/app_font_sizes.dart';
 import 'package:riverpod_tamplates/src/features/app_features/power_stones/presentation/widgets/success_reward_dailog_widget.dart';
 
 class DailyBonusBanner extends StatelessWidget {
@@ -22,7 +23,7 @@ class DailyBonusBanner extends StatelessWidget {
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.2),
               borderRadius: BorderRadius.circular(16),
@@ -40,13 +41,17 @@ class DailyBonusBanner extends StatelessWidget {
                   text: AppString.daily_bonus,
                   style: const TextStyle(
                     color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                    fontSize: AppFontSizes.extraLarge,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
                 CommonText(
                   text: AppString.power_stones_5,
-                  style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 14),
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.8),
+                    fontSize: AppFontSizes.medium,
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
               ],
             ),
@@ -55,7 +60,8 @@ class DailyBonusBanner extends StatelessWidget {
             onTap: () {
               showDialog(
                 context: context,
-                builder: (context) => const Dialog(child: SuccessRewardDialogWidget()),
+                builder: (context) =>
+                    const Dialog(child: SuccessRewardDialogWidget()),
               );
             },
             child: Container(
@@ -68,7 +74,7 @@ class DailyBonusBanner extends StatelessWidget {
                 text: AppString.claim,
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 18,
+                  fontSize: AppFontSizes.large,
                   color: Color(0xFFFFA000),
                 ),
               ),

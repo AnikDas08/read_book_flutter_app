@@ -1,222 +1,294 @@
-import 'package:core_kit/core_kit.dart';
+import 'package:core_kit/core_kit_internal.dart';
 import 'package:flutter/material.dart';
-import 'package:riverpod_tamplates/config/constance/app_string.dart';
-import 'package:riverpod_tamplates/config/theme/app_theme_data.dart';
+import 'package:riverpod_tamplates/src/constants/app_font_sizes.dart';
 import 'package:riverpod_tamplates/src/features/app_features/read/data/model/comment_model.dart';
 
 class CommentSection extends StatelessWidget {
+  CommentSection({super.key, required this.scrollController});
+
   final ScrollController scrollController;
+
   final List<Comment> comments = [
     Comment(
-      author: "Sarah Chen",
+      author: 'Sarah Chen',
       content:
-          "OMG! That plot twist at the end! I didn't see it coming at all! The author is absolutely brilliant! 😱✨",
-      timeAgo: "2 hours ago",
+          'OMG! That plot twist at the end! I did not see it coming at all! The author is absolutely brilliant!',
+      timeAgo: '2 hours ago',
       likes: 234,
     ),
     Comment(
-      author: "Mike Johnson",
-      content: "I know right! The foreshadowing was there all along!",
-      timeAgo: "2 hours ago",
+      author: 'Mike Johnson',
+      content: 'I know right! The foreshadowing was there all along!',
+      timeAgo: '2 hours ago',
       likes: 234,
       isReply: true,
     ),
     Comment(
-      author: "Sarah Chen",
+      author: 'Sarah Chen',
       content:
-          "OMG! That plot twist at the end! I didn't see it coming at all! The author is absolutely brilliant! 😱✨",
-      timeAgo: "2 hours ago",
+          'OMG! That plot twist at the end! I did not see it coming at all! The author is absolutely brilliant!',
+      timeAgo: '2 hours ago',
       likes: 234,
     ),
   ];
 
-  CommentSection({super.key, required this.scrollController});
-
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+      padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 16.h),
       decoration: const BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
       ),
       child: Column(
         children: [
-          Center(
-            child: Container(
-              width: 45,
-              height: 5,
-              decoration: BoxDecoration(
-                color: Colors.grey[300],
-                borderRadius: BorderRadius.circular(10),
-              ),
+          Container(
+            width: 48.w,
+            height: 4.h,
+            decoration: BoxDecoration(
+              color: const Color(0xFFD4D9E2),
+              borderRadius: BorderRadius.circular(10),
             ),
           ),
-          const SizedBox(height: 24),
+          22.height,
           Row(
             children: [
-              Icon(Icons.comment_outlined, color: context.color.subtext),
-              CommonText(text: AppString.Comments, fontSize: 16, fontWeight: FontWeight.bold),
+              const Icon(
+                Icons.chat_bubble_outline_rounded,
+                size: 20,
+                color: Color(0xFF111111),
+              ),
+              10.width,
+              const CommonText(
+                text: 'Comments',
+                fontSize: AppFontSizes.extraLarge,
+                fontWeight: FontWeight.w700,
+                textColor: Color(0xFF111111),
+              ),
             ],
           ),
-          CommonText(
-            text: "3 ${AppString.discussions}",
-            left: 20,
-            fontSize: 12,
-            textColor: context.color.navbarIconsUnselected,
+          4.height,
+          const CommonText(
+            text: '3 discussions',
+            left: 40,
+            fontSize: AppFontSizes.medium,
+            fontWeight: FontWeight.w400,
+            textColor: Color(0xFF758195),
           ).start,
-          10.height,
+          16.height,
           Expanded(
             child: ListView.builder(
               controller: scrollController,
               itemCount: comments.length,
-              itemBuilder: (context, index) => CommentCard(comment: comments[index]),
+              itemBuilder: (context, index) =>
+                  _CommentCard(comment: comments[index]),
             ),
           ),
-          _buildCommentInput(),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCommentInput() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border(top: BorderSide(color: Colors.grey.shade200)),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
+          4.height,
+          const CommonText(
+            text: 'Load More Comments',
+            fontSize: AppFontSizes.medium,
+            fontWeight: FontWeight.w400,
+            textColor: Color(0xFF4D8DFF),
+          ),
+          16.height,
           TextField(
             decoration: InputDecoration(
-              hintText: "Share your thoughts about this chapter...",
-              hintStyle: const TextStyle(fontSize: 14, color: Colors.grey),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              hintText: 'Share your thoughts about this chapter...',
+              hintStyle: const TextStyle(
+                fontSize: AppFontSizes.small,
+                color: Color(0xFFB1B8C7),
+              ),
               suffixIcon: Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: CircleAvatar(
-                  backgroundColor: Colors.blueAccent.shade100,
-                  child: const Icon(Icons.send, size: 18, color: Colors.white),
+                padding: const EdgeInsets.all(10),
+                child: Container(
+                  width: 30.w,
+                  height: 30.w,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFA98EF7),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Icon(
+                    Icons.send_outlined,
+                    color: Colors.white,
+                    size: 14,
+                  ),
                 ),
               ),
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(30),
-                borderSide: const BorderSide(color: Colors.deepPurpleAccent),
+                borderRadius: BorderRadius.circular(16),
+                borderSide: const BorderSide(
+                  color: Color(0xFF352CFF),
+                  width: 1.6,
+                ),
               ),
               enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(30),
-                borderSide: BorderSide(color: Colors.deepPurpleAccent.withOpacity(0.5)),
+                borderRadius: BorderRadius.circular(28),
+                borderSide: const BorderSide(
+                  color: Color(0xFF352CFF),
+                  width: 1.6,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(28),
+                borderSide: const BorderSide(
+                  color: Color(0xFF352CFF),
+                  width: 1.8,
+                ),
               ),
             ),
           ),
-          const SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  const Icon(Icons.access_time, size: 14, color: Colors.grey),
-                  const SizedBox(width: 4),
-                  Text(
-                    AppString.comments_require_admin_approval,
-                    style: const TextStyle(color: Colors.grey, fontSize: 11),
-                  ),
-                ],
+          10.height,
+       const   Row(
+            children: const [
+              Icon(Icons.access_time, size: 12, color: Color(0xFF758195)),
+              SizedBox(width: 8),
+              Expanded(
+                child: CommonText(
+                  text: 'Comments require admin approval',
+                  fontSize: AppFontSizes.small,
+                  fontWeight: FontWeight.w400,
+                  textColor: Color(0xFF758195),
+                ),
               ),
-              const Text("0/500", style: TextStyle(color: Colors.grey, fontSize: 11)),
+              CommonText(
+                text: '0/500',
+                fontSize: AppFontSizes.small,
+                fontWeight: FontWeight.w400,
+                textColor: Color(0xFF8B8B8B),
+              ),
             ],
           ),
-          10.height,
         ],
       ),
     );
   }
 }
 
-class CommentCard extends StatelessWidget {
-  final Comment comment;
+class _CommentCard extends StatelessWidget {
+  const _CommentCard({required this.comment});
 
-  const CommentCard({super.key, required this.comment});
+  final Comment comment;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(left: comment.isReply ? 48.0 : 0.0, bottom: 16.0),
+      padding: EdgeInsets.only(left: comment.isReply ? 28.w : 0, bottom: 16.h),
       child: Container(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(16.w),
         decoration: BoxDecoration(
-          color: comment.isReply ? const Color(0xFFF0F7FF) : Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Colors.grey.shade100),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.03),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
+          color: comment.isReply ? const Color(0xFFF0F6FF) : Colors.white,
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(
+            color: comment.isReply
+                ? const Color(0xFFD9E8FF)
+                : const Color(0xFFEEEEEE),
+          ),
         ),
-        child: Column(
+        child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                CircleAvatar(
-                  backgroundColor: Colors.grey.shade300,
-                  child: const Icon(Icons.person, color: Colors.white),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        comment.author,
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                      ),
-                      Text(
-                        comment.timeAgo,
-                        style: const TextStyle(color: Colors.grey, fontSize: 12),
-                      ),
-                    ],
+            Container(
+              width: 48.w,
+              height: 48.w,
+              decoration: BoxDecoration(
+                color: const Color(0xFFA6B0C0),
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.16),
+                    blurRadius: 18,
+                    offset: const Offset(0, 10),
                   ),
-                ),
-                const Icon(Icons.access_time, size: 14, color: Colors.grey),
-                const SizedBox(width: 4),
-                Text(
-                  '${comment.timeAgo.split(' ')[0]}h',
-                  style: const TextStyle(color: Colors.grey, fontSize: 12),
-                ),
-              ],
+                ],
+              ),
+              child: const Icon(
+                Icons.person_outline_rounded,
+                color: Colors.white,
+                size: 24,
+              ),
             ),
-            const SizedBox(height: 12),
-            Text(comment.content, style: const TextStyle(color: Colors.black87, height: 1.4)),
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade100,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Row(
+            14.width,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: .center,
                     children: [
-                      const Icon(Icons.favorite_border, size: 16, color: Colors.grey),
-                      const SizedBox(width: 6),
-                      Text(
-                        "${comment.likes}",
-                        style: const TextStyle(color: Colors.grey, fontSize: 13),
+                      Expanded(
+                        child: CommonText(
+                          text: comment.author,
+                          fontSize: AppFontSizes.large,
+                          fontWeight: FontWeight.w700,
+                          textColor: const Color(0xFF111111),
+                        ),
+                      ),
+                      const Icon(
+                        Icons.access_time,
+                        size: 12,
+                        color: Color(0xFF98A2B3),
+                      ),
+                      4.width,
+                      CommonText(
+                        text: comment.timeAgo,
+                        fontSize: AppFontSizes.small,
+                        fontWeight: FontWeight.w400,
+                        textColor: const Color(0xFF758195),
                       ),
                     ],
                   ),
-                ),
-                TextButton(
-                  onPressed: () {},
-                  child: const Text("Reply", style: TextStyle(color: Colors.blue)),
-                ),
-              ],
+                  10.height,
+                  CommonText(
+                    text: comment.content,
+                    fontSize: AppFontSizes.medium,
+                    fontWeight: FontWeight.w400,
+                    isDescription: true,
+                    height: 1.5,
+                    textAlign: TextAlign.left,
+                    textColor: const Color(0xFF333333),
+                  ),
+                  14.height,
+                  Row(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16.w,
+                          vertical: 10.h,
+                        ),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF6F7FB),
+                          borderRadius: BorderRadius.circular(216),
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.favorite_border_rounded,
+                              size: 14,
+                              color: Color(0xFFA7B0C0),
+                            ),
+                            8.width,
+                            CommonText(
+                              text: '${comment.likes}',
+                              fontSize: AppFontSizes.medium,
+                              fontWeight: FontWeight.w400,
+                              textColor: const Color(0xFF758195),
+                            ),
+                          ],
+                        ),
+                      ),
+                      16.width,
+                      const CommonText(
+                        text: 'Reply',
+                        fontSize: AppFontSizes.medium,
+                        fontWeight: FontWeight.w400,
+                        textColor: Color(0xFF4D8DFF),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ],
         ),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:riverpod_tamplates/config/constance/constants.dart';
 import 'package:riverpod_tamplates/config/corekit/back_button.dart';
 import 'package:riverpod_tamplates/src/common/share_icon_button.dart';
+import 'package:riverpod_tamplates/src/constants/app_font_sizes.dart';
 
 class BookDetailsAppbarWidget extends StatelessWidget {
   const BookDetailsAppbarWidget({super.key});
@@ -10,18 +11,24 @@ class BookDetailsAppbarWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.only( left:  16.0, right: 16),
+      padding: const EdgeInsets.only(left: 16.0, right: 16),
 
       child: Column(
         children: [
           const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              BackButtonWidget(),
+
               CommonText(
-                text: 'Shadow of the Violet Moon',
+                textAlign: .center,
+                overflow: .ellipsis,
+                text: 'Shadow of the Violet',
                 autoResize: false,
-                style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: AppFontSizes.heading,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
               ShareIconButton(),
             ],
@@ -40,7 +47,7 @@ class BookDetailsAppbarWidget extends StatelessWidget {
                 enableAspectRatio: true,
                 borderColor: Colors.white,
               ),
-               16.width,
+              16.width,
 
               // 2. Book Info Details
               Expanded(
@@ -49,7 +56,10 @@ class BookDetailsAppbarWidget extends StatelessWidget {
                   children: [
                     Text(
                       '• Elena Nightshade',
-                      style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 14.sp),
+                      style: TextStyle(
+                        color: Colors.white.withOpacity(0.8),
+                        fontSize: 14.sp,
+                      ),
                     ),
                     6.height,
 
@@ -57,15 +67,23 @@ class BookDetailsAppbarWidget extends StatelessWidget {
                       scrollDirection: Axis.horizontal,
                       child: Row(
                         children: [
-                          _buildStatChip(Icons.star, '4.8', const Color(0xFF3B1E99)),
-                           8.width,
+                          _buildStatChip(
+                            Icons.star,
+                            '4.8',
+                            const Color(0xFF3B1E99),
+                          ),
+                          8.width,
                           _buildStatChip(
                             Icons.people_outline,
                             '1.2M reviews',
                             const Color(0xFF3B1E99),
                           ),
                           8.width,
-                          _buildStatChip(null, 'Age Demand: 18+', const Color(0xFF3B1E99)),
+                          _buildStatChip(
+                            null,
+                            'Age Demand: 18+',
+                            const Color(0xFF3B1E99),
+                          ),
                         ],
                       ),
                     ),
@@ -94,15 +112,25 @@ class BookDetailsAppbarWidget extends StatelessWidget {
   // Helper for the dark stat chips
   Widget _buildStatChip(IconData? icon, String label, Color bgColor) {
     return Container(
-      padding:   EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-      decoration: BoxDecoration(color: bgColor, borderRadius: BorderRadius.circular(20.r)),
+      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(20.r),
+      ),
       child: Row(
         children: [
           if (icon != null) ...[
-            Icon(icon, color: icon == Icons.star ? Colors.amber : Colors.white, size: 16.w),
-             4.width,
+            Icon(
+              icon,
+              color: icon == Icons.star ? Colors.amber : Colors.white,
+              size: 16.w,
+            ),
+            4.width,
           ],
-          Text(label, style:   TextStyle(color: Colors.white, fontSize: 12.sp)),
+          Text(
+            label,
+            style: TextStyle(color: Colors.white, fontSize: 12.sp),
+          ),
         ],
       ),
     );
@@ -111,14 +139,18 @@ class BookDetailsAppbarWidget extends StatelessWidget {
   // Helper for the light genre tags
   Widget _buildGenreTag(String label) {
     return Container(
-      padding:   EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.9),
         borderRadius: BorderRadius.circular(20.r),
       ),
       child: Text(
         label,
-        style:   TextStyle(color: Colors.deepPurple, fontSize: 12.sp, fontWeight: FontWeight.w500),
+        style: TextStyle(
+          color: Colors.deepPurple,
+          fontSize: 12.sp,
+          fontWeight: FontWeight.w500,
+        ),
       ),
     );
   }

@@ -27,21 +27,13 @@ class BookWidget extends StatelessWidget {
           return Container(
             width: maxWidth,
             height: maxHeight,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(24),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
-                ),
-              ],
+            decoration: const BoxDecoration(
+              color: Colors.transparent,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Image Section - Now Expanded to take available vertical space
+                // Image Section
                 Expanded(
                   child: Stack(
                     children: [
@@ -49,72 +41,53 @@ class BookWidget extends StatelessWidget {
                         width: double.infinity,
                         height: double.infinity,
                         child: ClipRRect(
-                          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+                          borderRadius: BorderRadius.all(Radius.circular(12)),
                           child: CommonImage(src: Constants.sampleImage),
                         ),
                       ),
                       if (isNew || isTrending)
-                        Positioned(top: 12, right: 12, child: _buildNewBadge(context)),
+                        Positioned(top: 8, left: 8, child: _buildNewBadge(context)),
                     ],
                   ),
                 ),
 
-                // Content Section - Height is determined by its content
+                // Content Section
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.symmetric(vertical: 4),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const CommonText(
-                        text: 'Echoes of Tomorrow',
+                        text: 'Shadow of the Moon',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black87,
-                        ),
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        textColor: Color(0xFF333333),
                       ),
                       CommonText(
-                        text: 'Dr. Sarah Chen',
-                        style: TextStyle(fontSize: 12, color: Colors.blueGrey[400]),
+                        text: 'M. M. KAYE',
+                        fontSize: 10,
+                        textColor: context.color.subtext,
                       ),
-                      6.height,
+                      4.height,
                       Row(
                         children: [
-                          const Icon(Icons.star, color: Colors.amber, size: 20),
+                          const Icon(Icons.star, color: Colors.amber, size: 14),
+                          const Icon(Icons.star, color: Colors.amber, size: 14),
+                          const Icon(Icons.star, color: Colors.amber, size: 14),
+                          const Icon(Icons.star, color: Colors.amber, size: 14),
+                          const Icon(Icons.star_half, color: Colors.amber, size: 14),
                           const SizedBox(width: 4),
                           const Text(
-                            '4.8',
-                            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: RichText(
-                              text: TextSpan(
-                                text: '12,543 ',
-                                style: TextStyle(color: context.color.bodyText, fontSize: 14),
-                                children: [
-                                  TextSpan(
-                                    text: 'reviews',
-                                    style: TextStyle(color: context.color.subtext, fontSize: 12),
-                                  ),
-                                ],
-                              ),
+                            '4.0 / 5',
+                            style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w600,
+                              color: Color(0xFF6B7280),
                             ),
                           ),
-                        ],
-                      ),
-                      8.height,
-
-                      // Tags
-                      Wrap(
-                        spacing: 2,
-                        runSpacing: 2,
-                        children: [
-                          _buildTag('Sci-Fi', maxWidth: tagMaxWidth),
-                          _buildTag('Adventure', maxWidth: tagMaxWidth),
                         ],
                       ),
                     ],
@@ -130,7 +103,7 @@ class BookWidget extends StatelessWidget {
 
   Widget _buildNewBadge(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
         color: isNew ? const Color(0xFFFFD700) : null,
         gradient: isTrending ? context.color.ctaGradientBackgroundAccent : null,
@@ -141,7 +114,7 @@ class BookWidget extends StatelessWidget {
         children: [
           Icon(
             isNew ? Icons.auto_awesome : Icons.trending_up_outlined,
-            size: 14,
+            size: 10,
             color: isNew ? const Color(0xFF5E35B1) : Colors.white,
           ),
           const SizedBox(width: 4),
@@ -150,6 +123,7 @@ class BookWidget extends StatelessWidget {
             style: TextStyle(
               color: isNew ? const Color(0xFF5E35B1) : Colors.white,
               fontWeight: FontWeight.bold,
+              fontSize: 10,
             ),
           ),
         ],

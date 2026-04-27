@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:core_kit/core_kit_internal.dart';
+import 'package:core_kit/list_loader/smart_tab_list_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_tamplates/config/constance/app_string.dart';
@@ -43,19 +44,19 @@ class ExploreResultWidget extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        10.height,
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.w),
-          child: CommonText(
-            text: AppString.popular_tags,
-            fontSize: AppFontSizes.extraLarge,
-            fontWeight: FontWeight.w700,
-            textColor: context.color.headingBoldText,
+        16.height,
+
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.w),
+            child: CommonText(
+              text: AppString.popular_tags,
+              fontSize: AppFontSizes.extraLarge,
+              fontWeight: FontWeight.w700,
+              textColor: context.color.headingBoldText,
+            ),
           ),
-        ),
-        12.height,
         const _TagRow(tags: _tags),
-        22.height,
+        10.height,
         Expanded(
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -139,7 +140,8 @@ class _GenreRail extends ConsumerWidget {
     return SizedBox(
       width: 85.w,
       child: ListView.builder(
-        padding: const EdgeInsets.symmetric(horizontal: 5),
+
+        padding: const EdgeInsets.only(left: 16),
         itemCount: genres.length,
         itemBuilder: (context, index) {
           final genre = genres[index];
@@ -167,7 +169,7 @@ class _GenreRail extends ConsumerWidget {
               ),
               child: CommonText(
                 text: genre.label,
-                fontSize: AppFontSizes.small,
+                fontSize: AppFontSizes.small.sp,
                 fontWeight: .w400,
                 textColor: isSelected
                     ? context.color.buttonTextWhite
@@ -190,11 +192,15 @@ class _BookResultsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-      padding: EdgeInsets.only(right: 6.w),
-      itemCount: itemCount,
-      separatorBuilder: (_, _) => 16.height,
-      itemBuilder: (context, index) {
+    return SmartListLoader(
+      padding: const EdgeInsets.only(right: 16,left: 4),
+      itemCount: 50,
+      emptyWidget: const NoBooksFoundWidget(),
+      onRefresh: () {},
+      onLoadMore: (page) {},
+
+      limit: 10,
+      itemBuilder: (_, index) {
         return _ExploreBookCard(isCompleted: index.isEven);
       },
     );
@@ -216,6 +222,7 @@ class _ExploreBookCard extends StatelessWidget {
       onTap: () => context.router.navigate(const BookDetailsRoute()),
       child: Container(
         height: 100,
+        margin: .only(bottom: 6),
         padding: const EdgeInsets.all(5),
         decoration: BoxDecoration(
           color: context.color.bgColor,
@@ -242,73 +249,68 @@ class _ExploreBookCard extends StatelessWidget {
             ),
             6.width,
             Expanded(
-              child: Stack(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  SizedBox(
+                    width: 135.w,
+                    child: const CommonText(
+                      text: 'Echoes of Tomorrow',
+                      fontSize: AppFontSizes.medium,
+                      fontWeight: .bold,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      textColor: Color(0xFF111111),
+                    ),
+                  ),
+                  const CommonText(
+                    text: 'Dr. Sarah Chen',
+                    fontSize: AppFontSizes.small,
+                    maxLines: 1,
+                    fontWeight: FontWeight.w400,
+                    overflow: TextOverflow.ellipsis,
+                    textColor: Colors.black,
+                  ),
+                  const CommonText(
+                    text:
+                        'She was his assistant. He was his teacher. She was his mentor. He was his friend.',
+                    fontSize: AppFontSizes.small,
+                    maxLines: 2,
+                    textAlign: .left,
+                    fontWeight: FontWeight.w400,
+                    overflow: TextOverflow.ellipsis,
+                    textColor: Color(0xFF6B7280),
+                  ),
+                  const Spacer(),
+                  Row(
                     children: [
-                      SizedBox(
-                        width: 135.w,
-                        child: const CommonText(
-                          text: 'Echoes of Tomorrow',
-                          fontSize: AppFontSizes.medium,
-                          fontWeight: .w400,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          textColor: Color(0xFF111111),
-                        ),
+                      ...List.generate(4, (_) {
+                        return const Icon(
+                          Icons.star,
+                          color: Color(0xFFFFCC00),
+                          size: 12,
+                        );
+                      }),
+                      const Icon(
+                        Icons.star,
+                        color: Color(0xFFC8C8C8),
+                        size: 12,
                       ),
+                      6.width,
                       const CommonText(
-                        text: 'Dr. Sarah Chen',
+                        text: '4 / 5',
                         fontSize: AppFontSizes.small,
-                        maxLines: 1,
                         fontWeight: FontWeight.w400,
-                        overflow: TextOverflow.ellipsis,
-                        textColor: Color(0xFF6B7280),
-                      ),
-                      const CommonText(
-                        text: 'She was his assistant. He was her..',
-                        fontSize: AppFontSizes.small,
-                        maxLines: 1,
-                        fontWeight: FontWeight.w400,
-                        overflow: TextOverflow.ellipsis,
-                        textColor: Color(0xFF2C2C2C),
+                        textColor: Color(0xFF111111),
                       ),
                       const Spacer(),
-                      Row(
-                        children: [
-                          ...List.generate(4, (_) {
-                            return const Icon(
-                              Icons.star,
-                              color: Color(0xFFFFCC00),
-                              size: 12,
-                            );
-                          }),
-                          const Icon(
-                            Icons.star,
-                            color: Color(0xFFC8C8C8),
-                            size: 12,
-                          ),
-                          6.width,
-                          const CommonText(
-                            text: '4.0 / 5',
-                            fontSize: AppFontSizes.small,
-                            fontWeight: FontWeight.w400,
-                            textColor: Color(0xFF111111),
-                          ),
-                        ],
+                      CommonText(
+                        text: isCompleted ? 'Completed' : 'Ongoing',
+                        fontSize: AppFontSizes.caption,
+                        fontWeight: FontWeight.bold,
+                        textColor: statusColor,
                       ),
                     ],
-                  ),
-                  Positioned(
-                    right: 0,
-                    top: 4,
-                    child: CommonText(
-                      text: isCompleted ? 'Completed' : 'Ongoing',
-                      fontSize: AppFontSizes.caption,
-                      fontWeight: FontWeight.w500,
-                      textColor: statusColor,
-                    ),
                   ),
                 ],
               ),

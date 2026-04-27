@@ -55,7 +55,7 @@ class ActionBarWidget extends ConsumerWidget {
                       maxChildSize: 0.95,
                       expand: false,
                       builder: (context, scrollController) {
-                        return BookmarkModalWidget(scrollController: scrollController);
+                        return BookmarkModalWidget();
                       },
                     );
                   },

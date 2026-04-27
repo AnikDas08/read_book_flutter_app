@@ -2,8 +2,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 class BackButtonWidget extends StatelessWidget {
-  const BackButtonWidget({super.key, this.isDark = true});
-  final bool isDark;
+  const BackButtonWidget({super.key, this.isDark});
+  final bool? isDark;
 
   @override
   Widget build(BuildContext context) {
@@ -16,10 +16,10 @@ class BackButtonWidget extends StatelessWidget {
         width: 40,
         padding: const EdgeInsets.only(left: 10),
         decoration: BoxDecoration(
-          color: isDark ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(40),
+          color: isDark! ?  Colors.black.withValues(alpha: 0.2) : Colors.white.withValues(alpha: 0.2),
+          shape: .circle
         ),
-        child:   Icon(Icons.arrow_back_ios, color: isDark? Colors.white : Colors.black87),
+        child:   Icon(Icons.arrow_back_ios, color: isDark!? Colors.black : Colors.white,size: 24,),
       ),
     );
   }

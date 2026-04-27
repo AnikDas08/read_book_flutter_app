@@ -11,6 +11,22 @@
 part of 'app_router.dart';
 
 /// generated route for
+/// [AboutUsScreen]
+class AboutUsRoute extends PageRouteInfo<void> {
+  const AboutUsRoute({List<PageRouteInfo>? children})
+    : super(AboutUsRoute.name, initialChildren: children);
+
+  static const String name = 'AboutUsRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const AboutUsScreen();
+    },
+  );
+}
+
+/// generated route for
 /// [BookDetailsScreen]
 class BookDetailsRoute extends PageRouteInfo<void> {
   const BookDetailsRoute({List<PageRouteInfo>? children})
@@ -181,6 +197,22 @@ class HomeRoute extends PageRouteInfo<void> {
     name,
     builder: (data) {
       return const HomeScreen();
+    },
+  );
+}
+
+/// generated route for
+/// [LanguageScreen]
+class LanguageRoute extends PageRouteInfo<void> {
+  const LanguageRoute({List<PageRouteInfo>? children})
+    : super(LanguageRoute.name, initialChildren: children);
+
+  static const String name = 'LanguageRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const LanguageScreen();
     },
   );
 }
@@ -362,6 +394,22 @@ class ReadRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [ReviewScreen]
+class ReviewRoute extends PageRouteInfo<void> {
+  const ReviewRoute({List<PageRouteInfo>? children})
+    : super(ReviewRoute.name, initialChildren: children);
+
+  static const String name = 'ReviewRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const ReviewScreen();
+    },
+  );
+}
+
+/// generated route for
 /// [ShowMoreBooksScreen]
 class ShowMoreBooksRoute extends PageRouteInfo<ShowMoreBooksRouteArgs> {
   ShowMoreBooksRoute({
@@ -504,6 +552,22 @@ class TermsRoute extends PageRouteInfo<void> {
     name,
     builder: (data) {
       return const TermsScreen();
+    },
+  );
+}
+
+/// generated route for
+/// [UsedPowerStonesHistoryScreen]
+class UsedPowerStonesHistoryRoute extends PageRouteInfo<void> {
+  const UsedPowerStonesHistoryRoute({List<PageRouteInfo>? children})
+    : super(UsedPowerStonesHistoryRoute.name, initialChildren: children);
+
+  static const String name = 'UsedPowerStonesHistoryRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const UsedPowerStonesHistoryScreen();
     },
   );
 }

@@ -1,153 +1,206 @@
+import 'package:core_kit/core_kit_internal.dart';
 import 'package:flutter/material.dart';
-import 'package:riverpod_tamplates/config/constance/app_string.dart';
+import 'package:riverpod_tamplates/src/constants/app_font_sizes.dart';
 
 class BookmarkModalWidget extends StatefulWidget {
-  const BookmarkModalWidget({super.key, required this.scrollController});
-  final ScrollController scrollController;
+  const BookmarkModalWidget({super.key,});
 
   @override
   State<BookmarkModalWidget> createState() => _BookmarkModalWidgetState();
 }
 
 class _BookmarkModalWidgetState extends State<BookmarkModalWidget> {
-  int selectedOption = 0;
+  int selectedOption = 1;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+      padding: EdgeInsets.fromLTRB(16.w, 5.h, 16.w, 18.h),
       decoration: const BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
       ),
       child: ListView(
-        controller: widget.scrollController,
-        children: [ 
+        physics:const  ClampingScrollPhysics(),
+        children: [
           Center(
             child: Container(
-              width: 40,
-              height: 4,
+              width: 48.w,
+              height: 4.h,
               decoration: BoxDecoration(
-                color: Colors.grey[300],
-                borderRadius: BorderRadius.circular(2),
+                color: const Color(0xFFD4D9E2),
+                borderRadius: BorderRadius.circular(10),
               ),
             ),
           ),
-          const SizedBox(height: 24),
-
-          // 2. Header
+          24.height,
           Row(
             children: [
-              const Icon(Icons.bookmark_border_rounded, size: 24),
-              const SizedBox(width: 8),
-              Text(
-                AppString.bookmark,
-                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              const Icon(
+                Icons.bookmark_add_outlined,
+                size: 20,
+                color: Color(0xFF111111),
+              ),
+              10.width,
+              const CommonText(
+                text: 'Bookmark',
+                fontSize: AppFontSizes.extraLarge,
+                fontWeight: FontWeight.w500,
+                textColor: Color(0xFF111111),
               ),
             ],
           ),
-          const Text(
-            'Chapter 2: Awakening Powers',
-            style: TextStyle(color: Colors.grey, fontSize: 14),
+          10.height,
+          const CommonText(
+            text: 'Chapter 2: Awakening Powers',
+            fontSize: AppFontSizes.medium,
+            fontWeight: FontWeight.w400,
+            textColor: Color(0xFF444444),
           ),
-          const SizedBox(height: 24),
-
-          // 3. Selection List
-          _buildBookmarkOption(
-            title: AppString.Favorites,
-            subtitle: '12 ${AppString.chapters}',
-            icon: Icons.star_rounded,
-            iconBg: Colors.orange,
-            index: 0,
+          22.height,
+          _BookmarkOption(
+            emoji: '⭐',
+            title: 'Favorites',
+            subtitle: '12 chapters',
+            iconBackground: const LinearGradient(
+              colors: [Color(0xFFFFC400), Color(0xFFF59E0B)],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+            isSelected: selectedOption == 0,
+            onTap: () => setState(() => selectedOption = 0),
           ),
-          const SizedBox(height: 12),
-          _buildBookmarkOption(
-            title: AppString.Want_to_Read,
-            subtitle: '8 ${AppString.chapters}',
-            icon: Icons.library_books_rounded,
-            iconBg: Colors.blue,
-            index: 1,
+          14.height,
+          _BookmarkOption(
+            emoji: '📚',
+            title: 'Want to Read',
+            subtitle: '8 chapters',
+            iconBackground: const LinearGradient(
+              colors: [Color(0xFF3B82F6), Color(0xFF4C35FF)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            isSelected: selectedOption == 1,
+            onTap: () => setState(() => selectedOption = 1),
           ),
-          const SizedBox(height: 32),
-
-          // 4. Done Button
-          SizedBox(
-            width: double.infinity,
-            height: 56,
-            child: ElevatedButton(
-              onPressed: () => Navigator.pop(context),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF6236FF),
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
-                elevation: 0,
+          24.height,
+          GestureDetector(
+            onTap: () => Navigator.of(context).pop(),
+            child: Container(
+              height: 48.h,
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [Color(0xFF2B26FF), Color(0xFF7A3FFF)],
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                ),
+                borderRadius: BorderRadius.circular(28),
               ),
-              child: Text(
-                AppString.Done,
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              alignment: Alignment.center,
+              child: const CommonText(
+                text: 'Done',
+                fontSize: AppFontSizes.large,
+                fontWeight: FontWeight.w700,
+                textColor: Colors.white,
               ),
             ),
           ),
-          const SizedBox(height: 16), // Bottom safe area
         ],
       ),
     );
   }
+}
 
-  Widget _buildBookmarkOption({
-    required String title,
-    required String subtitle,
-    required IconData icon,
-    required Color iconBg,
-    required int index,
-  }) {
-    final isSelected = selectedOption == index;
+class _BookmarkOption extends StatelessWidget {
+  const _BookmarkOption({
+    required this.emoji,
+    required this.title,
+    required this.subtitle,
+    required this.iconBackground,
+    required this.isSelected,
+    required this.onTap,
+  });
 
+  final String emoji;
+  final String title;
+  final String subtitle;
+  final Gradient iconBackground;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => setState(() => selectedOption = index),
+      onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 14.h),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-            color: isSelected ? const Color(0xFF6236FF) : Colors.grey.shade200,
-            width: 1.5,
-          ),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(color: const Color(0xFFE9ECF2), width: 1.5),
         ),
         child: Row(
           children: [
-            // Styled Icon Box
             Container(
-              padding: const EdgeInsets.all(10),
+              width: 48.w,
+              height: 48.w,
               decoration: BoxDecoration(
-                color: iconBg.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(12),
+                gradient: iconBackground,
+                borderRadius: BorderRadius.circular(14),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.15),
+                    blurRadius: 20,
+                    offset: const Offset(0, 10),
+                  ),
+                ],
               ),
-              child: Icon(icon, color: iconBg, size: 24),
+              alignment: Alignment.center,
+              child: Text(emoji, style: const TextStyle(fontSize: 24)),
             ),
-            const SizedBox(width: 16),
-            // Text Content
+            16.width,
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                  Text(subtitle, style: const TextStyle(color: Colors.grey, fontSize: 13)),
+                  CommonText(
+                    text: title,
+                    fontSize: AppFontSizes.large,
+                    fontWeight: FontWeight.w400,
+                    textColor: const Color(0xFF111111),
+                  ),
+                  4.height,
+                  CommonText(
+                    text: subtitle,
+                    fontSize: AppFontSizes.small,
+                    fontWeight: FontWeight.w400,
+                    textColor: const Color(0xFF758195),
+                  ),
                 ],
               ),
             ),
-            // Checkbox indicator
             Container(
-              width: 24,
-              height: 24,
+              width: 28.w,
+              height: 28.w,
               decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: isSelected ? const Color(0xFF6236FF) : Colors.transparent,
+                color: isSelected
+                    ? const Color(0xFF5B34FF)
+                    : Colors.transparent,
+                borderRadius: BorderRadius.circular(10),
                 border: Border.all(
-                  color: isSelected ? const Color(0xFF6236FF) : Colors.grey.shade300,
+                  color: isSelected
+                      ? const Color(0xFF5B34FF)
+                      : const Color(0xFFD0D5DD),
+                  width: 1.6,
                 ),
               ),
-              child: isSelected ? const Icon(Icons.check, color: Colors.white, size: 16) : null,
+              child: isSelected
+                  ? const Icon(
+                      Icons.check_rounded,
+                      color: Colors.white,
+                      size: 16,
+                    )
+                  : null,
             ),
           ],
         ),

@@ -1,85 +1,157 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:core_kit/core_kit.dart';
+import 'package:core_kit/core_kit_internal.dart';
 import 'package:flutter/material.dart';
+import 'package:riverpod_tamplates/config/corekit/back_button.dart';
+import 'package:riverpod_tamplates/config/theme/app_theme_data.dart';
+import 'package:riverpod_tamplates/src/constants/app_font_sizes.dart';
 
 @RoutePage()
-class FaqScreen extends StatelessWidget {
+class FaqScreen extends StatefulWidget {
   const FaqScreen({super.key});
+
+  static const _question = 'How Share Charge works?';
+  static const _answer =
+      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting,";
+
+  @override
+  State<FaqScreen> createState() => _FaqScreenState();
+}
+
+class _FaqScreenState extends State<FaqScreen> {
+  final _expandedIndexController = ValueNotifier<int?>(-1);
+
+  @override
+  void dispose() {
+    _expandedIndexController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F6F8),
-      appBar: const CommonAppBar(title: 'FAQ\'s'),
-      body: ListView(
-        padding: const EdgeInsets.all(20.0),
-        children: [
-          _buildFAQItem(
-            "How do I change my password?",
-            "Navigate to the Account section on the Settings screen and tap 'Change Password'. You will be prompted to enter your current password and then set a new one.",
+      appBar: CommonAppBar(
+        leading: const BackButtonWidget(isDark: true),
+
+        appbarConfig: AppbarConfig(
+          leadingAlignment: .bottomStart,
+          leadingPadding: .zero,
+          decoration: () => const BoxDecoration(color: Colors.white),
+        ),
+      ),
+      backgroundColor: context.color.bgColor,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              12.height,
+              CommonText(
+                text: "FAQ's",
+                fontSize: AppFontSizes.extraLarge,
+                fontWeight: FontWeight.w500,
+                textColor: context.color.headingBoldText,
+              ),
+              24.height,
+              ValueListenableBuilder<int?>(
+                valueListenable: _expandedIndexController,
+                builder: (context, expandedIndex, _) {
+                  return Column(
+                    children: List.generate(
+                      7,
+                      (index) => Padding(
+                        padding: const EdgeInsets.only(bottom: 16),
+                        child: _FaqTile(
+                          isOpen: expandedIndex == index,
+                          onToggle: () {
+                            _expandedIndexController.value =
+                                expandedIndex == index ? -1 : index;
+                          },
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ],
           ),
-          _buildFAQItem(
-            "Can I disable all notifications?",
-            "Yes! In the Preferences section, you can toggle the 'Notifications' switch to turn off all push alerts instantly.",
-          ),
-          _buildFAQItem(
-            "Is my data secure?",
-            "Absolutely. Rinik Tech uses industry-standard encryption to ensure your personal information and account data remain private and secure.",
-          ),
-          _buildFAQItem(
-            "How do I delete my account?",
-            "If you wish to leave us, scroll to the bottom of the Settings screen and tap 'Delete Account'. Please note this action is permanent and cannot be undone.",
-          ),
-          _buildFAQItem(
-            "How often is the app updated?",
-            "We typically release updates once a month to introduce new features, improve performance, and fix any known bugs.",
-          ),
-        ],
+        ),
       ),
     );
   }
+}
 
-  Widget _buildFAQItem(String question, String answer) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(15),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Theme(
-        // This removes the default border/divider that ExpansionTile adds
-        data: ThemeData().copyWith(dividerColor: Colors.transparent),
-        child: ExpansionTile(
-          iconColor: Colors.purple,
-          collapsedIconColor: Colors.grey,
-          title: Text(
-            question,
-            style: const TextStyle(
-              fontWeight: FontWeight.w600,
-              fontSize: 15,
-              color: Color(0xFF4A4E69),
-            ),
-          ),
+class _FaqTile extends StatelessWidget {
+  const _FaqTile({required this.isOpen, required this.onToggle});
+
+  final bool isOpen;
+  final VoidCallback onToggle;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onToggle,
+      child: Container(
+        padding: EdgeInsets.fromLTRB(12, isOpen ? 20 : 0, 12, isOpen ? 18 : 0),
+        constraints: BoxConstraints(minHeight: isOpen ? 210 : 68),
+        decoration: BoxDecoration(
+          color: context.color.bgColor,
+          borderRadius: BorderRadius.circular(4),
+          border: Border.all(color: const Color(0xFFE5E7EB)),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
-              child: Text(
-                answer,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey.shade700,
-                  height: 1.5, // Improves readability
+            Row(
+              children: [
+                const Expanded(
+                  child: CommonText(
+                    text: FaqScreen._question,
+                    fontSize: AppFontSizes.medium,
+                    fontWeight: FontWeight.w500,
+                    textColor: Color(0xFF333333),
+                  ),
                 ),
-              ),
+                Icon(
+                  isOpen ? Icons.remove : Icons.add,
+                  size: 24,
+                  color: isOpen ? Colors.black : const Color(0xFF9CA3AF),
+                ),
+              ],
             ),
+            if (isOpen) ...[
+              14.height,
+              const Divider(height: 1, color: Color(0xFFE5E7EB)),
+              18.height,
+              const CommonText(
+                text: FaqScreen._answer,
+                fontSize: AppFontSizes.medium,
+                textColor: Color(0xFF6B7280),
+                textAlign: TextAlign.left,
+                isDescription: true,
+              ),
+            ],
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _PlainBackButton extends StatelessWidget {
+  const _PlainBackButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => context.router.pop(),
+      child: const SizedBox(
+        width: 48,
+        height: 48,
+        child: Icon(
+          Icons.arrow_back_ios_new,
+          color: Color(0xFF1C1CFF),
+          size: 24,
         ),
       ),
     );

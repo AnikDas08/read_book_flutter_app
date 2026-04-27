@@ -6,26 +6,56 @@ import 'package:riverpod_tamplates/config/constance/app_string.dart';
 import 'package:riverpod_tamplates/config/constance/constants.dart';
 import 'package:riverpod_tamplates/config/constance/headline_widget.dart';
 import 'package:riverpod_tamplates/config/corekit/back_button.dart';
+import 'package:riverpod_tamplates/src/constants/app_font_sizes.dart';
 import 'package:riverpod_tamplates/src/features/app_features/story/presentation/widget/story_card_widget.dart';
 
 @RoutePage()
-class StoryScreen extends ConsumerWidget {
+class StoryScreen extends ConsumerStatefulWidget {
   const StoryScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<StoryScreen> createState() => _StoryScreenState();
+}
+
+class _StoryScreenState extends ConsumerState<StoryScreen> {
+  final ValueNotifier<int> _selectedTab = ValueNotifier<int>(0);
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: CommonAppBar(
-        disableBack: true,
-        hideBack: true,
-        titleWidget: _appbarBuilder(context, ref),
-        appbarConfig: AppbarConfig(height: 130),
+        title: "Short Stories",
+        leading: const BackButtonWidget(isDark: false),
+        appbarConfig:  AppbarConfig(height: 90, titleAlignment: .center),
       ),
       body: SmartListLoader(
         itemCount: 30,
-        topWidget: Container(
-          padding: const EdgeInsets.only(left: 16, right: 16, top: 10),
-          child: HeadlineWidget(title: AppString.Short_Stories),
+        topWidget: Padding(
+          padding: EdgeInsets.fromLTRB(16.w, 18.h, 16.w, 20.h),
+          child: ValueListenableBuilder<int>(
+            valueListenable: _selectedTab,
+            builder: (context, selectedIndex, _) {
+              return Row(
+                children: [
+                  Expanded(
+                    child: _TabButton(
+                      title: 'Top Short Stories',
+                      isSelected: selectedIndex == 0,
+                      onTap: () => _selectedTab.value = 0,
+                    ),
+                  ),
+                  12.width,
+                  Expanded(
+                    child: _TabButton(
+                      title: 'Trending Short Stories',
+                      isSelected: selectedIndex == 1,
+                      onTap: () => _selectedTab.value = 1,
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
         ),
         itemBuilder: (context, index) {
           return const StoryCardWidget();
@@ -33,52 +63,53 @@ class StoryScreen extends ConsumerWidget {
       ),
     );
   }
+}
 
-  Widget _appbarBuilder(BuildContext context, WidgetRef ref) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: Constants.padding),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              const BackButtonWidget(),
-              8.width,
-              CommonText(
-                text: AppString.Short_Stories,
-                style: Theme.of(context).appBarTheme.titleTextStyle,
-              ),
-            ],
-          ),
-          8.height,
-          CommonText(
-            text: AppString.Quick_reads_for_your_busy_day,
-            style: TextStyle(fontSize: 14, color: Colors.white.withValues(alpha: .8)),
-          ).start,
-          8.height,
-          Row(
-            children: [
-              Expanded(child: _menu(context, title: AppString.top_short_stories, value: 20)),
-              10.width,
-              Expanded(child: _menu(context, title: AppString.trending_short_stories, value: 30)),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
+class _TabButton extends StatelessWidget {
+  const _TabButton({
+    required this.title,
+    required this.isSelected,
+    required this.onTap,
+  });
 
-  Container _menu(BuildContext context, {required String title, required int value}) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: .1),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      alignment: .center,
-      child: CommonText(
-        text: title,
-        left: 8, right: 8,
-        style: TextStyle(fontSize: 16, color: Colors.white.withValues(alpha: .8)),
+  final String title;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 48.h,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: isSelected ? null : const Color(0xFFE5E7EB),
+          gradient: isSelected
+              ? const LinearGradient(
+                  colors: [Color(0xFF5B34FF), Color(0xFF8E44FF)],
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                )
+              : null,
+          borderRadius: BorderRadius.circular(14),
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: const Color(0xFF5B34FF).withOpacity(0.2),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ]
+              : null,
+        ),
+        child: CommonText(
+          text: title,
+          fontSize: AppFontSizes.small,
+          fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+          textColor: isSelected ? Colors.white : const Color(0xFF9BA3AF),
+          textAlign: TextAlign.center,
+        ),
       ),
     );
   }

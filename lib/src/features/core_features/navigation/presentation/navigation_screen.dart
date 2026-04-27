@@ -7,6 +7,7 @@ import 'package:riverpod_tamplates/config/route/app_router.dart';
 import 'package:riverpod_tamplates/config/theme/app_theme_data.dart';
 import 'package:riverpod_tamplates/gen/assets.gen.dart';
 import 'package:riverpod_tamplates/src/common/notification_button_widget.dart';
+import 'package:riverpod_tamplates/src/constants/app_ui_constants.dart';
 import 'package:riverpod_tamplates/src/features/app_features/explore/presentation/widgets/explore_screen_appbar.dart';
 import 'package:riverpod_tamplates/src/features/app_features/home/presentation/widget/home_screen_appbar.dart';
 import 'package:riverpod_tamplates/src/features/app_features/library/presentation/widgets/library_profile_header.dart';
@@ -38,21 +39,7 @@ class NavigationScreen extends StatelessWidget {
             disableBack: true,
             hideBack: true,
             appbarConfig: AppbarConfig(
-              height: 190,
-              decoration: () => BoxDecoration(
-                gradient: context.color.ctaGradientBackgroundAccent,
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(32.r),
-                  bottomRight: Radius.circular(32.r),
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.25),
-                    blurRadius: 24,
-                    offset: const Offset(0, 12),
-                  ),
-                ],
-              ),
+              height: 120,
             ),
             titleWidget: const ExploreScreenAppbar(),
           );
@@ -74,24 +61,26 @@ class NavigationScreen extends StatelessWidget {
             titleWidget: const HomeScreenAppBar(),
           );
         } else if (tabsRouter.activeIndex == 3) {
+
           return CommonAppBar(
             disableBack: true,
             hideBack: true,
             titleWidget: const LibraryProfileHeader(),
-            appbarConfig: AppbarConfig(height: 150),
+            appbarConfig: AppbarConfig(height: 165),
           );
-
-
         } else if (tabsRouter.activeIndex == 4) {
           return CommonAppBar(
             disableBack: true,
             hideBack: true,
-            title: AppString.contest,
+
             appbarConfig: AppbarConfig(
-              titleSpacing: 16,
-              actions: [const NotificationButtonWidget()],
-            ),
+                titleSpacing: 16,
+                height: 110, decoration: ()=> BoxDecoration(
+              color: Colors.white
+            )),
+            titleWidget: const ProfileHeader(avatarUrl: AppUiConstants.samplePerson),
           );
+          return null;
         }
         return null;
       },
@@ -106,7 +95,6 @@ class NavigationScreen extends StatelessWidget {
             showUnselectedLabels: false,
             type: BottomNavigationBarType.fixed,
             items: [
-
               _navBuilder(
                 context,
                 tabsRouter,
@@ -136,7 +124,6 @@ class NavigationScreen extends StatelessWidget {
                 'Profile',
                 4,
               ),
-
             ],
           ),
         );

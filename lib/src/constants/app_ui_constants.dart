@@ -16,4 +16,6 @@ class AppUiConstants {
   static const double elevation = 2.0;
   static const double elevationHigh = 8.0;
   static const double elevationLow = 1.0;
+
+  static const String samplePerson = 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80';
 }
