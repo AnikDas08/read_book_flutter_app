@@ -43,8 +43,8 @@ class CommentSection extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            width: 84.w,
-            height: 8.h,
+            width: 48.w,
+            height: 4.h,
             decoration: BoxDecoration(
               color: const Color(0xFFD4D9E2),
               borderRadius: BorderRadius.circular(10),
@@ -55,13 +55,13 @@ class CommentSection extends StatelessWidget {
             children: [
               const Icon(
                 Icons.chat_bubble_outline_rounded,
-                size: 30,
+                size: 20,
                 color: Color(0xFF111111),
               ),
               10.width,
               const CommonText(
                 text: 'Comments',
-                fontSize: AppFontSizes.display,
+                fontSize: AppFontSizes.extraLarge,
                 fontWeight: FontWeight.w700,
                 textColor: Color(0xFF111111),
               ),
@@ -71,7 +71,7 @@ class CommentSection extends StatelessWidget {
           const CommonText(
             text: '3 discussions',
             left: 40,
-            fontSize: AppFontSizes.heading,
+            fontSize: AppFontSizes.medium,
             fontWeight: FontWeight.w400,
             textColor: Color(0xFF758195),
           ).start,
@@ -87,7 +87,7 @@ class CommentSection extends StatelessWidget {
           4.height,
           const CommonText(
             text: 'Load More Comments',
-            fontSize: AppFontSizes.heading,
+            fontSize: AppFontSizes.medium,
             fontWeight: FontWeight.w400,
             textColor: Color(0xFF4D8DFF),
           ),
@@ -96,31 +96,27 @@ class CommentSection extends StatelessWidget {
             decoration: InputDecoration(
               hintText: 'Share your thoughts about this chapter...',
               hintStyle: const TextStyle(
-                fontSize: AppFontSizes.heading,
+                fontSize: AppFontSizes.small,
                 color: Color(0xFFB1B8C7),
-              ),
-              contentPadding: EdgeInsets.symmetric(
-                horizontal: 18.w,
-                vertical: 18.h,
               ),
               suffixIcon: Padding(
                 padding: const EdgeInsets.all(10),
                 child: Container(
-                  width: 54.w,
-                  height: 54.w,
+                  width: 30.w,
+                  height: 30.w,
                   decoration: BoxDecoration(
                     color: const Color(0xFFA98EF7),
-                    borderRadius: BorderRadius.circular(18),
+                    borderRadius: BorderRadius.circular(12),
                   ),
                   child: const Icon(
                     Icons.send_outlined,
                     color: Colors.white,
-                    size: 28,
+                    size: 14,
                   ),
                 ),
               ),
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(28),
+                borderRadius: BorderRadius.circular(16),
                 borderSide: const BorderSide(
                   color: Color(0xFF352CFF),
                   width: 1.6,
@@ -143,21 +139,21 @@ class CommentSection extends StatelessWidget {
             ),
           ),
           10.height,
-          Row(
+       const   Row(
             children: const [
-              Icon(Icons.access_time, size: 20, color: Color(0xFF758195)),
+              Icon(Icons.access_time, size: 12, color: Color(0xFF758195)),
               SizedBox(width: 8),
               Expanded(
                 child: CommonText(
                   text: 'Comments require admin approval',
-                  fontSize: AppFontSizes.title,
+                  fontSize: AppFontSizes.small,
                   fontWeight: FontWeight.w400,
                   textColor: Color(0xFF758195),
                 ),
               ),
               CommonText(
                 text: '0/500',
-                fontSize: AppFontSizes.title,
+                fontSize: AppFontSizes.small,
                 fontWeight: FontWeight.w400,
                 textColor: Color(0xFF8B8B8B),
               ),
@@ -193,8 +189,8 @@ class _CommentCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              width: 64.w,
-              height: 64.w,
+              width: 48.w,
+              height: 48.w,
               decoration: BoxDecoration(
                 color: const Color(0xFFA6B0C0),
                 shape: BoxShape.circle,
@@ -209,7 +205,7 @@ class _CommentCard extends StatelessWidget {
               child: const Icon(
                 Icons.person_outline_rounded,
                 color: Colors.white,
-                size: 34,
+                size: 24,
               ),
             ),
             14.width,
@@ -218,25 +214,26 @@ class _CommentCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: .center,
                     children: [
                       Expanded(
                         child: CommonText(
                           text: comment.author,
-                          fontSize: AppFontSizes.extraLarge,
+                          fontSize: AppFontSizes.large,
                           fontWeight: FontWeight.w700,
                           textColor: const Color(0xFF111111),
                         ),
                       ),
                       const Icon(
                         Icons.access_time,
-                        size: 16,
+                        size: 12,
                         color: Color(0xFF98A2B3),
                       ),
                       4.width,
                       CommonText(
                         text: comment.timeAgo,
-                        fontSize: AppFontSizes.medium,
+                        fontSize: AppFontSizes.small,
                         fontWeight: FontWeight.w400,
                         textColor: const Color(0xFF758195),
                       ),
@@ -245,8 +242,9 @@ class _CommentCard extends StatelessWidget {
                   10.height,
                   CommonText(
                     text: comment.content,
-                    fontSize: AppFontSizes.heading,
+                    fontSize: AppFontSizes.medium,
                     fontWeight: FontWeight.w400,
+                    isDescription: true,
                     height: 1.5,
                     textAlign: TextAlign.left,
                     textColor: const Color(0xFF333333),
@@ -261,19 +259,19 @@ class _CommentCard extends StatelessWidget {
                         ),
                         decoration: BoxDecoration(
                           color: const Color(0xFFF6F7FB),
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(216),
                         ),
                         child: Row(
                           children: [
                             const Icon(
                               Icons.favorite_border_rounded,
-                              size: 22,
+                              size: 14,
                               color: Color(0xFFA7B0C0),
                             ),
                             8.width,
                             CommonText(
                               text: '${comment.likes}',
-                              fontSize: AppFontSizes.heading,
+                              fontSize: AppFontSizes.medium,
                               fontWeight: FontWeight.w400,
                               textColor: const Color(0xFF758195),
                             ),
@@ -283,7 +281,7 @@ class _CommentCard extends StatelessWidget {
                       16.width,
                       const CommonText(
                         text: 'Reply',
-                        fontSize: AppFontSizes.heading,
+                        fontSize: AppFontSizes.medium,
                         fontWeight: FontWeight.w400,
                         textColor: Color(0xFF4D8DFF),
                       ),
