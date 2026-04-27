@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_tamplates/config/constance/app_string.dart';
 import 'package:riverpod_tamplates/config/constance/constants.dart';
+import 'package:riverpod_tamplates/config/corekit/back_button.dart';
 import 'package:riverpod_tamplates/config/route/app_router.dart';
 import 'package:riverpod_tamplates/config/theme/app_theme_data.dart';
 import 'package:riverpod_tamplates/src/common/share_icon_button.dart';
@@ -28,6 +29,20 @@ class BookDetailsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
+      appBar: CommonAppBar(
+        title: "Book Details",
+        leading: const BackButtonWidget(isDark: false,),
+
+        appbarConfig: AppbarConfig(
+          actions: [
+            ShareIconButton(isDark: false,)
+          ],
+          titleAlignment: .center,
+          decoration: () => BoxDecoration(
+            color: Colors.white
+          )
+        ),
+      ),
       backgroundColor: context.color.bgColor,
       body: SafeArea(
         child: SingleChildScrollView(
@@ -35,7 +50,6 @@ class BookDetailsScreen extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _BookHeaderRow(title: 'Book Details', onBack: context.router.pop),
               22.height,
               Row(
                 spacing: 5,
@@ -118,17 +132,17 @@ class BookDetailsScreen extends ConsumerWidget {
                           textColor: context.color.headingBoldText,
                         ),
                         6.height,
-                       const CommonText(
+                        const CommonText(
                           text: '• Elena Nightshade',
                           fontSize: AppFontSizes.small,
                           fontWeight: FontWeight.w400,
-                          textColor:  Color(0xFF333333),
+                          textColor: Color(0xFF333333),
                         ),
                         10.height,
-                       const SingleChildScrollView(
+                        const SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
                           child: Row(
-                            children:  [
+                            children: [
                               _InfoChip(
                                 icon: Icons.star,
                                 iconColor: Color(0xFFFFC107),
@@ -146,7 +160,7 @@ class BookDetailsScreen extends ConsumerWidget {
                         ),
                         10.height,
                         const Row(
-                          children:  [
+                          children: [
                             Expanded(child: _GenreChip(label: 'Fantasy')),
                             SizedBox(width: 8),
                             Expanded(child: _GenreChip(label: 'Romance')),
@@ -159,22 +173,26 @@ class BookDetailsScreen extends ConsumerWidget {
                   ),
                 ],
               ),
-              22.height,
-              ..._storyParagraphs.map(
-                (paragraph) => Column(
-                  children: [
-                    CommonText(
-                      text: paragraph,
-                      maxLines: 4,
-                      fontSize: AppFontSizes.small,
-                      fontWeight: FontWeight.w400,
-                      textAlign: TextAlign.left,
-                      textColor: const Color(0xFF1F2937),
-                    ),
-                    12.height
-                  ],
-                ),
+              20.height,
+
+              const CommonText(
+                text:
+                    '''<p>The night was darker than usual. Violet stepped out of her apartment, unaware that her life was about to change forever.</p>
+
+<p>The city lights flickered in the distance, casting long shadows across the empty streets. She pulled her coat tighter around her shoulders, feeling a chill that had nothing to do with the weather.</p>
+
+<p>"You're late," a voice said from the shadows.</p>
+
+<p>Violet froze. She knew that voice. It had haunted her dreams for years.</p>
+
+<p>"I didn't think you'd come," she replied, her voice steadier than she felt.</p>''',
+                // isDescription: true,
+                fontSize: AppFontSizes.small,
+                fontWeight: FontWeight.w400,
+                textAlign: TextAlign.left,
+                textColor: const Color(0xFF1F2937),
               ),
+
               8.height,
               GestureDetector(
                 onTap: () {
@@ -200,7 +218,7 @@ class BookDetailsScreen extends ConsumerWidget {
                   alignment: Alignment.center,
                   child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children:  [
+                    children: [
                       Icon(
                         Icons.play_arrow_outlined,
                         color: Colors.white,

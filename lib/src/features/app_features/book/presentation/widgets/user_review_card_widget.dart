@@ -22,8 +22,8 @@ class UserReviewCardWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                width: 66.w,
-                height: 66.w,
+                width: 44.w,
+                height: 44.w,
                 decoration: BoxDecoration(
                   color: const Color(0xFFA6B0C0),
                   shape: BoxShape.circle,
@@ -38,7 +38,7 @@ class UserReviewCardWidget extends StatelessWidget {
                 child: const Icon(
                   Icons.person_outline_rounded,
                   color: Colors.white,
-                  size: 34,
+                  size: 24,
                 ),
               ),
               14.width,
@@ -47,25 +47,26 @@ class UserReviewCardWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: .start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         const Expanded(
                           child: CommonText(
                             text: 'Sarah Chen',
-                            fontSize: AppFontSizes.extraLarge,
-                            fontWeight: FontWeight.w700,
+                            fontSize: AppFontSizes.large,
+                            fontWeight: FontWeight.w500,
                             textColor: Color(0xFF111111),
                           ),
                         ),
                         const Icon(
                           Icons.access_time,
-                          size: 16,
+                          size: 14,
                           color: Color(0xFF98A2B3),
                         ),
                         4.width,
                         const CommonText(
                           text: '2 weeks',
-                          fontSize: AppFontSizes.medium,
+                          fontSize: AppFontSizes.small,
                           fontWeight: FontWeight.w400,
                           textColor: Color(0xFF667085),
                         ),
@@ -79,7 +80,7 @@ class UserReviewCardWidget extends StatelessWidget {
                           padding: EdgeInsets.only(right: 3),
                           child: Icon(
                             Icons.star,
-                            size: 18,
+                            size: 14,
                             color: Color(0xFFFFC700),
                           ),
                         ),
@@ -94,8 +95,9 @@ class UserReviewCardWidget extends StatelessWidget {
           const CommonText(
             text:
                 'This is now in my top 5 favorite novels of all time! The emotional depth and world-building are incredible. Every chapter left me wanting more. A must-read!',
-            fontSize: AppFontSizes.title,
+            fontSize: AppFontSizes.medium,
             fontWeight: FontWeight.w400,
+            isDescription: true,
             textColor: Color(0xFF344054),
             height: 1.55,
             textAlign: TextAlign.left,

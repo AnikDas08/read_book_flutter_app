@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:core_kit/core_kit_internal.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_tamplates/config/constance/app_string.dart';
+import 'package:riverpod_tamplates/config/corekit/back_button.dart';
 import 'package:riverpod_tamplates/config/theme/app_theme_data.dart';
 import 'package:riverpod_tamplates/src/common/share_icon_button.dart';
 import 'package:riverpod_tamplates/src/constants/app_font_sizes.dart';
@@ -15,6 +16,20 @@ class ReviewScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: CommonAppBar(
+        title: "Review",
+        leading: const BackButtonWidget(isDark: false,),
+
+        appbarConfig:  AppbarConfig(
+            actions: [
+             const ShareIconButton(isDark: false,)
+            ],
+            titleAlignment: .center,
+            decoration: () => const  BoxDecoration(
+                color: Colors.white
+            )
+        ),
+      ),
       backgroundColor: context.color.bgColor,
       body: SafeArea(
         child: SingleChildScrollView(
@@ -22,36 +37,6 @@ class ReviewScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  GestureDetector(
-                    onTap: context.router.pop,
-                    child: Container(
-                      width: 56.w,
-                      height: 56.w,
-                      decoration: BoxDecoration(
-                        color: Colors.black.withValues(alpha: 0.35),
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(
-                        Icons.arrow_back_ios_new_rounded,
-                        color: Colors.white,
-                        size: 24,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: CommonText(
-                      text: 'Review',
-                      fontSize: AppFontSizes.display,
-                      fontWeight: FontWeight.w400,
-                      textAlign: TextAlign.center,
-                      textColor: const Color(0xFF111111),
-                    ),
-                  ),
-                  const ShareIconButton(isDark: false),
-                ],
-              ),
               22.height,
               Container(
                 width: double.infinity,
@@ -73,7 +58,7 @@ class ReviewScreen extends StatelessWidget {
                         const Icon(
                           Icons.star,
                           color: Color(0xFFFFD11A),
-                          size: 40,
+                          size: 25,
                         ),
                         10.width,
                         const CommonText(
@@ -84,7 +69,7 @@ class ReviewScreen extends StatelessWidget {
                         ),
                         CommonText(
                           text: '/ 5.0',
-                          fontSize: AppFontSizes.heading,
+                          fontSize: AppFontSizes.extraLarge,
                           fontWeight: FontWeight.w600,
                           textColor: Colors.white.withValues(alpha: 0.7),
                         ),
@@ -93,16 +78,16 @@ class ReviewScreen extends StatelessWidget {
                     12.height,
                     const CommonText(
                       text: 'Overall Rating',
-                      fontSize: AppFontSizes.heading,
+                      fontSize: AppFontSizes.medium,
                       fontWeight: FontWeight.w400,
                       textColor: Colors.white,
                     ),
-                    10.height,
+                    4.height,
                     CommonText(
                       text: '${AppString.based_on} 1,247 ${AppString.reviews}',
-                      fontSize: AppFontSizes.heading,
+                      fontSize: AppFontSizes.medium,
                       fontWeight: FontWeight.w400,
-                      textColor: Colors.white,
+                      textColor: Colors.white.withValues(alpha: 0.8),
                     ),
                     18.height,
                     ...const [
@@ -125,23 +110,23 @@ class ReviewScreen extends StatelessWidget {
                         );
                       },
                       child: Container(
-                        height: 78.h,
+                        height: 48.h,
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(22),
                         ),
-                        child: Row(
+                        child: const Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
+                          children:  [
                             Icon(
                               Icons.star_border_rounded,
                               color: Color(0xFF4C35FF),
-                              size: 26,
+                              size: 20,
                             ),
                             SizedBox(width: 10),
                             CommonText(
                               text: 'Write a Review',
-                              fontSize: AppFontSizes.heading,
+                              fontSize: AppFontSizes.large,
                               fontWeight: FontWeight.w700,
                               textColor: Color(0xFF4C35FF),
                             ),
@@ -153,18 +138,18 @@ class ReviewScreen extends StatelessWidget {
                 ),
               ),
               18.height,
-              Row(
+              const Row(
                 children: [
-                  const CommonText(
+                   CommonText(
                     text: 'Reader Reviews',
-                    fontSize: AppFontSizes.heading,
-                    fontWeight: FontWeight.w700,
+                    fontSize: AppFontSizes.extraLarge,
+                    fontWeight: FontWeight(500),
                     textColor: Color(0xFF111111),
                   ),
-                  const Spacer(),
-                  const CommonText(
+                   Spacer(),
+                   CommonText(
                     text: '3 of 112',
-                    fontSize: AppFontSizes.extraLarge,
+                    fontSize: AppFontSizes.medium,
                     fontWeight: FontWeight.w400,
                     textColor: Color(0xFF2E49FF),
                   ),
@@ -205,12 +190,12 @@ class _RatingBarRow extends StatelessWidget {
               children: [
                 CommonText(
                   text: rank,
-                  fontSize: AppFontSizes.extraLarge,
+                  fontSize: AppFontSizes.medium,
                   fontWeight: FontWeight.w700,
                   textColor: Colors.white,
                 ),
                 6.width,
-                const Icon(Icons.star, color: Color(0xFFFFD11A), size: 18),
+                const Icon(Icons.star, color: Color(0xFFFFD11A), size: 16),
               ],
             ),
           ),
@@ -219,7 +204,7 @@ class _RatingBarRow extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
               child: LinearProgressIndicator(
                 value: percent,
-                minHeight: 10.h,
+                minHeight: 8.h,
                 backgroundColor: Colors.white.withValues(alpha: 0.24),
                 valueColor: const AlwaysStoppedAnimation<Color>(
                   Color(0xFFFFD11A),
@@ -232,7 +217,7 @@ class _RatingBarRow extends StatelessWidget {
             width: 56.w,
             child: CommonText(
               text: label,
-              fontSize: AppFontSizes.extraLarge,
+              fontSize: AppFontSizes.medium,
               fontWeight: FontWeight.w700,
               textAlign: TextAlign.end,
               textColor: Colors.white,
