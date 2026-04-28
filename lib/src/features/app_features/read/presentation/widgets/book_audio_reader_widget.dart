@@ -21,11 +21,11 @@ class BookAudioReaderWidget extends ConsumerWidget {
       color: Colors.transparent,
       child: Container(
         constraints: BoxConstraints(
-          maxHeight: MediaQuery.of(context).size.height * 0.45,
+          maxHeight: MediaQuery.of(context).size.height * 0.50,
         ),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(30.r),
+          borderRadius: BorderRadius.circular(16.r),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.18),
@@ -39,28 +39,28 @@ class BookAudioReaderWidget extends ConsumerWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                padding: EdgeInsets.fromLTRB(18.w, 18.h, 18.w, 18.h),
+                padding: EdgeInsets.symmetric(horizontal: 16.w,vertical: 12.h),
                 decoration: const BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [Color(0xFF863BFF), Color(0xFF2A26FF)],
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
+                    colors: [Color(0xFF2A26FF),Color(0xFF863BFF)],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
                   ),
                   borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
                 ),
                 child: Row(
                   children: [
                     Container(
-                      width: 54.w,
-                      height: 54.w,
+                      width: 40.w,
+                      height: 40.w,
                       decoration: BoxDecoration(
                         color: Colors.white.withValues(alpha: 0.12),
-                        borderRadius: BorderRadius.circular(18.r),
+                        borderRadius: BorderRadius.circular(10.r),
                       ),
                       child: const Icon(
                         Icons.volume_up_outlined,
                         color: Colors.white,
-                        size: 30,
+                        size: 20,
                       ),
                     ),
                     12.width,
@@ -70,17 +70,18 @@ class BookAudioReaderWidget extends ConsumerWidget {
                         children: [
                           CommonText(
                             text: AppString.Audio_Narration,
-                            fontSize: smallFontSize,
+                            fontSize: AppFontSizes.small,
                             textColor: Colors.white70,
                           ),
                           4.height,
                           CommonText(
                             text: chapter?.title ?? 'Chapter 1: The Beginning',
-                            fontSize: titleFontSize,
+                            fontSize: AppFontSizes.medium,
                             fontWeight: FontWeight.w700,
                             textColor: Colors.white,
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
+                            textAlign: .start,
                           ),
                         ],
                       ),
@@ -90,75 +91,78 @@ class BookAudioReaderWidget extends ConsumerWidget {
                           ref.read(readProvider.notifier).toggleAudioPlaying(),
                       borderRadius: BorderRadius.circular(20.r),
                       child: Container(
-                        width: 48.w,
-                        height: 48.w,
+                        width: 32.w,
+                        height: 22.w,
                         decoration: BoxDecoration(
                           color: Colors.white.withValues(alpha: 0.15),
                           shape: BoxShape.circle,
                         ),
-                        child: const Icon(
+                        child:  Icon(
                           Icons.close_rounded,
                           color: Colors.white,
-                          size: 24,
+                          size: 16.sp,
                         ),
                       ),
                     ),
                   ],
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 0),
-                child: Column(
-                  children: [
-                    SliderTheme(
-                      data: SliderTheme.of(context).copyWith(
-                        activeTrackColor: const Color(0xFF2A26FF),
-                        inactiveTrackColor: const Color(0xFFE4E7EE),
-                        thumbColor: const Color(0xFF2A26FF),
-                        trackHeight: 4.h,
-                        thumbShape: const RoundSliderThumbShape(
-                          enabledThumbRadius: 5,
+              Column(
+                children: [
+                  SliderTheme(
+                    data: SliderTheme.of(context).copyWith(
+                      activeTrackColor: const Color(0xFF2A26FF),
+                      inactiveTrackColor: const Color(0xFFE4E7EE),
+                      thumbColor: const Color(0xFF2A26FF),
+                      trackHeight: 4.h,padding: .only(left: 16.w,right: 16.h, top: 30.h,bottom: 12.h),
+                      thumbShape: const RoundSliderThumbShape(
+                        enabledThumbRadius: 5,
+                      ),
+                    ),
+                    child: Slider(value: 0.04, onChanged: (_) {}),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.w),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          '0:00',
+                          style: TextStyle(
+                            fontSize: smallFontSize,
+                            color: const Color(0xFF667085),
+                          ),
                         ),
-                      ),
-                      child: Slider(value: 0.04, onChanged: (_) {}),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 6.w),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            '0:00',
-                            style: TextStyle(
-                              fontSize: smallFontSize,
-                              color: const Color(0xFF667085),
-                            ),
+                        Text(
+                          '14:05',
+                          style: TextStyle(
+                            fontSize: smallFontSize,
+                            color: const Color(0xFF667085),
                           ),
-                          Text(
-                            '14:05',
-                            style: TextStyle(
-                              fontSize: smallFontSize,
-                              color: const Color(0xFF667085),
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                    14.height,
-                    Row(
+                  ),
+                  14.height,
+                  Padding(
+                    padding:  EdgeInsets.symmetric(horizontal: 16.w),
+                    child: Row(
                       children: [
                         const Icon(
                           Icons.volume_up_outlined,
-                          size: 28,
+                          size: 20,
                           color: Color(0xFF667085),
                         ),
+                        20.width,
+
                         SizedBox(
-                          width: 90.w,
+                          width: 70.w,
                           child: SliderTheme(
                             data: SliderTheme.of(context).copyWith(
                               activeTrackColor: const Color(0xFF2A26FF),
                               inactiveTrackColor: const Color(0xFFE4E7EE),
                               thumbColor: const Color(0xFF2A26FF),
+                              padding: .symmetric(horizontal: 0.w),
                               trackHeight: 4.h,
                               thumbShape: const RoundSliderThumbShape(
                                 enabledThumbRadius: 5,
@@ -170,13 +174,13 @@ class BookAudioReaderWidget extends ConsumerWidget {
                         const Spacer(),
                         const Icon(
                           Icons.skip_previous_rounded,
-                          size: 34,
+                          size: 20,
                           color: Color(0xFF667085),
                         ),
                         8.width,
                         Container(
-                          width: 72.w,
-                          height: 72.w,
+                          width: 56.w,
+                          height: 56.w,
                           decoration: BoxDecoration(
                             gradient: const LinearGradient(
                               colors: [Color(0xFF2A26FF), Color(0xFF8A42FF)],
@@ -195,34 +199,34 @@ class BookAudioReaderWidget extends ConsumerWidget {
                           child: const Icon(
                             Icons.play_arrow_rounded,
                             color: Colors.white,
-                            size: 44,
+                            size: 24,
                           ),
                         ),
                         8.width,
                         const Icon(
                           Icons.skip_next_rounded,
-                          size: 34,
+                          size: 20,
                           color: Color(0xFF667085),
                         ),
                         10.width,
                         const CommonText(
                           text: '1.0x',
-                          fontSize: AppFontSizes.large,
+                          fontSize: AppFontSizes.medium,
                           fontWeight: FontWeight.w700,
                           textColor: Color(0xFF667085),
                         ),
                       ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
               16.height,
               const Divider(height: 1, color: Color(0xFFE4E7EE)),
               Padding(
-                padding: EdgeInsets.symmetric(vertical: 12.h),
+                padding: EdgeInsets.symmetric(vertical: 10.h),
                 child: CommonText(
                   text: AppString.narrated_by_ai_voice_english,
-                  fontSize: smallFontSize,
+                  fontSize: AppFontSizes.small,
                   textColor: const Color(0xFF667085),
                 ),
               ),
