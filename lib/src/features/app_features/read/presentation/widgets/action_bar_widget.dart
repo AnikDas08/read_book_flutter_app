@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_tamplates/config/constance/app_string.dart';
 import 'package:riverpod_tamplates/config/theme/app_theme_data.dart';
+import 'package:riverpod_tamplates/gen/assets.gen.dart';
 import 'package:riverpod_tamplates/src/constants/app_font_sizes.dart';
 import 'package:riverpod_tamplates/src/features/app_features/read/riverpod/read_notifier.dart';
 
@@ -34,8 +35,9 @@ class ActionBarWidget extends ConsumerWidget {
         : book.selectedChapter / (book.chapters.length - 1);
 
     return Container(
+      height: 160.h,
       margin: EdgeInsets.symmetric(horizontal: 16.w),
-      padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 14.h),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(28.r),
@@ -52,22 +54,23 @@ class ActionBarWidget extends ConsumerWidget {
         children: [
           CommonText(
             text: book.title ?? AppString.shadow_of_the_violet_moon,
-            fontSize: AppFontSizes.title,
-            fontWeight: FontWeight.w700,
+            fontSize: AppFontSizes.medium,
+            fontWeight: FontWeight.w600,
             textColor: const Color(0xFF111827),
           ),
           4.height,
           CommonText(
             text: chapter.title ?? '',
-            fontSize: AppFontSizes.extraLarge,
+            fontSize: AppFontSizes.small,
+            fontWeight: FontWeight.w400,
             textColor: const Color(0xFF697386),
           ),
-          18.height,
+          12.height,
           ClipRRect(
             borderRadius: BorderRadius.circular(999),
             child: LinearProgressIndicator(
               value: progress.clamp(0.0, 1.0),
-              minHeight: 7.h,
+              minHeight: 4.h,
               color: context.color.blue500,
               backgroundColor: const Color(0xFFD9DCE3),
             ),
@@ -76,18 +79,15 @@ class ActionBarWidget extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildActionItem(Icons.menu_rounded, onOpenChapters),
-              _buildActionItem(Icons.tune_rounded, onOpenSettings),
+              _buildActionItem(Assets.images.menu, onOpenChapters),
+              _buildActionItem(Assets.images.settings, onOpenSettings),
               _buildActionItem(
-                Icons.volume_up_outlined,
+                Assets.images.audio,
                 () => ref.read(readProvider.notifier).toggleAudioPlaying(),
               ),
-              _buildActionItem(Icons.share_outlined, onOpenShare),
-              _buildActionItem(Icons.bookmark_add_outlined, onOpenBookmark),
-              _buildActionItem(
-                Icons.chat_bubble_outline_rounded,
-                onOpenComments,
-              ),
+              _buildActionItem(Assets.images.share, onOpenShare),
+              _buildActionItem(Assets.images.bookmark, onOpenBookmark),
+              _buildActionItem(Assets.images.message, onOpenComments),
             ],
           ),
         ],
@@ -95,13 +95,13 @@ class ActionBarWidget extends ConsumerWidget {
     );
   }
 
-  Widget _buildActionItem(IconData icon, VoidCallback onTap) {
+  Widget _buildActionItem(String icon, VoidCallback onTap) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(14.r),
       child: Padding(
         padding: EdgeInsets.all(6.w),
-        child: Icon(icon, color: const Color(0xFF4D7DFF), size: 28),
+        child: CommonImage(src: icon, size: 24),
       ),
     );
   }

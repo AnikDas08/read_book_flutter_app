@@ -63,6 +63,18 @@ class $AssetsImagesGen {
   AssetGenImage get spalshIcon =>
       const AssetGenImage('assets/images/spalsh_icon.png');
 
+  String get menu =>  'assets/images/menu.svg';
+
+  String get settings =>  'assets/images/settings.svg';
+
+  String get power =>  'assets/images/power.svg';
+
+  String get audio =>  'assets/images/audio.svg';
+
+  String get bookmark =>  'assets/images/bookmark.svg';
+  String get share =>  'assets/images/share.svg';
+  String get message =>  'assets/images/message.svg';
+
   /// List of all assets
   List<dynamic> get values => [
     appIcon,
@@ -79,6 +91,13 @@ class $AssetsImagesGen {
     rank2,
     rank3,
     spalshIcon,
+    menu,
+    settings,
+    power,
+    audio,
+    bookmark,
+    share,
+    message,
   ];
 }
 
