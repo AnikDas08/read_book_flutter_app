@@ -1,58 +1,68 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:riverpod_tamplates/config/constance/constants.dart';
 import 'package:riverpod_tamplates/src/features/app_features/read/data/model/book_model.dart';
 import 'package:riverpod_tamplates/src/features/app_features/read/riverpod/read_state.dart';
 
 part 'read_notifier.g.dart';
 
-@Riverpod()
+@Riverpod(keepAlive: true)
 class ReadNotifier extends _$ReadNotifier {
   @override
   ReadState build() {
+    ref.keepAlive();
     return const ReadState();
   }
 
   void toggleAudioPlaying() {
-    state = state.copyWith(isAudioPlaying: !state.isAudioPlaying);
+    final nextValue = !state.isAudioPlaying;
+    state = state.copyWith(
+      isAudioPlaying: nextValue,
+      isActionPanelVisible: nextValue ? false : state.isActionPanelVisible,
+    );
   }
 
   void selectBook() {
     state = state.copyWith(
       slectedBook: BookModel(
         title: 'Shadow of the Violet Moon',
+        author: 'M. M. KAYE',
+        coverImage: Constants.sampleImage,
         chapters: [
-          BookChapter(
+          const BookChapter(
             title: 'Chapter 1: The Beginning',
             content:
-                'In the quiet town of Oakhaven, where shadows danced with secrets and the air hummed with unspoken magic, lived Elara, a young woman bound by duty and haunted by a past she barely remembered. Her days were spent tending to the town\'s ancient library, a sanctuary of forgotten lore and whispered histories. But beneath the veneer of normalcy, a darkness stirred, threatening to unravel the fragile peace of her world.',
+                'The night was darker than usual. Violet stepped out of her apartment, unaware that her life was about to change forever.\n\nThe city lights flickered in the distance, casting long shadows across the empty streets. She pulled her coat tighter around her shoulders, feeling a chill that had nothing to do with the weather.\n\n"You\'re late," a voice said from the shadows.\n\nViolet froze. She knew that voice. It had haunted her dreams for years.\n\n"I didn\'t think you\'d come," she replied, her voice steadier than she felt.\n\nA figure emerged from the darkness. Tall, imposing, with eyes that seemed to glow in the dim light. This was the man who had changed everything. The man who had awakened powers within her that she never knew existed.\n\n"We need to talk," he said simply. "About what you are. About what you\'re meant to become."\n\nViolet\'s hands trembled. She had spent her entire life running from the truth. But tonight, there would be no more running.\n\n"I\'m listening," she said.\n\nAnd with those two words, her destiny began to unfold.',
           ),
-          BookChapter(
-            title: 'Chapter 2: The Journey',
+          const BookChapter(
+            title: 'Chapter 2: Awakening Powers',
             content:
-                'One fateful evening, as a crimson moon painted the sky in hues of fire and blood, Elara stumbled upon a hidden passage within the library\'s depths. It led her to a realm beyond imagination, where mythical creatures roamed free and ancient prophecies awaited their fulfillment. With a reluctant heart, she embarked on a perilous journey, guided by cryptic clues and the whispers of the wind.',
+                'The night was darker than usual. Violet stepped out of her apartment, unaware that her life was about to change forever.\n\nThe city lights flickered in the distance, casting long shadows across the empty streets. She pulled her coat tighter around her shoulders, feeling a chill that had nothing to do with the weather.\n\n"You\'re late," a voice said from the shadows.\n\nViolet froze. She knew that voice. It had haunted her dreams for years.\n\n"I didn\'t think you\'d come," she replied, her voice steadier than she felt.\n\nA figure emerged from the darkness. Tall, imposing, with eyes that seemed to glow in the dim light. This was the man who had changed everything. The man who had awakened powers within her that she never knew existed.\n\n"We need to talk," he said simply. "About what you are. About what you\'re meant to become."\n\nViolet\'s hands trembled. She had spent her entire life running from the truth. But tonight, there would be no more running.\n\nViolet\'s hands trembled. She had spent her entire life running from the truth. But tonight, there would be no more running.\n\n"I\'m listening," she said.\n\nAnd with those two words, her destiny began to unfold.',
           ),
-          BookChapter(
-            title: 'Chapter 3: The Discovery',
+          const BookChapter(
+            title: 'Chapter 3: First Lesson',
             content:
-                'Along her path, Elara encountered a cast of extraordinary characters: a wise old mage with eyes that held the wisdom of ages, a mischievous sprite with a penchant for riddles, and a stoic warrior sworn to protect the balance of realms. Together, they navigated treacherous landscapes, deciphered ancient texts, and confronted formidable foes who sought to plunge the world into eternal darkness.',
-          ),
-          BookChapter(
-            title: 'Chapter 4: The Conflict',
-            content:
-                'The climax arrived at the heart of the Shadowfell, a realm where light dared not tread. Elara, armed with newfound courage and the power of her ancestors, faced the Shadow Lord, a being of pure malevolence who craved dominion over all realms. The battle raged, shaking the very foundations of existence, as destinies hung in the balance.',
-          ),
-          BookChapter(
-            title: 'Chapter 5: The Resolution',
-            content:
-                'In the end, it was not brute force but the power of unity and sacrifice that triumphed. Elara, embracing her true potential, restored balance to the realms, banishing the shadows and ushering in an era of peace. Yet, the echoes of her journey lingered, a testament to the courage that resided within even the most ordinary of souls.',
+                'The first lesson waited beyond a locked gate, hidden behind courage and patience.',
+            isLocked: true,
+            unlockAdsRequired: 2,
+            watchedAds: 0,
+            showSparkle: true,
           ),
         ],
         selectedChapter: 0,
       ),
+      readingMode: ReadingMode.slide,
+      selectedMode: 0,
+      fontSize: 16,
+      lineSpacing: 1.8,
+      isAudioPlaying: false,
+      isActionPanelVisible: true,
     );
   }
 
   void selectChapter(int index) {
-    state = state.copyWith(slectedBook: state.slectedBook?.copyWith(selectedChapter: index));
+    state = state.copyWith(
+      slectedBook: state.slectedBook?.copyWith(selectedChapter: index),
+    );
   }
 
   void updateFontSize(double size) {
@@ -65,5 +75,36 @@ class ReadNotifier extends _$ReadNotifier {
 
   void updateBackgroundMode(int mode) {
     state = state.copyWith(selectedMode: mode);
+  }
+
+  void updateReadingMode(ReadingMode mode) {
+    state = state.copyWith(readingMode: mode);
+  }
+
+  void toggleActionPanel() {
+    state = state.copyWith(isActionPanelVisible: !state.isActionPanelVisible);
+  }
+
+  void setActionPanelVisible(bool isVisible) {
+    state = state.copyWith(isActionPanelVisible: isVisible);
+  }
+
+  void watchAdForCurrentChapter() {
+    final book = state.slectedBook;
+    if (book == null) return;
+    final chapterIndex = book.selectedChapter;
+    final chapters = [...book.chapters];
+    final chapter = chapters[chapterIndex];
+    if (!chapter.isLocked) return;
+
+    final watchedAds = chapter.watchedAds + 1;
+    final shouldUnlock = watchedAds >= chapter.unlockAdsRequired;
+
+    chapters[chapterIndex] = chapter.copyWith(
+      watchedAds: watchedAds,
+      isLocked: shouldUnlock ? false : chapter.isLocked,
+    );
+
+    state = state.copyWith(slectedBook: book.copyWith(chapters: chapters));
   }
 }

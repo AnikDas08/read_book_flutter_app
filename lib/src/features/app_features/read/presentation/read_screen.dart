@@ -5,11 +5,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_tamplates/config/theme/app_theme_data.dart';
 import 'package:riverpod_tamplates/src/features/app_features/read/presentation/widgets/action_bar_widget.dart';
 import 'package:riverpod_tamplates/src/features/app_features/read/presentation/widgets/book_audio_reader_widget.dart';
+import 'package:riverpod_tamplates/src/features/app_features/read/presentation/widgets/book_mark_modal_widget.dart';
 import 'package:riverpod_tamplates/src/features/app_features/read/presentation/widgets/book_reading_widget.dart';
 import 'package:riverpod_tamplates/src/features/app_features/read/presentation/widgets/chapters_drawer.dart';
+import 'package:riverpod_tamplates/src/features/app_features/read/presentation/widgets/comment_widget.dart';
 import 'package:riverpod_tamplates/src/features/app_features/read/presentation/widgets/no_book_selected_widget.dart';
+import 'package:riverpod_tamplates/src/features/app_features/read/presentation/widgets/reading_setting_modal.dart';
+import 'package:riverpod_tamplates/src/features/app_features/read/presentation/widgets/share_book_modal_widget.dart';
 import 'package:riverpod_tamplates/src/features/app_features/read/riverpod/read_notifier.dart';
-import 'package:riverpod_tamplates/src/features/app_features/read/riverpod/read_state.dart';
 
 @RoutePage()
 class ReadScreen extends ConsumerWidget {
@@ -18,104 +21,163 @@ class ReadScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final readState = ref.watch(readProvider);
-    return Scaffold(
+    final backgroundColors = [
+      Colors.white,
+      const Color(0xFF131313),
+      const Color(0xFFF7EFD9),
+      const Color(0xFFDFF4DB),
+    ];
+    final pageBackground = readState.slectedBook == null
+        ? context.color.bgColor
+        : backgroundColors[readState.selectedMode];
 
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Stack(
-          children: [
-            Positioned.fill(
-              child: Column(
-                mainAxisSize: .min,
-                children: [
-                  10.height,
-                  if (readState.slectedBook == null)
-                  const Expanded(child: NoBookSelectedWidget()),
-                  if (readState.slectedBook != null) const Expanded(child: BookReadingWidget()),
-              
-                  10.height,
-                  _buttons(context, readState, ref),
-                  16.height,
-                  _actionBar(readState, context),
-                  5.height,
-                ],
-              ),
+    return Scaffold(
+      backgroundColor: pageBackground,
+      drawerEnableOpenDragGesture: false,
+      drawer: const ChaptersDrawer(),
+      body: Builder(
+        builder: (scaffoldContext) {
+          return SafeArea(
+            child: Stack(
+              children: [
+                Positioned.fill(
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.translucent,
+                    onTap:
+                        readState.slectedBook == null ||
+                            readState.isAudioPlaying
+                        ? null
+                        : () => ref
+                              .read(readProvider.notifier)
+                              .toggleActionPanel(),
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(
+                        16.w,
+                        14.h,
+                        16.w,
+                        readState.slectedBook == null
+                            ? 16.h
+                            : readState.isAudioPlaying
+                            ? 340.h
+                            : 16.h,
+                      ),
+                      child: readState.slectedBook == null
+                          ? const NoBookSelectedWidget()
+                          : const BookReadingWidget(),
+                    ),
+                  ),
+                ),
+                if (readState.slectedBook != null && !readState.isAudioPlaying)
+                  Positioned(
+                    left: 0,
+                    right: 0,
+                    bottom: 26.h,
+                    child: IgnorePointer(
+                      ignoring: !readState.isActionPanelVisible,
+                      child: AnimatedSlide(
+                        duration: const Duration(milliseconds: 280),
+                        curve: Curves.easeOutCubic,
+                        offset: readState.isActionPanelVisible
+                            ? Offset.zero
+                            : const Offset(0, 0.22),
+                        child: AnimatedOpacity(
+                          duration: const Duration(milliseconds: 220),
+                          curve: Curves.easeOut,
+                          opacity: readState.isActionPanelVisible ? 1 : 0,
+                          child: ActionBarWidget(
+                            onOpenChapters: () =>
+                                Scaffold.of(scaffoldContext).openDrawer(),
+                            onOpenSettings: () => _showSettings(context),
+                            onOpenShare: () => _showShare(context),
+                            onOpenBookmark: () => _showBookmark(context),
+                            onOpenComments: () => _showComments(context),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                if (readState.isAudioPlaying)
+                  Positioned(
+                    bottom: 22.h,
+                    left: 16.w,
+                    right: 16.w,
+                    child: const BookAudioReaderWidget(),
+                  ),
+              ],
             ),
-            if (readState.isAudioPlaying)
-              Positioned(
-                bottom: 100.h,
-                left: 16,
-                right: 16,
-                child: const SizedBox(height: 300, child: BookAudioReaderWidget()),
-              ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
 
-  ActionBarWidget _actionBar(ReadState readState, BuildContext context) {
-    final isBookSelected = readState.slectedBook != null;
-    final backgroundColor = isBookSelected
-        ? context.color.inputBorderFocus.withValues(alpha: 0.1)
-        : context.color.lightGray.withValues(alpha: 0.35);
-    final iconColor = isBookSelected
-        ? context.color.inputBorderFocus
-        : context.color.subtext.withValues(alpha: 0.6);
-
-    return ActionBarWidget(
-      backgroundColor: backgroundColor,
-      iconColor: iconColor,
-      textColor: iconColor,
-      isBookSelected: isBookSelected,
+  void _showSettings(BuildContext context) {
+    showModalBottomSheet<void>(
+      context: context,
+      useSafeArea: true,
+      isScrollControlled: true,
+      backgroundColor: Colors.white,
+      builder: (context) {
+        return DraggableScrollableSheet(
+          initialChildSize: 0.62,
+          minChildSize: 0.45,
+          maxChildSize: 0.95,
+          expand: false,
+          builder: (context, scrollController) {
+            return ReadingSettingsModal(controller: scrollController);
+          },
+        );
+      },
     );
   }
 
-  Row _buttons(BuildContext context, ReadState readState, WidgetRef ref) {
-    const inactiveGradient = LinearGradient(
-      colors: [Color(0xff8f8eff), Color(0xffc2a0ff)],
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter,
-    );
-    final previousActionOpacity =
-        readState.slectedBook == null || readState.slectedBook?.selectedChapter == 0
-        ? inactiveGradient
-        : context.color.ctaGradientBackgroundAccent;
-    final nextActionOpacity =
-        readState.slectedBook == null ||
-            readState.slectedBook?.selectedChapter ==
-                (readState.slectedBook?.chapters.length ?? 0) - 1
-        ? inactiveGradient
-        : context.color.ctaGradientBackgroundAccent;
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Flexible(
-          child: CommonButton(
-            titleText: 'Previous',
-            borderColor: context.color.bgColor,
-            onTap: readState.slectedBook != null && readState.slectedBook!.selectedChapter > 0
-                ? () => ref.read(readProvider.notifier).selectChapter(readState.slectedBook!.selectedChapter - 1)
-                : null,
-            buttonWidth: 130,
-            prefix: Icon(Icons.arrow_back_ios_new, color: context.color.buttonTextWhite),
-            gradient: previousActionOpacity,
-          ),
-        ),
-        Flexible(
-          child: CommonButton(
-            titleText: 'Next',
-            borderColor: context.color.bgColor,
-            onTap: readState.slectedBook != null && readState.slectedBook!.selectedChapter < (readState.slectedBook!.chapters.length - 1)
-                ? () => ref.read(readProvider.notifier).selectChapter(readState.slectedBook!.selectedChapter + 1)
-                : null,
-            buttonWidth: 130,
-            suffix: Icon(Icons.arrow_forward_ios, color: context.color.buttonTextWhite),
-            gradient: nextActionOpacity,
-          ),
-        ),
-      ],
+  void _showShare(BuildContext context) {
+    showModalBottomSheet<void>(
+      context: context,
+      useSafeArea: true,
+      isScrollControlled: true,
+      backgroundColor: Colors.white,
+      builder: (_) => const ShareBookModalWidget(),
     );
   }
 
+  void _showBookmark(BuildContext context) {
+    showModalBottomSheet<void>(
+      context: context,
+      useSafeArea: true,
+      isScrollControlled: true,
+      backgroundColor: Colors.white,
+      builder: (_) {
+        return DraggableScrollableSheet(
+          initialChildSize: 0.46,
+          minChildSize: 0.35,
+          maxChildSize: 0.82,
+          expand: false,
+          builder: (sheetContext, sheetController) {
+            return const BookmarkModalWidget();
+          },
+        );
+      },
+    );
+  }
+
+  void _showComments(BuildContext context) {
+    showModalBottomSheet<void>(
+      context: context,
+      useSafeArea: true,
+      isScrollControlled: true,
+      backgroundColor: Colors.white,
+      builder: (_) {
+        return DraggableScrollableSheet(
+          initialChildSize: 0.72,
+          minChildSize: 0.5,
+          maxChildSize: 0.94,
+          expand: false,
+          builder: (_, scrollController) {
+            return CommentSection(scrollController: scrollController);
+          },
+        );
+      },
+    );
+  }
 }

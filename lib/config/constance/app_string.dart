@@ -79,13 +79,14 @@ class _AppString {
   final String verify = 'Verify';
   final String resend_code_in = 'Resend code in';
 
-  //read screen 
+  //read screen
   final String no_book_selected = 'No Book Selected';
   final String no_chapter_available_yet = 'No Chapter Available Yet';
   final String no_chapter_selected = 'No Chapter Selected';
   final String words = 'words';
   final String oops_no_content_here = 'Oops! No Content Here.';
-  final String looks_like_this_chapter_is_empty_for_now_lets_find_something_interesting_to_redad =
+  final String
+  looks_like_this_chapter_is_empty_for_now_lets_find_something_interesting_to_redad =
       'Looks like this chapter is empty for now. Let’s find something interesting to redad';
   final String explore_books = 'Explore Books';
   final String previous = 'Previous';
@@ -94,11 +95,12 @@ class _AppString {
   final String comment = 'Comment';
   final String share = 'Share';
 
-  //contest 
+  //contest
   final String contest = 'Contest';
   final String writers = 'Writers';
   final String books = 'Books';
-  final String rankings_based_on_power_stone_votes = 'Rankings based on Power Stone Votes';
+  final String rankings_based_on_power_stone_votes =
+      'Rankings based on Power Stone Votes';
   final String search = 'Search';
   final String top_writers = 'Top Writers';
   final String top_books = 'Top Books';
@@ -116,14 +118,16 @@ class _AppString {
   final String paused = 'Paused';
   final String results = 'Results';
   final String no_books_found = 'No books found';
-  final String try_adjusting_your_search_or_filters = 'Try adjusting your search or filters'; 
+  final String try_adjusting_your_search_or_filters =
+      'Try adjusting your search or filters';
   final String browse_by_genre = 'Browse by Genre';
   final String popular_tags = 'Popular Tags';
   final String Explore = 'Explore';
-  final String search_by_title_author_or_genre = 'Search by title, author, or genre...';
+  final String search_by_title_author_or_genre =
+      'Search by title, author, or genre...';
   final String filter = 'Filter';
   final String genre = 'Genre';
- 
+
   final String chapters = 'Chapters';
   final String status = 'Status';
   final String power_stones = 'Power Stones';
@@ -140,7 +144,8 @@ class _AppString {
   final String shadow_of_the_violet_moon = 'Shadow of the Violet Moon';
   final String your_rating = 'Your Rating';
   final String your_review = 'Your Review';
-  final String share_your_thoughts_about_this_book = 'Share your thoughts about this book...';
+  final String share_your_thoughts_about_this_book =
+      'Share your thoughts about this book...';
   final String submit_review = 'Submit Review';
 
   final String available_power_stones = 'Available Power Stones';
@@ -158,7 +163,8 @@ class _AppString {
 
   final String how_to_use_power_stones = 'How to Use Power Stones';
   final String vote_for_books = 'Vote for Books';
-  final String support_your_favorite_books_and_authors = 'Support your favorite books and authors';
+  final String support_your_favorite_books_and_authors =
+      'Support your favorite books and authors';
 
   final String unlock_chapters = 'Unlock Chapters';
   final String use_power_stones_to_unlock_premium_chapters_and_support_authors =
@@ -189,7 +195,7 @@ class _AppString {
   final String Monthly = 'Monthly';
   final String Rankings_based_on = 'Rankings based on';
   final String Power_Stone_Votes = 'Power Stone Votes';
-  final String Book_List = 'Book List'; 
+  final String Book_List = 'Book List';
   final String Quick_reads_for_your_busy_day = 'Quick reads for your busy day';
   final String Want_to_Read = 'Want to Read';
   final String Favorites = 'Favorites';
@@ -205,11 +211,27 @@ class _AppString {
   final String Eye_Comfort = 'Eye Comfort';
   final String Comments = 'Comments';
   final String discussions = 'discussions';
-  final String comments_require_admin_approval = 'Comments require admin approval';
+  final String comments_require_admin_approval =
+      'Comments require admin approval';
+  final String slide = 'Slide';
+  final String flip = 'Flip';
+  final String scroll = 'Scroll';
+  final String chapter_locked = 'Chapter Locked';
+  final String unlock_this_chapter_to_continue_reading =
+      'Unlock this chapter to continue reading';
+  final String watch_2_ads_to_unlock = 'Watch 2 Ads to Unlock';
+  final String sponsored = 'Sponsored';
+  final String share_author_and_book_pages = 'Share Author & Book Pages';
+  final String share_via = 'Share via';
+  final String load_more_comments = 'Load More Comments';
+  final String share_your_thoughts_about_this_chapter =
+      'Share your thoughts about this chapter...';
+  final String narrated_by_ai_voice_english = 'Narrated by AI Voice • English';
+  final String favorites = 'Favorites';
+  final String chapter_count_12 = '12 chapters';
+  final String chapter_count_8 = '8 chapters';
+  final String watch_ads_to_unlock = 'Watch ads to unlock';
   final String login_as_guest = 'Login as Guest';
   final top_short_stories = "Top Short Stories";
-  final trending_short_stories  ="Trending Short Stories";
-
-
+  final trending_short_stories = "Trending Short Stories";
 }
- 

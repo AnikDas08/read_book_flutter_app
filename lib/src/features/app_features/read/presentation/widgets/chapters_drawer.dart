@@ -20,7 +20,6 @@ class ChaptersDrawer extends ConsumerWidget {
     return Drawer(
       child: Column(
         children: [
-          // Header
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -28,11 +27,11 @@ class ChaptersDrawer extends ConsumerWidget {
                   context.color.ctaGradientBackgroundAccent.colors[0],
                   context.color.ctaGradientBackgroundAccent.colors[1],
                 ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
               ),
             ),
-            padding: const EdgeInsets.only(left: 16,right: 16, bottom: 10),
+            padding: const EdgeInsets.only(left: 16, right: 16, bottom: 10),
             child: SafeArea(
               bottom: false,
               child: Row(
@@ -49,7 +48,8 @@ class ChaptersDrawer extends ConsumerWidget {
                       ),
                       4.height,
                       CommonText(
-                        text: '${currentChapterIndex + 1} / $totalChapters chapters',
+                        text:
+                            '${currentChapterIndex + 1} / $totalChapters chapters',
                         fontSize: 12,
                         textColor: Colors.white70,
                       ),
@@ -69,7 +69,6 @@ class ChaptersDrawer extends ConsumerWidget {
               ),
             ),
           ),
-          // Chapters List
           Expanded(
             child: ListView.builder(
               padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
@@ -85,7 +84,10 @@ class ChaptersDrawer extends ConsumerWidget {
                   },
                   child: Container(
                     margin: const EdgeInsets.only(bottom: 8),
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 12,
+                    ),
                     decoration: BoxDecoration(
                       color: isSelected
                           ? const Color(0xFF5B4FEE)
@@ -93,53 +95,46 @@ class ChaptersDrawer extends ConsumerWidget {
                       borderRadius: BorderRadius.circular(12),
                       border: isSelected
                           ? null
-                          : Border.all(
-                              color: Colors.grey.shade200,
-                              width: 1,
-                            ),
+                          : Border.all(color: Colors.grey.shade200, width: 1),
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    child: Row(
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  CommonText(
-                                    text: 'Chapter ${index + 1}',
-                                    fontSize: 12,
-                                    textColor: isSelected
-                                        ? Colors.white70
-                                        : Colors.grey[600],
-                                  ),
-                                  4.height,
-                                  CommonText(
-                                    text: chapter.title ?? 'Chapter ${index + 1}',
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
-                                    textColor: isSelected
-                                        ? Colors.white
-                                        : Colors.black87,
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ],
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CommonText(
+                                text: 'Chapter ${index + 1}',
+                                fontSize: 12,
+                                textColor: isSelected
+                                    ? Colors.white70
+                                    : Colors.grey[600],
                               ),
-                            ),
-                            8.width,
-                            // // Bookmark icon placeholder (if needed)
-                            // Icon(
-                            //   Icons.bookmark_outline,
-                            //   size: 18,
-                            //   color: isSelected
-                            //       ? Colors.white60
-                            //       : Colors.grey[400],
-                            // ),
-                          ],
+                              4.height,
+                              CommonText(
+                                text: chapter.title ?? 'Chapter ${index + 1}',
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                textColor: isSelected
+                                    ? Colors.white
+                                    : Colors.black87,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
                         ),
+                        if (chapter.showSparkle)
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8),
+                            child: Icon(
+                              Icons.auto_awesome_rounded,
+                              size: 18,
+                              color: chapter.isLocked
+                                  ? const Color(0xFFFFCC00)
+                                  : Colors.white60,
+                            ),
+                          ),
                       ],
                     ),
                   ),
@@ -152,4 +147,3 @@ class ChaptersDrawer extends ConsumerWidget {
     );
   }
 }
-

@@ -1,19 +1,28 @@
 import 'package:core_kit/core_kit_internal.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_tamplates/src/constants/app_font_sizes.dart';
+import 'package:riverpod_tamplates/src/features/app_features/read/riverpod/read_notifier.dart';
 
-class BookmarkModalWidget extends StatefulWidget {
-  const BookmarkModalWidget({super.key,});
+class BookmarkModalWidget extends ConsumerStatefulWidget {
+  const BookmarkModalWidget({super.key});
 
   @override
-  State<BookmarkModalWidget> createState() => _BookmarkModalWidgetState();
+  ConsumerState<BookmarkModalWidget> createState() =>
+      _BookmarkModalWidgetState();
 }
 
-class _BookmarkModalWidgetState extends State<BookmarkModalWidget> {
+class _BookmarkModalWidgetState extends ConsumerState<BookmarkModalWidget> {
   int selectedOption = 1;
 
   @override
   Widget build(BuildContext context) {
+    final book = ref.watch(readProvider).slectedBook;
+    final chapterTitle = book == null
+        ? 'Chapter 2: Awakening Powers'
+        : book.chapters[book.selectedChapter].title ??
+              'Chapter 2: Awakening Powers';
+
     return Container(
       padding: EdgeInsets.fromLTRB(16.w, 5.h, 16.w, 18.h),
       decoration: const BoxDecoration(
@@ -21,7 +30,8 @@ class _BookmarkModalWidgetState extends State<BookmarkModalWidget> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
       ),
       child: ListView(
-        physics:const  ClampingScrollPhysics(),
+        physics: const ClampingScrollPhysics(),
+        shrinkWrap: true,
         children: [
           Center(
             child: Container(
@@ -51,15 +61,15 @@ class _BookmarkModalWidgetState extends State<BookmarkModalWidget> {
             ],
           ),
           10.height,
-          const CommonText(
-            text: 'Chapter 2: Awakening Powers',
+          CommonText(
+            text: chapterTitle,
             fontSize: AppFontSizes.medium,
             fontWeight: FontWeight.w400,
-            textColor: Color(0xFF444444),
+            textColor: const Color(0xFF444444),
           ),
           22.height,
           _BookmarkOption(
-            emoji: '⭐',
+            emoji: '★',
             title: 'Favorites',
             subtitle: '12 chapters',
             iconBackground: const LinearGradient(

@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_tamplates/config/constance/app_string.dart';
 import 'package:riverpod_tamplates/config/constance/enums.dart';
 import 'package:riverpod_tamplates/config/theme/app_theme_data.dart';
+import 'package:riverpod_tamplates/src/constants/app_font_sizes.dart';
 import 'package:riverpod_tamplates/src/features/app_features/library/presentation/widgets/book_widget.dart';
 import 'package:riverpod_tamplates/src/features/app_features/library/presentation/widgets/no_books_found.dart';
 import 'package:riverpod_tamplates/src/features/app_features/library/riverpod/library_notifire.dart';
@@ -137,11 +138,7 @@ class LibraryScreen extends StatelessWidget {
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         physics: const BouncingScrollPhysics(),
-        child: Row(
-          children: [
-            ...tabs,
-          ],
-        ),
+        child: Row(children: [...tabs]),
       ),
     );
   }
@@ -159,15 +156,13 @@ class LibraryScreen extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
+        height: 40.h,
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
         margin: const EdgeInsets.only(right: 8),
         decoration: BoxDecoration(
           border: isSelected
               ? null
-              : Border.all(
-                  width: 1,
-                  color: const Color(0xFFE5E7EB),
-                ),
+              : Border.all(width: 1, color: const Color(0xFFE5E7EB)),
           borderRadius: BorderRadius.circular(100),
           color: isSelected ? null : Colors.white,
           gradient: isSelected
@@ -198,23 +193,25 @@ class LibraryScreen extends StatelessWidget {
             6.width,
             CommonText(
               text: type.title,
-              fontSize: 13,
-              fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+              fontSize: AppFontSizes.large,
+              fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
               textColor: isSelected ? Colors.white : const Color(0xFF6B7280),
             ),
             6.width,
             Container(
               padding: const EdgeInsets.all(4),
-              constraints: const BoxConstraints(minWidth: 20, minHeight: 20),
+              constraints: const BoxConstraints(minWidth: 24, minHeight: 24),
               decoration: BoxDecoration(
-                color: isSelected ? Colors.white.withOpacity(0.3) : const Color(0xFFF3F4F6),
+                color: isSelected
+                    ? Colors.white.withOpacity(0.3)
+                    : const Color(0xFFF3F4F6),
                 shape: BoxShape.circle,
               ),
               child: Center(
                 child: Text(
                   '$count',
                   style: TextStyle(
-                    fontSize: 10,
+                    fontSize: AppFontSizes.small,
                     fontWeight: FontWeight.bold,
                     color: isSelected ? Colors.white : const Color(0xFF9CA3AF),
                   ),
