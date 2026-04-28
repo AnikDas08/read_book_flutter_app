@@ -20,9 +20,10 @@ class RankingScreen extends ConsumerWidget {
     return Scaffold(
       appBar: CommonAppBar(
         hideBack: true,
-        disableBack: true,
+        disableBack: false,
         titleWidget: _appbarBuilder(context, ref),
-        appbarConfig: AppbarConfig(height: 130),
+        appbarConfig: AppbarConfig(height: 130,titleAlignment: .center),
+        leading: const BackButtonWidget(isDark: false,),
       ),
       body: SmartListLoader(
         itemCount: 30,
@@ -64,43 +65,16 @@ class RankingScreen extends ConsumerWidget {
           12.height,
           Row(
             children: [
-              const BackButtonWidget(isDark: false,),
-              8.width,
+              const BackButtonWidget(isDark: true,iconColor: Colors.white,),
+              70.width,
               CommonText(
                 text: AppString.Rankings,
                 style: Theme.of(context).appBarTheme.titleTextStyle,
               ),
             ],
           ),
-          8.height,
+          10.height,
           const RankingFilterWidget(),
-          // 8.height,
-          // Container(
-          //   padding: const EdgeInsets.symmetric(vertical: 10),
-          //   decoration: BoxDecoration(
-          //     color: Colors.white.withValues(alpha: .1),
-          //     borderRadius: BorderRadius.circular(12),
-          //   ),
-          //   alignment: .center,
-          //   child: RichText(
-          //     text: TextSpan(
-          //       children: [
-          //         TextSpan(
-          //           text: '${AppString.Rankings_based_on} ',
-          //           style: TextStyle(fontSize: 12.sp, color: Colors.white.withValues(alpha: .8)),
-          //         ),
-          //         TextSpan(
-          //           text: AppString.Power_Stone_Votes,
-          //           style: TextStyle(
-          //             color: context.color.blue50,
-          //             fontWeight: .bold,
-          //             fontSize: 12.sp,
-          //           ),
-          //         ),
-          //       ],
-          //     ),
-          //   ),
-          // ),
         ],
       ),
     );

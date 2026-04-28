@@ -13,7 +13,11 @@ class NotificationScreen extends ConsumerWidget {
   Widget build(BuildContext context, _) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar:  CommonAppBar(title: "Notifications",appbarConfig: AppbarConfig(height: 70),leading: const BackButtonWidget(isDark: false,),),
+      appBar: CommonAppBar(
+        title: "Notifications",
+        appbarConfig: AppbarConfig(height: 70,titleAlignment: .center),
+        leading: const BackButtonWidget(isDark: true,iconColor: Colors.white,),
+      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: ListView(

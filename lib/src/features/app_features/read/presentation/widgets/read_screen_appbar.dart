@@ -24,13 +24,23 @@ class ReadScreenAppBar extends StatelessWidget {
                   crossAxisAlignment: .start,
                   children: [
                     CommonText(
-                      text: AppString.no_book_selected,
+                      text: isBookSelected
+                          ? readState.slectedBook!.title.toString()
+                          : AppString.no_book_selected,
                       fontSize: 14,
                       fontWeight: .w600,
                       textColor: context.color.buttonTextWhite,
                     ),
                     CommonText(
-                      text: AppString.no_chapter_available_yet,
+                      text: isBookSelected
+                          ? readState
+                                .slectedBook!
+                                .chapters[readState
+                                    .slectedBook!
+                                    .selectedChapter]
+                                .title
+                                .toString()
+                          : AppString.no_chapter_available_yet,
                       fontSize: 12,
                       fontWeight: .w400,
                       textColor: context.color.buttonTextWhite,
@@ -48,7 +58,9 @@ class ReadScreenAppBar extends StatelessWidget {
                   child: Icon(
                     Icons.list_outlined,
                     size: 30,
-                    color: isBookSelected ? context.color.buttonTextWhite : context.color.iconClr,
+                    color: isBookSelected
+                        ? context.color.buttonTextWhite
+                        : context.color.iconClr,
                   ),
                 ),
                 10.width,
@@ -65,7 +77,9 @@ class ReadScreenAppBar extends StatelessWidget {
                           maxChildSize: .95,
                           expand: false,
                           builder: (context, scrollController) {
-                            return ReadingSettingsModal(controller: scrollController);
+                            return ReadingSettingsModal(
+                              controller: scrollController,
+                            );
                           },
                         );
                       },
@@ -74,7 +88,9 @@ class ReadScreenAppBar extends StatelessWidget {
                   child: Icon(
                     Icons.tune_sharp,
                     size: 20,
-                    color: isBookSelected ? context.color.buttonTextWhite : context.color.iconClr,
+                    color: isBookSelected
+                        ? context.color.buttonTextWhite
+                        : context.color.iconClr,
                   ),
                 ),
                 16.width,
@@ -83,9 +99,7 @@ class ReadScreenAppBar extends StatelessWidget {
             6.height,
             const Padding(
               padding: EdgeInsets.only(right: 16),
-              child: LinearProgressIndicator(
-                value: .5, color: Colors.amber,
-              ),
+              child: LinearProgressIndicator(value: .5, color: Colors.amber),
             ),
           ],
         );

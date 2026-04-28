@@ -21,9 +21,17 @@ class NoBookSelectedWidget extends StatelessWidget {
           textColor: context.color.bodyText,
         ),
         8.height,
-        CommonText(text: '0 ${AppString.words}', textColor: context.color.iconClr, fontSize: 14),
+        CommonText(
+          text: '0 ${AppString.words}',
+          textColor: context.color.iconClr,
+          fontSize: 14,
+        ),
         Expanded(child: contentWidget(context)),
-        CommonText(text: '0 of 0', textColor: context.color.iconClr, fontSize: 14).end,
+        CommonText(
+          text: '0 of 0',
+          textColor: context.color.iconClr,
+          fontSize: 14,
+        ).end,
       ],
     );
   }
@@ -32,14 +40,21 @@ class NoBookSelectedWidget extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: context.color.subtleOverlaysShadows, width: 1.2.w),
+        border: Border.all(
+          color: context.color.subtleOverlaysShadows,
+          width: 1.2.w,
+        ),
       ),
       child: Column(
         mainAxisAlignment: .center,
         children: [
           CommonImage(src: Assets.images.openBook).center,
           16.height,
-          CommonText(text: AppString.oops_no_content_here, fontSize: 18, fontWeight: .w600),
+          CommonText(
+            text: AppString.oops_no_content_here,
+            fontSize: 18,
+            fontWeight: .w600,
+          ),
           CommonText(
             text: AppString
                 .looks_like_this_chapter_is_empty_for_now_lets_find_something_interesting_to_redad,

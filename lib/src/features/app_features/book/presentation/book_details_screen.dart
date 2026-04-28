@@ -193,10 +193,7 @@ class BookDetailsScreen extends ConsumerWidget {
               GestureDetector(
                 onTap: () {
                   ref.read(readProvider.notifier).selectBook();
-                  context.router.popUntil(
-                    (route) => route.settings.name == NavigationRoute.name,
-                  );
-                  context.router.navigate(const ReadRoute());
+                  context.router.push(const ReadRoute());
                 },
                 child: Container(
                   height: 48.h,

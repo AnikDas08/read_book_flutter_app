@@ -2,9 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:core_kit/core_kit_internal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_tamplates/config/constance/app_string.dart';
-import 'package:riverpod_tamplates/config/constance/constants.dart';
-import 'package:riverpod_tamplates/config/constance/headline_widget.dart';
 import 'package:riverpod_tamplates/config/corekit/back_button.dart';
 import 'package:riverpod_tamplates/src/constants/app_font_sizes.dart';
 import 'package:riverpod_tamplates/src/features/app_features/story/presentation/widget/story_card_widget.dart';
@@ -25,7 +22,7 @@ class _StoryScreenState extends ConsumerState<StoryScreen> {
     return Scaffold(
       appBar: CommonAppBar(
         title: "Short Stories",
-        leading: const BackButtonWidget(isDark: false),
+        leading: const BackButtonWidget(isDark: true,iconColor: Colors.white,),
         appbarConfig:  AppbarConfig(height: 90, titleAlignment: .center),
       ),
       body: SmartListLoader(

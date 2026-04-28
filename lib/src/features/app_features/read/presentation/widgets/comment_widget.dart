@@ -139,8 +139,8 @@ class CommentSection extends StatelessWidget {
             ),
           ),
           10.height,
-       const   Row(
-            children: const [
+          const Row(
+            children: [
               Icon(Icons.access_time, size: 12, color: Color(0xFF758195)),
               SizedBox(width: 8),
               Expanded(
@@ -173,7 +173,7 @@ class _CommentCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(left: comment.isReply ? 28.w : 0, bottom: 16.h),
+      padding: EdgeInsets.only(left: comment.isReply ? 24.w : 0, bottom: 16.h),
       child: Container(
         padding: EdgeInsets.all(16.w),
         decoration: BoxDecoration(
@@ -215,7 +215,6 @@ class _CommentCard extends StatelessWidget {
                 children: [
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: .center,
                     children: [
                       Expanded(
                         child: CommonText(
@@ -231,11 +230,13 @@ class _CommentCard extends StatelessWidget {
                         color: Color(0xFF98A2B3),
                       ),
                       4.width,
-                      CommonText(
-                        text: comment.timeAgo,
-                        fontSize: AppFontSizes.small,
-                        fontWeight: FontWeight.w400,
-                        textColor: const Color(0xFF758195),
+                      Flexible(
+                        child: CommonText(
+                          text: comment.timeAgo,
+                          fontSize: AppFontSizes.small,
+                          fontWeight: FontWeight.w400,
+                          textColor: const Color(0xFF758195),
+                        ),
                       ),
                     ],
                   ),
@@ -250,7 +251,10 @@ class _CommentCard extends StatelessWidget {
                     textColor: const Color(0xFF333333),
                   ),
                   14.height,
-                  Row(
+                  Wrap(
+                    spacing: 16.w,
+                    runSpacing: 8.h,
+                    crossAxisAlignment: WrapCrossAlignment.center,
                     children: [
                       Container(
                         padding: EdgeInsets.symmetric(
@@ -262,6 +266,7 @@ class _CommentCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(216),
                         ),
                         child: Row(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
                             const Icon(
                               Icons.favorite_border_rounded,
@@ -278,7 +283,6 @@ class _CommentCard extends StatelessWidget {
                           ],
                         ),
                       ),
-                      16.width,
                       const CommonText(
                         text: 'Reply',
                         fontSize: AppFontSizes.medium,
