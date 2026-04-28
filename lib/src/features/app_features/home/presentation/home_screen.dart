@@ -128,32 +128,20 @@ class HomeScreen extends ConsumerWidget {
   }
 
   SizedBox _trendingBooks(double itemSizeInrow) {
-    final cardWidth = 150.w;
     return SizedBox(
-      height: cardWidth * 1.5,
+      width: 400,
+      height: 220.h,
       child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
+        scrollDirection: .horizontal,
         child: Row(
           children: [
-            SizedBox(
-              width: cardWidth,
-              child: const BookWidget(isTrending: true),
-            ),
+            const BookWidget(isTrending: true),
             12.width,
-            SizedBox(
-              width: cardWidth,
-              child: const BookWidget(isTrending: true),
-            ),
+            const BookWidget(isTrending: true),
             12.width,
-            SizedBox(
-              width: cardWidth,
-              child: const BookWidget(isTrending: true),
-            ),
+            const BookWidget(isTrending: true),
             12.width,
-            SizedBox(
-              width: cardWidth,
-              child: const BookWidget(isTrending: true),
-            ),
+            const BookWidget(isTrending: true),
           ],
         ),
       ),

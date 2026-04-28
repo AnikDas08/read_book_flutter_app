@@ -45,7 +45,7 @@ class LibraryScreen extends StatelessWidget {
                   value: selectedLibrary,
                   gridConfig: GridConfig(
                     itemInRow: 3,
-                    aspectRatio: .60,
+                    aspectRatio: .70,
                     mainAxisSpacing: 10,
                     crossAxisSpacing: 6,
                   ),

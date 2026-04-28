@@ -308,8 +308,8 @@ class _LockedChapterView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              width: 128.w,
-              height: 128.w,
+              width: 80.w,
+              height: 80.w,
               decoration: const BoxDecoration(
                 shape: BoxShape.circle,
                 gradient: LinearGradient(
@@ -321,29 +321,30 @@ class _LockedChapterView extends StatelessWidget {
               child: const Icon(
                 Icons.lock_outline_rounded,
                 color: Colors.white,
-                size: 54,
+                size: 40,
               ),
             ),
             32.height,
             CommonText(
               text: AppString.chapter_locked,
-              fontSize: AppFontSizes.display,
+              fontSize: AppFontSizes.title,
               fontWeight: FontWeight.w700,
               textColor: const Color(0xFF111111),
             ),
             14.height,
             CommonText(
               text: AppString.unlock_this_chapter_to_continue_reading,
-              fontSize: AppFontSizes.title,
+              fontSize: AppFontSizes.medium,
               textColor: const Color(0xFF697386),
             ),
             48.height,
             CommonButton(
+              titleSize: AppFontSizes.medium,
               titleText: AppString.watch_2_ads_to_unlock,
               gradient: const LinearGradient(
                 colors: [Color(0xFF2A26FF), Color(0xFF8A42FF)],
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
               ),
               onTap: () => onUnlock(chapter),
             ),

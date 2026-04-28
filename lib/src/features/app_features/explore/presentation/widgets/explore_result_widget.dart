@@ -17,7 +17,15 @@ class ExploreResultWidget extends ConsumerWidget {
   final int? itemCount;
   final String? selectedGenre;
 
-  static const _tags = ['#Enemies to Lovers', '#Mafia Romance', '#Revenge'];
+  static const _tags = [
+    '#Enemies to Lovers',
+    '#Mafia Romance',
+    '#Revenge',
+    '#Love',
+    '#Novels',
+    '#Seduction',
+    '#Angry',
+  ];
   static const _genres = [
     _GenreItem('All', Color(0xFF151515)),
     _GenreItem('Romance', Colors.red),
@@ -46,15 +54,15 @@ class ExploreResultWidget extends ConsumerWidget {
       children: [
         16.height,
 
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w),
-            child: CommonText(
-              text: AppString.popular_tags,
-              fontSize: AppFontSizes.extraLarge,
-              fontWeight: FontWeight.w700,
-              textColor: context.color.headingBoldText,
-            ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.w),
+          child: CommonText(
+            text: AppString.popular_tags,
+            fontSize: AppFontSizes.extraLarge,
+            fontWeight: FontWeight.w700,
+            textColor: context.color.headingBoldText,
           ),
+        ),
         const _TagRow(tags: _tags),
         10.height,
         Expanded(
@@ -94,7 +102,7 @@ class _TagRow extends ConsumerWidget {
             onTap: () => notifier.selectTag(tag),
             child: Container(
               height: 36.h,
-              margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 8),
               padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 10.h),
               alignment: Alignment.center,
               decoration: BoxDecoration(
@@ -140,7 +148,6 @@ class _GenreRail extends ConsumerWidget {
     return SizedBox(
       width: 85.w,
       child: ListView.builder(
-
         padding: const EdgeInsets.only(left: 16),
         itemCount: genres.length,
         itemBuilder: (context, index) {
@@ -193,7 +200,7 @@ class _BookResultsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SmartListLoader(
-      padding: const EdgeInsets.only(right: 16,left: 4),
+      padding: const EdgeInsets.only(right: 16, left: 4),
       itemCount: 50,
       emptyWidget: const NoBooksFoundWidget(),
       onRefresh: () {},

@@ -40,20 +40,18 @@ class ShowMoreBooksScreen extends StatelessWidget {
                 return const BookFeedCardWidget();
               },
             )
-          : SmartStaggeredLoader(
-              padding: const EdgeInsets.only(
-                left: Constants.padding,
-                right: Constants.padding,
-                top: Constants.padding,
-              ),
+          : GridView.builder(
+              padding: const .symmetric(horizontal: 16),
               itemCount: 50,
-              gridConfig: GridConfig(itemInRow: 2, aspectRatio: .68),
               itemBuilder: (context, index) {
-                return BookWidget(
-                  isNew: isNew,
-                  isTrending: isTrending,
-                );
+                return BookWidget(isNew: isNew, isTrending: isTrending);
               },
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+                crossAxisCount: 2,
+                childAspectRatio: .80,
+              ),
             ),
     );
   }
