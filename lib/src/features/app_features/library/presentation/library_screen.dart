@@ -16,17 +16,19 @@ class LibraryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold( 
+    return Scaffold(
       body: Consumer(
         builder: (context, ref, _) {
           final selectedLibrary = ref.watch(selectedLibraryProvider);
-          final selectedLibraryNotifier = ref.read(selectedLibraryProvider.notifier);
+          final selectedLibraryNotifier = ref.read(
+            selectedLibraryProvider.notifier,
+          );
           return Column(
             children: [
               _header(context, selectedLibraryNotifier, selectedLibrary),
               Expanded(
                 child: SmartTabListLoader(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
                   tabs: const [
                     SmartTabConfig(tab: LibrayType.Reading, itemCount: 20),
                     SmartTabConfig(tab: LibrayType.Completed, itemCount: 0),
@@ -34,16 +36,24 @@ class LibraryScreen extends StatelessWidget {
                     SmartTabConfig(tab: LibrayType.Paused, itemCount: 40),
                   ],
                   itemBuilder: (ctx, index) {
-                    return const BookWidget();
+                    return BookWidget(
+                      isCompleted: selectedLibrary == LibrayType.Completed,
+                      showProgress: true,
+                    );
                   },
                   value: selectedLibrary,
                   gridConfig: GridConfig(
-                    itemInRow: 2,
-                    aspectRatio: .68,
-                    mainAxisSpacing: 12,
-                    crossAxisSpacing: 12,
+                    itemInRow: 3,
+                    aspectRatio: .60,
+                    mainAxisSpacing: 10,
+                    crossAxisSpacing: 6,
                   ),
-                  emptyWidget: const NoBooksFoundWidget(),
+                  emptyWidget: Column(
+                    children: [
+                      SizedBox(height: MediaQuery.of(context).size.height / 4),
+                      const NoBooksFoundWidget(),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -61,23 +71,28 @@ class LibraryScreen extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          10.height,
+          (MediaQuery.of(context).padding.top + 10).height,
           Row(
-            mainAxisAlignment: .spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              CommonText(text: AppString.my_library, fontSize: 18, fontWeight: .bold),
+              CommonText(
+                text: AppString.my_library,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
               CommonText(
                 text: AppString.hide_profile,
                 fontSize: 14,
                 textColor: context.color.ctaButtonsText,
-                fontWeight: .bold,
+                fontWeight: FontWeight.w600,
               ),
             ],
           ),
-          10.height,
+          16.height,
           _tabBuilder(selectedLibraryNotifire, selectedLibray, context),
-          10.height,
+          12.height,
         ],
       ),
     );
@@ -106,7 +121,7 @@ class LibraryScreen extends StatelessWidget {
       }
       return _tabItem(
         type: e,
-        count: 10,
+        count: e == LibrayType.Reading ? 4 : 0,
         context: context,
         prefixIcon: icon,
         onTap: () {
@@ -118,10 +133,15 @@ class LibraryScreen extends StatelessWidget {
 
     return SizedBox(
       key: const ValueKey('tab_builder'),
-      height: 50,
+      height: 48,
       child: SingleChildScrollView(
-        scrollDirection: .horizontal,
-        child: Row(children: tabs),
+        scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
+        child: Row(
+          children: [
+            ...tabs,
+          ],
+        ),
       ),
     );
   }
@@ -139,33 +159,69 @@ class LibraryScreen extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
-        margin: const EdgeInsets.only(right: 5),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+        margin: const EdgeInsets.only(right: 8),
         decoration: BoxDecoration(
           border: isSelected
               ? null
-              : Border.all(width: 1.2.w, color: context.color.subtleOverlaysShadows),
-          borderRadius: BorderRadius.circular(40.r),
-
-          color: !isSelected ? context.color.bgColor : null,
-          gradient: isSelected ? context.color.ctaGradientBackgroundAccent : null,
+              : Border.all(
+                  width: 1,
+                  color: const Color(0xFFE5E7EB),
+                ),
+          borderRadius: BorderRadius.circular(100),
+          color: isSelected ? null : Colors.white,
+          gradient: isSelected
+              ? const LinearGradient(
+                  colors: [Color(0xFF5B34FF), Color(0xFF8E44FF)],
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                )
+              : null,
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: const Color(0xFF5B34FF).withOpacity(0.2),
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
+                  ),
+                ]
+              : null,
         ),
-        child: CommonText(
-          text: type.name,
-          suffix: CommonText(
-            text: '($count)',
-            fontSize: 16,
-            fontWeight: .w500,
-            textColor: isSelected ? context.color.buttonTextWhite : context.color.subtext,
-          ),
-          fontSize: 16,
-          fontWeight: .w500,
-          textColor: isSelected ? context.color.buttonTextWhite : context.color.subtext,
-          preffix: Icon(
-            prefixIcon,
-            color: isSelected ? context.color.buttonTextWhite : context.color.subtext,
-          ),
-        
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              prefixIcon,
+              size: 16,
+              color: isSelected ? Colors.white : const Color(0xFF9BA3AF),
+            ),
+            6.width,
+            CommonText(
+              text: type.title,
+              fontSize: 13,
+              fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+              textColor: isSelected ? Colors.white : const Color(0xFF6B7280),
+            ),
+            6.width,
+            Container(
+              padding: const EdgeInsets.all(4),
+              constraints: const BoxConstraints(minWidth: 20, minHeight: 20),
+              decoration: BoxDecoration(
+                color: isSelected ? Colors.white.withOpacity(0.3) : const Color(0xFFF3F4F6),
+                shape: BoxShape.circle,
+              ),
+              child: Center(
+                child: Text(
+                  '$count',
+                  style: TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                    color: isSelected ? Colors.white : const Color(0xFF9CA3AF),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

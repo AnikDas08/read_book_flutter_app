@@ -3,6 +3,7 @@ import 'package:core_kit/core_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_tamplates/config/constance/app_string.dart';
 import 'package:riverpod_tamplates/config/constance/constants.dart';
+import 'package:riverpod_tamplates/config/corekit/back_button.dart';
 import 'package:riverpod_tamplates/config/route/app_router.dart';
 import 'package:riverpod_tamplates/config/theme/app_theme_data.dart';
 import 'package:riverpod_tamplates/gen/assets.gen.dart';
@@ -38,9 +39,7 @@ class NavigationScreen extends StatelessWidget {
           return CommonAppBar(
             disableBack: true,
             hideBack: true,
-            appbarConfig: AppbarConfig(
-              height: 120,
-            ),
+            appbarConfig: AppbarConfig(height: 120),
             titleWidget: const ExploreScreenAppbar(),
           );
         } else if (tabsRouter.activeIndex == 1) {
@@ -61,12 +60,14 @@ class NavigationScreen extends StatelessWidget {
             titleWidget: const HomeScreenAppBar(),
           );
         } else if (tabsRouter.activeIndex == 3) {
-
           return CommonAppBar(
+            title: "Library",
             disableBack: true,
             hideBack: true,
-            titleWidget: const LibraryProfileHeader(),
-            appbarConfig: AppbarConfig(height: 165),
+            appbarConfig: AppbarConfig(
+              titleSpacing: 16,
+              actions: [const NotificationButtonWidget()],
+            ),
           );
         } else if (tabsRouter.activeIndex == 4) {
           return CommonAppBar(
@@ -74,11 +75,13 @@ class NavigationScreen extends StatelessWidget {
             hideBack: true,
 
             appbarConfig: AppbarConfig(
-                titleSpacing: 16,
-                height: 110, decoration: ()=> BoxDecoration(
-              color: Colors.white
-            )),
-            titleWidget: const ProfileHeader(avatarUrl: AppUiConstants.samplePerson),
+              titleSpacing: 16,
+              height: 110,
+              decoration: () => BoxDecoration(color: Colors.white),
+            ),
+            titleWidget: const ProfileHeader(
+              avatarUrl: AppUiConstants.samplePerson,
+            ),
           );
           return null;
         }

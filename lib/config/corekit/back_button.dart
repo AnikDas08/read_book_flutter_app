@@ -17,7 +17,7 @@ class BackButtonWidget extends StatelessWidget {
         width: 40,
         padding: const EdgeInsets.only(left: 8),
         decoration: BoxDecoration(
-          color: isDark!
+          color: (isDark != null && isDark == true)
               ? Colors.white.withValues(alpha: 0.2)
               : Colors.black.withValues(alpha: 0.4),
           shape: .circle,
@@ -25,7 +25,7 @@ class BackButtonWidget extends StatelessWidget {
         child: Center(
           child: Icon(
             Icons.arrow_back_ios,
-            color: isDark!
+            color: (isDark != null && isDark == true)
                 ? iconColor ?? Colors.black
                 : iconColor ?? Colors.white,
             size: 20,

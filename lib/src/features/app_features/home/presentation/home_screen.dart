@@ -107,20 +107,20 @@ class HomeScreen extends ConsumerWidget {
   }
 
   SizedBox _recommendedBooks(double itemSizeInrow) {
-    final cardWidth = itemSizeInrow * 0.95;
+    final cardWidth = 150.w;
     return SizedBox(
       height: cardWidth * 1.5,
       child: SingleChildScrollView(
         scrollDirection: .horizontal,
         child: Row(
           children: [
-            SizedBox(width: cardWidth, child: const BookWidget()),
+            SizedBox(width: cardWidth, child: const BookWidget(isNew: true)),
             12.width,
-            SizedBox(width: cardWidth, child: const BookWidget()),
+            SizedBox(width: cardWidth, child: const BookWidget(isNew: true)),
             12.width,
-            SizedBox(width: cardWidth, child: const BookWidget()),
+            SizedBox(width: cardWidth, child: const BookWidget(isNew: true)),
             12.width,
-            SizedBox(width: cardWidth, child: const BookWidget()),
+            SizedBox(width: cardWidth, child: const BookWidget(isNew: true)),
           ],
         ),
       ),
@@ -128,20 +128,32 @@ class HomeScreen extends ConsumerWidget {
   }
 
   SizedBox _trendingBooks(double itemSizeInrow) {
-    final cardWidth = itemSizeInrow * 0.95;
+    final cardWidth = 150.w;
     return SizedBox(
       height: cardWidth * 1.5,
       child: SingleChildScrollView(
-        scrollDirection: .horizontal,
+        scrollDirection: Axis.horizontal,
         child: Row(
           children: [
-            SizedBox(width: cardWidth, child: const BookWidget(isNew: false, isTrending: true)),
+            SizedBox(
+              width: cardWidth,
+              child: const BookWidget(isTrending: true),
+            ),
             12.width,
-            SizedBox(width: cardWidth, child: const BookWidget(isNew: false, isTrending: true)),
+            SizedBox(
+              width: cardWidth,
+              child: const BookWidget(isTrending: true),
+            ),
             12.width,
-            SizedBox(width: cardWidth, child: const BookWidget(isNew: false, isTrending: true)),
+            SizedBox(
+              width: cardWidth,
+              child: const BookWidget(isTrending: true),
+            ),
             12.width,
-            SizedBox(width: cardWidth, child: const BookWidget(isNew: false, isTrending: true)),
+            SizedBox(
+              width: cardWidth,
+              child: const BookWidget(isTrending: true),
+            ),
           ],
         ),
       ),
@@ -157,7 +169,11 @@ class HomeScreen extends ConsumerWidget {
           onTap: onTap,
           child: CommonText(
             text: AppString.show_more,
-            suffix: Icon(Icons.arrow_forward_ios, size: 14, color: context.color.ctaButtonsText),
+            suffix: Icon(
+              Icons.arrow_forward_ios,
+              size: 14,
+              color: context.color.ctaButtonsText,
+            ),
             fontSize: 14,
             fontWeight: FontWeight.bold,
             textColor: context.color.ctaButtonsText,
@@ -180,7 +196,10 @@ class HomeScreen extends ConsumerWidget {
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-        decoration: BoxDecoration(color: background, borderRadius: BorderRadius.circular(12.r)),
+        decoration: BoxDecoration(
+          color: background,
+          borderRadius: BorderRadius.circular(12.r),
+        ),
         child: Column(
           children: [
             Icon(icon, color: color, size: 32),
@@ -191,7 +210,11 @@ class HomeScreen extends ConsumerWidget {
               fontSize: 16,
               fontWeight: FontWeight.bold,
             ),
-            CommonText(text: subTitle, textColor: context.color.subtext, fontSize: 12),
+            CommonText(
+              text: subTitle,
+              textColor: context.color.subtext,
+              fontSize: 12,
+            ),
           ],
         ),
       ),
