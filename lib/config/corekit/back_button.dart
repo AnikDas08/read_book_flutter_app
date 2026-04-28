@@ -2,8 +2,9 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 class BackButtonWidget extends StatelessWidget {
-  const BackButtonWidget({super.key, this.isDark});
+  const BackButtonWidget({super.key, this.iconColor, this.isDark});
   final bool? isDark;
+  final Color? iconColor;
 
   @override
   Widget build(BuildContext context) {
@@ -14,12 +15,22 @@ class BackButtonWidget extends StatelessWidget {
       child: Container(
         height: 40,
         width: 40,
-        padding: const EdgeInsets.only(left: 10),
+        padding: const EdgeInsets.only(left: 8),
         decoration: BoxDecoration(
-          color: isDark! ?  Colors.black.withValues(alpha: 0.2) : Colors.white.withValues(alpha: 0.2),
-          shape: .circle
+          color: isDark!
+              ? Colors.white.withValues(alpha: 0.2)
+              : Colors.black.withValues(alpha: 0.4),
+          shape: .circle,
         ),
-        child:   Icon(Icons.arrow_back_ios, color: isDark!? Colors.black : Colors.white,size: 24,),
+        child: Center(
+          child: Icon(
+            Icons.arrow_back_ios,
+            color: isDark!
+                ? iconColor ?? Colors.black
+                : iconColor ?? Colors.white,
+            size: 20,
+          ),
+        ),
       ),
     );
   }

@@ -25,7 +25,7 @@ class _StoryScreenState extends ConsumerState<StoryScreen> {
     return Scaffold(
       appBar: CommonAppBar(
         title: "Short Stories",
-        leading: const BackButtonWidget(isDark: false),
+        leading: const BackButtonWidget(isDark: true,iconColor: Colors.white,),
         appbarConfig:  AppbarConfig(height: 90, titleAlignment: .center),
       ),
       body: SmartListLoader(
