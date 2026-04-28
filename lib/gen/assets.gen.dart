@@ -21,12 +21,24 @@ class $AssetsImagesGen {
   /// File path: assets/images/app_name.svg
   String get appName => 'assets/images/app_name.svg';
 
+  /// File path: assets/images/audio.svg
+  String get audio => 'assets/images/audio.svg';
+
+  /// File path: assets/images/bookmark.svg
+  String get bookmark => 'assets/images/bookmark.svg';
+
   /// File path: assets/images/empty_books.png
   AssetGenImage get emptyBooks =>
       const AssetGenImage('assets/images/empty_books.png');
 
   /// File path: assets/images/gift_box.svg
   String get giftBox => 'assets/images/gift_box.svg';
+
+  /// File path: assets/images/menu.svg
+  String get menu => 'assets/images/menu.svg';
+
+  /// File path: assets/images/message.svg
+  String get message => 'assets/images/message.svg';
 
   /// File path: assets/images/notificaiton.svg
   String get notificaiton => 'assets/images/notificaiton.svg';
@@ -50,6 +62,9 @@ class $AssetsImagesGen {
   /// File path: assets/images/open_book.svg
   String get openBook => 'assets/images/open_book.svg';
 
+  /// File path: assets/images/power.svg
+  String get power => 'assets/images/power.svg';
+
   /// File path: assets/images/rank_1.svg
   String get rank1 => 'assets/images/rank_1.svg';
 
@@ -59,45 +74,39 @@ class $AssetsImagesGen {
   /// File path: assets/images/rank_3.svg
   String get rank3 => 'assets/images/rank_3.svg';
 
+  /// File path: assets/images/settings.svg
+  String get settings => 'assets/images/settings.svg';
+
+  /// File path: assets/images/share.svg
+  String get share => 'assets/images/share.svg';
+
   /// File path: assets/images/spalsh_icon.png
   AssetGenImage get spalshIcon =>
       const AssetGenImage('assets/images/spalsh_icon.png');
-
-  String get menu =>  'assets/images/menu.svg';
-
-  String get settings =>  'assets/images/settings.svg';
-
-  String get power =>  'assets/images/power.svg';
-
-  String get audio =>  'assets/images/audio.svg';
-
-  String get bookmark =>  'assets/images/bookmark.svg';
-  String get share =>  'assets/images/share.svg';
-  String get message =>  'assets/images/message.svg';
 
   /// List of all assets
   List<dynamic> get values => [
     appIcon,
     appName,
+    audio,
+    bookmark,
     emptyBooks,
     giftBox,
+    menu,
+    message,
     notificaiton,
     onboarding1,
     onboarding2,
     onboarding3,
     onboarding4,
     openBook,
+    power,
     rank1,
     rank2,
     rank3,
-    spalshIcon,
-    menu,
     settings,
-    power,
-    audio,
-    bookmark,
     share,
-    message,
+    spalshIcon,
   ];
 }
 

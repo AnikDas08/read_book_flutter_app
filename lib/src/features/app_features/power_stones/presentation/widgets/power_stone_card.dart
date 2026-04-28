@@ -5,16 +5,19 @@ import 'package:riverpod_tamplates/config/constance/app_string.dart';
 import 'package:riverpod_tamplates/config/theme/app_theme_data.dart';
 import 'package:riverpod_tamplates/src/constants/app_font_sizes.dart';
 
-class PowerStonesCard extends StatelessWidget {
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_tamplates/src/features/app_features/power_stones/riverpod/power_stone_notifier.dart';
+
+class PowerStonesCard extends ConsumerWidget {
   const PowerStonesCard({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final stoneState = ref.watch(powerStoneProvider);
     return Container(
-
       width: double.infinity,
       height: 221,
-      padding: const .all(16),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: context.color.bgColor,
         borderRadius: BorderRadius.circular(24),
@@ -54,9 +57,9 @@ class PowerStonesCard extends StatelessWidget {
             ),
           ),
           10.height,
-          const CommonText(
-            text: '5',
-            style: TextStyle(
+          CommonText(
+            text: stoneState.availableStones.toString(),
+            style: const TextStyle(
               fontSize: 36,
               fontWeight: FontWeight.w700,
               color: Colors.black,

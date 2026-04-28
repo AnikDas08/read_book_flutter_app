@@ -5,11 +5,14 @@ import 'package:riverpod_tamplates/gen/assets.gen.dart';
 import 'package:riverpod_tamplates/src/constants/app_font_sizes.dart';
 import 'package:riverpod_tamplates/src/features/app_features/power_stones/presentation/widgets/success_reward_dailog_widget.dart';
 
-class DailyBonusBanner extends StatelessWidget {
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_tamplates/src/features/app_features/power_stones/riverpod/power_stone_notifier.dart';
+
+class DailyBonusBanner extends ConsumerWidget {
   const DailyBonusBanner({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -58,10 +61,16 @@ class DailyBonusBanner extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () {
+              ref.read(powerStoneProvider.notifier).addPowerStones(5);
+              final stoneState = ref.read(powerStoneProvider);
               showDialog(
                 context: context,
-                builder: (context) =>
-                    const Dialog(child: SuccessRewardDialogWidget()),
+                builder: (context) => Dialog(
+                  child: SuccessRewardDialogWidget(
+                    earnedAmount: 5,
+                    totalAmount: stoneState.availableStones,
+                  ),
+                ),
               );
             },
             child: Container(
