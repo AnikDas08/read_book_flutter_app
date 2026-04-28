@@ -18,6 +18,8 @@ class ChaptersDrawer extends ConsumerWidget {
     final currentChapterIndex = book.selectedChapter;
 
     return Drawer(
+      backgroundColor: Colors.white,
+      width: MediaQuery.of(context).size.width/1.5,
       child: Column(
         children: [
           Container(
@@ -60,7 +62,7 @@ class ChaptersDrawer extends ConsumerWidget {
                       Navigator.of(context).pop();
                     },
                     child: const Icon(
-                      Icons.arrow_forward,
+                      Icons.arrow_forward_ios_outlined,
                       color: Colors.white,
                       size: 24,
                     ),
