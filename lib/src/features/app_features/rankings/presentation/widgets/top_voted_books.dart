@@ -2,6 +2,7 @@ import 'package:core_kit/core_kit_internal.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_tamplates/config/constance/constants.dart';
 import 'package:riverpod_tamplates/gen/assets.gen.dart';
+import 'package:riverpod_tamplates/src/constants/app_font_sizes.dart';
 
 class TopVotedBooks extends StatelessWidget {
   const TopVotedBooks({super.key});
@@ -92,23 +93,26 @@ class BookRankCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(color: baseColor, borderRadius: BorderRadius.circular(24)),
+      decoration: BoxDecoration(
+        color: baseColor,
+        borderRadius: BorderRadius.circular(24),
+      ),
       child: isHorizontal ? _buildHorizontal() : _buildVertical(),
     );
   }
- 
+
   Widget _buildHorizontal() {
     return Row(
       children: [
         _buildImageWithBadge(80, 110),
-        const SizedBox(width: 16), 
+        const SizedBox(width: 16),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildRankBadge(), 
-              Text(title, style: _titleStyle(20)),
-              Text(author, style: _authorStyle()), 
+              _buildRankBadge(),
+              CommonText(text: title, style: _titleStyle(18),textAlign: .start,),
+              CommonText(style: _authorStyle(), text: author),
               6.height,
               _buildVoteChip(),
             ],
@@ -117,14 +121,14 @@ class BookRankCard extends StatelessWidget {
       ],
     );
   }
- 
+
   Widget _buildVertical() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildImageWithBadge(double.infinity, 140),
         4.height,
-        _buildRankBadge(), 
+        _buildRankBadge(),
         CommonText(
           text: title,
           maxLines: 1,
@@ -138,9 +142,8 @@ class BookRankCard extends StatelessWidget {
       ],
     );
   }
- 
-  Widget _buildImageWithBadge(double width, double height) {
 
+  Widget _buildImageWithBadge(double width, double height) {
     var rankImage = '';
     if (rank == 1) {
       rankImage = Assets.images.rank1;
@@ -178,7 +181,11 @@ class BookRankCard extends StatelessWidget {
       children: [
         Text(
           '$rank',
-          style: const TextStyle(color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold),
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 30,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         4.width,
         Container(
@@ -189,7 +196,11 @@ class BookRankCard extends StatelessWidget {
           ),
           child: Text(
             rankLabel,
-            style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: AppFontSizes.small.sp,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
       ],
@@ -210,14 +221,22 @@ class BookRankCard extends StatelessWidget {
           const Icon(Icons.bolt, color: Colors.white, size: 16),
           Text(
             ' $votes votes',
-            style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ],
       ),
     );
   }
 
-  TextStyle _titleStyle(double size) =>
-      TextStyle(color: Colors.white, fontSize: size, fontWeight: FontWeight.bold);
-  TextStyle _authorStyle() => TextStyle(color: Colors.white.withValues(alpha: .9), fontSize: 14);
+  TextStyle _titleStyle(double size) => TextStyle(
+    color: Colors.white,
+    fontSize: size,
+    fontWeight: FontWeight.bold,
+  );
+  TextStyle _authorStyle() =>
+      TextStyle(color: Colors.white.withValues(alpha: .9), fontSize: 14);
 }
