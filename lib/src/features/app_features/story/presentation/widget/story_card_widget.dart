@@ -117,13 +117,13 @@ class StoryCardWidget extends StatelessWidget {
                             text: rating.toString(),
                             style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
                           ),
-                          const SizedBox(width: 12),
-                          const Icon(Icons.menu_book_rounded, color: Color(0xFF9EA7B5), size: 16),
-                          const SizedBox(width: 4),
-                          CommonText(
-                            text: '$chapters ${AppString.chapters}',
-                            style: const TextStyle(color: Color(0xFF9EA7B5), fontSize: 12),
-                          ),
+                          // const SizedBox(width: 12),
+                          // const Icon(Icons.menu_book_rounded, color: Color(0xFF9EA7B5), size: 16),
+                          // const SizedBox(width: 4),
+                          // CommonText(
+                          //   text: '$chapters ${AppString.chapters}',
+                          //   style: const TextStyle(color: Color(0xFF9EA7B5), fontSize: 12),
+                          // ),
                         ],
                       ),
                       Row(
