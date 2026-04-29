@@ -57,16 +57,17 @@ class LoginScreen extends ConsumerWidget {
               25.height,
               InputCardWidget(child: _inputSections(context, entity)),
               24.height,
-              CommonButton(
-                buttonColor: context.color.bgColor,
-                titleGradient: context.color.ctaGradientLogo,
-                titleText: AppString.login_title,
-                isLoading: authState.isLoading,
-                onTap: () {
-                  // if (formKey.currentState?.validate() ?? false) {
-                  authNotifier.login(entity['email']!, entity['password']!);
-                  // }
-                },
+              SizedBox(
+                width: double.infinity,
+                child: CommonButton(
+                  buttonColor: context.color.bgColor,
+                  titleGradient: context.color.ctaGradientLogo,
+                  titleText: AppString.login_title,
+                  isLoading: authState.isLoading,
+                  onTap: () {
+                    authNotifier.login(entity['email']!, entity['password']!);
+                  },
+                ),
               ),
               24.height,
               GestureDetector(
