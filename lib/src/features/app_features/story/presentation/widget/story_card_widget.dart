@@ -10,7 +10,6 @@ class StoryCardWidget extends StatelessWidget {
   final String author;
   final String summary;
   final String? imageUrl;
-  final String timeAgo;
   final double rating;
   final int chapters;
   final String views;
@@ -22,7 +21,6 @@ class StoryCardWidget extends StatelessWidget {
     this.summary =
         'She was his assistant. He was her boss. But the lines between business and pleasure blur in this steamy romance.',
     this.imageUrl,
-    this.timeAgo = '30 min ago',
     this.rating = 4.8,
     this.chapters = 5,
     this.views = '45K',
@@ -78,16 +76,6 @@ class StoryCardWidget extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      Row(
-                        children: [
-                          const Icon(Icons.access_time, size: 14, color: Color(0xFF9EA7B5)),
-                          const SizedBox(width: 4),
-                          CommonText(
-                            text: timeAgo,
-                            style: const TextStyle(fontSize: 12, color: Color(0xFF9EA7B5)),
-                          ),
-                        ],
-                      ),
                     ],
                   ),
 
@@ -117,13 +105,13 @@ class StoryCardWidget extends StatelessWidget {
                             text: rating.toString(),
                             style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
                           ),
-                          const SizedBox(width: 12),
-                          const Icon(Icons.menu_book_rounded, color: Color(0xFF9EA7B5), size: 16),
-                          const SizedBox(width: 4),
-                          CommonText(
-                            text: '$chapters ${AppString.chapters}',
-                            style: const TextStyle(color: Color(0xFF9EA7B5), fontSize: 12),
-                          ),
+                          // const SizedBox(width: 12),
+                          // const Icon(Icons.menu_book_rounded, color: Color(0xFF9EA7B5), size: 16),
+                          // const SizedBox(width: 4),
+                          // CommonText(
+                          //   text: '$chapters ${AppString.chapters}',
+                          //   style: const TextStyle(color: Color(0xFF9EA7B5), fontSize: 12),
+                          // ),
                         ],
                       ),
                       Row(
