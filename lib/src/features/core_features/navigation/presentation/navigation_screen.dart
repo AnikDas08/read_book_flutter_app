@@ -56,7 +56,7 @@ class NavigationScreen extends StatelessWidget {
           return CommonAppBar(
             disableBack: true,
             hideBack: true,
-            appbarConfig: AppbarConfig(height: 190),
+            appbarConfig: AppbarConfig(height: 200),
             titleWidget: const HomeScreenAppBar(),
           );
         } else if (tabsRouter.activeIndex == 3) {

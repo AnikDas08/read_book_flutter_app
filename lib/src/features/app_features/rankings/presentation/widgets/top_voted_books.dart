@@ -111,7 +111,11 @@ class BookRankCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildRankBadge(),
-              CommonText(text: title, style: _titleStyle(18),textAlign: .start,),
+              CommonText(
+                text: title,
+                style: _titleStyle(18),
+                textAlign: .start,
+              ),
               CommonText(style: _authorStyle(), text: author),
               6.height,
               _buildVoteChip(),
