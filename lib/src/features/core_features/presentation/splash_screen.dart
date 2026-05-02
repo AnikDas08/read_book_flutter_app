@@ -61,7 +61,15 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(height: MediaQuery.of(context).padding.top + 30),
+                  // SizedBox(height: MediaQuery.of(context).padding.top + 30),
+                  CommonAppBar(
+                    disableBack: true,
+                    hideBack: true,
+                    appbarConfig: AppbarConfig(
+                      decoration: () =>
+                          BoxDecoration(color: Colors.transparent),
+                    ),
+                  ),
                   const Spacer(),
                   CommonImage(
                     src: Assets.images.spalshIcon.path,
