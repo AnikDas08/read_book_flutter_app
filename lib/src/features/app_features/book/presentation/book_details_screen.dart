@@ -41,136 +41,154 @@ class BookDetailsScreen extends ConsumerWidget {
       ),
       backgroundColor: context.color.bgColor,
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.fromLTRB(16.w, 18.h, 16.w, 28.h),
+        top: false,
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.w),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              22.height,
-              Row(
-                spacing: 5,
-                children: [
-                  const Expanded(
-                    child: _StatCard(
-                      icon: Icons.menu_book_outlined,
-                      iconColor: Color(0xFF6B21A8),
-                      title: '87',
-                      subtitle: 'Chapters',
-                    ),
-                  ),
-
-                  const Expanded(
-                    child: _StatCard(
-                      icon: Icons.access_time_outlined,
-                      iconColor: Color(0xFF6B21A8),
-                      title: 'Completed',
-                      subtitle: 'Status',
-                    ),
-                  ),
-
-                  const Expanded(
-                    child: _StatCard(
-                      icon: Icons.electric_bolt_outlined,
-                      iconColor: Color(0xFFFFC107),
-                      title: '7',
-                      subtitle: 'Power Stones',
-                    ),
-                  ),
-
-                  Expanded(
-                    child: _VoteCard(
-                      onTap: () {
-                        showDialog<void>(
-                          context: context,
-                          builder: (_) => const Dialog(
-                            backgroundColor: Colors.transparent,
-                            insetPadding: EdgeInsets.symmetric(horizontal: 20),
-                            child: SuccessVoteDialogWidget(
-                              earnedAmount: 2,
-                              totalAmount: 5,
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Row(
+                        spacing: 5,
+                        children: [
+                          const Expanded(
+                            child: _StatCard(
+                              icon: Icons.menu_book_outlined,
+                              iconColor: Color(0xFF6B21A8),
+                              title: '87',
+                              subtitle: 'Chapters',
                             ),
                           ),
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              22.height,
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    width: 94.w,
-                    height: 140.h,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(14),
-                      border: Border.all(
-                        color: const Color(0xFF1F2937),
-                        width: 1.1,
-                      ),
-                    ),
-                    clipBehavior: Clip.antiAlias,
-                    child: const CommonImage(
-                      src: Constants.sampleImage,
-                      fill: BoxFit.fill,
-                    ),
-                  ),
-                  10.width,
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        CommonText(
-                          text: AppString.shadow_of_the_violet_moon,
-                          fontSize: AppFontSizes.extraLarge,
-                          fontWeight: FontWeight.w500,
-                          textColor: context.color.headingBoldText,
-                        ),
-                        6.height,
-                        const CommonText(
-                          text: '• Elena Nightshade',
-                          fontSize: AppFontSizes.small,
-                          fontWeight: FontWeight.w400,
-                          textColor: Color(0xFF333333),
-                        ),
-                        10.height,
-                        const SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: [
-                              _InfoChip(
-                                icon: Icons.star,
-                                iconColor: Color(0xFFFFC107),
-                                text: '4.8',
-                              ),
-                              SizedBox(width: 8),
-                              _InfoChip(icon: Icons.visibility, text: '1.2M'),
-                              SizedBox(width: 8),
-                              _InfoChip(text: 'Age: 18+'),
-                            ],
+
+                          const Expanded(
+                            child: _StatCard(
+                              icon: Icons.access_time_outlined,
+                              iconColor: Color(0xFF6B21A8),
+                              title: 'Completed',
+                              subtitle: 'Status',
+                            ),
                           ),
-                        ),
-                        10.height,
-                        const Row(
-                          children: [
-                            Expanded(child: _GenreChip(label: 'Fantasy')),
-                            SizedBox(width: 8),
-                            Expanded(child: _GenreChip(label: 'Romance')),
-                            SizedBox(width: 8),
-                            Expanded(child: _GenreChip(label: 'Magic')),
-                          ],
-                        ),
-                      ],
-                    ),
+
+                          const Expanded(
+                            child: _StatCard(
+                              icon: Icons.electric_bolt_outlined,
+                              iconColor: Color(0xFFFFC107),
+                              title: '7',
+                              subtitle: 'Power Stones',
+                            ),
+                          ),
+
+                          Expanded(
+                            child: _VoteCard(
+                              onTap: () {
+                                showDialog<void>(
+                                  context: context,
+                                  builder: (_) => const Dialog(
+                                    backgroundColor: Colors.transparent,
+                                    insetPadding: EdgeInsets.symmetric(
+                                      horizontal: 20,
+                                    ),
+                                    child: SuccessVoteDialogWidget(
+                                      earnedAmount: 2,
+                                      totalAmount: 5,
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                      10.height,
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            width: 94.w,
+                            height: 140.h,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(14),
+                              border: Border.all(
+                                color: const Color(0xFF1F2937),
+                                width: 1.1,
+                              ),
+                            ),
+                            clipBehavior: Clip.antiAlias,
+                            child: const CommonImage(
+                              src: Constants.sampleImage,
+                              fill: BoxFit.fill,
+                            ),
+                          ),
+                          10.width,
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                CommonText(
+                                  text: AppString.shadow_of_the_violet_moon,
+                                  fontSize: AppFontSizes.extraLarge,
+                                  fontWeight: FontWeight.w500,
+                                  textColor: context.color.headingBoldText,
+                                ),
+                                6.height,
+                                const CommonText(
+                                  text: '• Elena Nightshade',
+                                  fontSize: AppFontSizes.small,
+                                  fontWeight: FontWeight.w400,
+                                  textColor: Color(0xFF333333),
+                                ),
+                                10.height,
+                                const SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Row(
+                                    children: [
+                                      _InfoChip(
+                                        icon: Icons.star,
+                                        iconColor: Color(0xFFFFC107),
+                                        text: '4.8',
+                                      ),
+                                      SizedBox(width: 8),
+                                      _InfoChip(
+                                        icon: Icons.visibility,
+                                        text: '1.2M',
+                                      ),
+                                      SizedBox(width: 8),
+                                      _InfoChip(text: 'Age: 18+'),
+                                    ],
+                                  ),
+                                ),
+                                10.height,
+                                const Row(
+                                  children: [
+                                    Expanded(
+                                      child: _GenreChip(label: 'Fantasy'),
+                                    ),
+                                    SizedBox(width: 8),
+                                    Expanded(
+                                      child: _GenreChip(label: 'Romance'),
+                                    ),
+                                    SizedBox(width: 8),
+                                    Expanded(child: _GenreChip(label: 'Magic')),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      10.height,
+
+                      _ExpandableDescription(
+                        text: AppString.book_description_sample,
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
-              10.height,
 
-              _ExpandableDescription(text: AppString.book_description_sample),
-
-              8.height,
               GestureDetector(
                 onTap: () {
                   ref.read(readProvider.notifier).selectBook();
@@ -209,7 +227,7 @@ class BookDetailsScreen extends ConsumerWidget {
                   ),
                 ),
               ),
-              22.height,
+              10.height,
               Row(
                 children: [
                   Expanded(
@@ -339,8 +357,8 @@ class _StatCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 75.h,
-      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 10.h),
+      height: 60.h,
+      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(8),
@@ -389,7 +407,7 @@ class _VoteCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: 75.h,
+        height: 60.h,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
           gradient: const LinearGradient(
@@ -562,7 +580,7 @@ class _ExpandableDescriptionState extends State<_ExpandableDescription> {
             fontWeight: FontWeight.w400,
             textAlign: TextAlign.left,
             textColor: const Color(0xFF1F2937),
-            maxLines: 12,
+            maxLines: 14,
             isDescription: true,
           ),
           secondChild: CommonText(
@@ -571,7 +589,7 @@ class _ExpandableDescriptionState extends State<_ExpandableDescription> {
             fontWeight: FontWeight.w400,
             textAlign: TextAlign.left,
             textColor: const Color(0xFF1F2937),
-            maxLines: 12,
+            maxLines: 14,
             isDescription: false,
           ),
         ),

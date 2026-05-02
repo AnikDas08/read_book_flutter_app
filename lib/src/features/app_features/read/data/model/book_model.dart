@@ -95,32 +95,34 @@ class BookModel {
 class BookChapter {
   final String? id;
   final String? title;
-  final String? content;
   final String? createdAt;
   final String? updatedAt;
   final bool isLocked;
   final int unlockAdsRequired;
   final int watchedAds;
   final bool showSparkle;
+  final List<String> pages;
 
   const BookChapter({
     this.id,
     this.title,
-    this.content,
     this.createdAt,
     this.updatedAt,
     this.isLocked = false,
     this.unlockAdsRequired = 0,
     this.watchedAds = 0,
     this.showSparkle = false,
+    this.pages = const [],
   });
 
   factory BookChapter.fromJson(Map<String, dynamic> json) => BookChapter(
     id: json["id"],
     title: json["title"],
-    content: json["content"],
     createdAt: json["created_at"],
     updatedAt: json["updated_at"],
+    pages: json["pages"] == null
+        ? []
+        : List<String>.from(json["pages"]!.map((x) => x)),
     isLocked: json["is_locked"] ?? false,
     unlockAdsRequired: json["unlock_ads_required"] ?? 0,
     watchedAds: json["watched_ads"] ?? 0,
@@ -130,32 +132,32 @@ class BookChapter {
   Map<String, dynamic> toJson() => {
     "id": id,
     "title": title,
-    "content": content,
     "created_at": createdAt,
     "updated_at": updatedAt,
     "is_locked": isLocked,
     "unlock_ads_required": unlockAdsRequired,
     "watched_ads": watchedAds,
     "show_sparkle": showSparkle,
+    "pages": List<dynamic>.from(pages.map((x) => x)),
   };
 
   BookChapter copyWith({
     String? id,
     String? title,
-    String? content,
     String? createdAt,
     String? updatedAt,
     bool? isLocked,
     int? unlockAdsRequired,
     int? watchedAds,
+    List<String>? pages,
     bool? showSparkle,
   }) {
     return BookChapter(
       id: id ?? this.id,
       title: title ?? this.title,
-      content: content ?? this.content,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      pages: pages ?? this.pages,
       isLocked: isLocked ?? this.isLocked,
       unlockAdsRequired: unlockAdsRequired ?? this.unlockAdsRequired,
       watchedAds: watchedAds ?? this.watchedAds,

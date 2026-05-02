@@ -19,7 +19,7 @@ class ReadState extends Equatable {
     this.lineSpacing = 1,
     this.selectedMode = 0,
     this.readingMode = ReadingMode.slide,
-    this.isActionPanelVisible = true,
+    this.isActionPanelVisible = false,
   });
 
   ReadState copyWith({

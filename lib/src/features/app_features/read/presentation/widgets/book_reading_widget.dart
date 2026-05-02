@@ -27,11 +27,29 @@ class _BookReadingWidgetState extends ConsumerState<BookReadingWidget> {
   void initState() {
     super.initState();
     final readState = ref.read(readProvider);
-    _pageController = PageController(
-      initialPage: readState.slectedBook?.selectedChapter ?? 0,
-    );
+    final book = readState.slectedBook;
+    var initialPage = 0;
+    if (book != null) {
+      initialPage = _getInitialPage(book);
+    }
+    _pageController = PageController(initialPage: initialPage);
+    _flipPageNotifier.value = initialPage.toDouble();
     _pageController.addListener(_onPageScroll);
     _scrollController.addListener(_onScrollChapterDetect);
+  }
+
+  int _getInitialPage(BookModel book) {
+    var pageIndex = 0;
+    for (var i = 0; i < book.chapters.length; i++) {
+      if (i == book.selectedChapter) return pageIndex;
+      final ch = book.chapters[i];
+      if (ch.isLocked || ch.pages.isEmpty) {
+        pageIndex += 1;
+      } else {
+        pageIndex += ch.pages.length;
+      }
+    }
+    return pageIndex;
   }
 
   void _onPageScroll() {
@@ -48,7 +66,7 @@ class _BookReadingWidgetState extends ConsumerState<BookReadingWidget> {
     if (scrollBox == null) return;
     final scrollTop = scrollBox.localToGlobal(Offset.zero).dy;
 
-    int visibleChapter = 0;
+    var visibleChapter = 0;
     for (final entry in _chapterKeys.entries) {
       final key = entry.value;
       final renderObj = key.currentContext?.findRenderObject() as RenderBox?;
@@ -63,7 +81,8 @@ class _BookReadingWidgetState extends ConsumerState<BookReadingWidget> {
       }
     }
 
-    final currentSelected = ref.read(readProvider).slectedBook?.selectedChapter ?? 0;
+    final currentSelected =
+        ref.read(readProvider).slectedBook?.selectedChapter ?? 0;
     if (visibleChapter != currentSelected) {
       ref.read(readProvider.notifier).selectChapter(visibleChapter);
     }
@@ -79,6 +98,37 @@ class _BookReadingWidgetState extends ConsumerState<BookReadingWidget> {
     super.dispose();
   }
 
+  List<_ReaderPage> _flattenPages(BookModel book) {
+    final pages = <_ReaderPage>[];
+    for (var i = 0; i < book.chapters.length; i++) {
+      final ch = book.chapters[i];
+      if (ch.isLocked || ch.pages.isEmpty) {
+        pages.add(
+          _ReaderPage(
+            chapter: ch,
+            chapterIndex: i,
+            content: null,
+            pageIndex: 0,
+            totalPages: 1,
+          ),
+        );
+      } else {
+        for (var p = 0; p < ch.pages.length; p++) {
+          pages.add(
+            _ReaderPage(
+              chapter: ch,
+              chapterIndex: i,
+              content: ch.pages[p],
+              pageIndex: p,
+              totalPages: ch.pages.length,
+            ),
+          );
+        }
+      }
+    }
+    return pages;
+  }
+
   @override
   Widget build(BuildContext context) {
     final readState = ref.watch(readProvider);
@@ -89,14 +139,25 @@ class _BookReadingWidgetState extends ConsumerState<BookReadingWidget> {
     final currentChapterIndex = book.selectedChapter;
     final chapter = book.chapters[currentChapterIndex];
 
+    final flatPages = _flattenPages(book);
+    var targetPageIndex = flatPages.indexWhere(
+      (p) => p.chapterIndex == currentChapterIndex,
+    );
+    if (targetPageIndex == -1) targetPageIndex = 0;
+
     if (readState.readingMode != ReadingMode.scroll &&
-        _pageController.hasClients &&
-        (_pageController.page?.round() ?? 0) != currentChapterIndex) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted && _pageController.hasClients) {
-          _pageController.jumpToPage(currentChapterIndex);
+        _pageController.hasClients) {
+      final currentFlatPage = _pageController.page?.round() ?? 0;
+      if (flatPages.isNotEmpty && currentFlatPage < flatPages.length) {
+        final currentDisplayedChapter = flatPages[currentFlatPage].chapterIndex;
+        if (currentDisplayedChapter != currentChapterIndex) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted && _pageController.hasClients) {
+              _pageController.jumpToPage(targetPageIndex);
+            }
+          });
         }
-      });
+      }
     }
 
     return Column(
@@ -105,27 +166,43 @@ class _BookReadingWidgetState extends ConsumerState<BookReadingWidget> {
         Expanded(
           child: chapter.isLocked
               ? _LockedChapterView(chapter: chapter, onUnlock: _startUnlockFlow)
-              : _buildReadingContent(context, readState, book, theme),
+              : _buildReadingContent(
+                  context,
+                  readState,
+                  book,
+                  theme,
+                  flatPages,
+                ),
         ),
         if (readState.readingMode != ReadingMode.scroll) ...[
           4.height,
-          CommonText(
-            text: '${currentChapterIndex + 1} of ${book.chapters.length}',
-            fontSize: AppFontSizes.medium,
-            textColor: theme.subtleTextColor,
-          ).end,
+          ValueListenableBuilder<double>(
+            valueListenable: _flipPageNotifier,
+            builder: (context, pageValue, child) {
+              final flatIndex = pageValue.round();
+              if (flatPages.isEmpty || flatIndex >= flatPages.length) {
+                return const SizedBox.shrink();
+              }
+              final pageObj = flatPages[flatIndex];
+              return CommonText(
+                text: 'Page ${pageObj.pageIndex + 1} of ${pageObj.totalPages}',
+                fontSize: AppFontSizes.medium,
+                textColor: theme.subtleTextColor,
+              ).end;
+            },
+          ),
         ],
       ],
     );
   }
 
-  /// Builds a single chapter card (reused across modes).
-  Widget _buildChapterCard(
-    BookChapter chapter,
+  /// Builds a single chapter/page card (reused across modes).
+  Widget _buildPageCard(
+    _ReaderPage page,
     ReadState readState,
     _ReaderVisualTheme theme,
   ) {
-    if (chapter.isLocked) {
+    if (page.chapter.isLocked) {
       return _ReadingCard(
         theme: theme,
         child: Center(
@@ -145,7 +222,7 @@ class _BookReadingWidgetState extends ConsumerState<BookReadingWidget> {
       child: SingleChildScrollView(
         padding: EdgeInsets.fromLTRB(20.w, 18.h, 20.w, 24.h),
         child: _ChapterText(
-          chapter: chapter,
+          content: page.content ?? '',
           fontSize: readState.fontSize,
           lineSpacing: readState.lineSpacing,
           textColor: theme.contentColor,
@@ -159,6 +236,7 @@ class _BookReadingWidgetState extends ConsumerState<BookReadingWidget> {
     ReadState readState,
     BookModel book,
     _ReaderVisualTheme theme,
+    List<_ReaderPage> flatPages,
   ) {
     // ── SCROLL MODE: continuous scrolling through all chapters ──
     if (readState.readingMode == ReadingMode.scroll) {
@@ -199,7 +277,7 @@ class _BookReadingWidgetState extends ConsumerState<BookReadingWidget> {
                   16.height,
                 ],
                 _ChapterText(
-                  chapter: chapter,
+                  content: chapter.pages.join('\n\n'),
                   fontSize: readState.fontSize,
                   lineSpacing: readState.lineSpacing,
                   textColor: theme.contentColor,
@@ -217,14 +295,18 @@ class _BookReadingWidgetState extends ConsumerState<BookReadingWidget> {
         key: const ValueKey('flip_page_view'),
         controller: _pageController,
         physics: const BouncingScrollPhysics(),
-        onPageChanged: (index) =>
-            ref.read(readProvider.notifier).selectChapter(index),
-        itemCount: book.chapters.length,
+        onPageChanged: (index) {
+          final targetChapter = flatPages[index].chapterIndex;
+          if (targetChapter != readState.slectedBook?.selectedChapter) {
+            ref.read(readProvider.notifier).selectChapter(targetChapter);
+          }
+        },
+        itemCount: flatPages.length,
         itemBuilder: (context, index) {
           return ValueListenableBuilder<double>(
             valueListenable: _flipPageNotifier,
             builder: (context, currentPage, child) {
-              double pageOffset = (currentPage - index).clamp(-1.0, 1.0);
+              final pageOffset = (currentPage - index).clamp(-1.0, 1.0);
 
               // rotation: rotate up to 90° (pi/2) based on page offset
               final angle = pageOffset * math.pi / 2;
@@ -252,7 +334,9 @@ class _BookReadingWidgetState extends ConsumerState<BookReadingWidget> {
                       Positioned.fill(
                         child: DecoratedBox(
                           decoration: BoxDecoration(
-                            color: Colors.black.withValues(alpha: shadowOpacity),
+                            color: Colors.black.withValues(
+                              alpha: shadowOpacity,
+                            ),
                             borderRadius: BorderRadius.circular(24.r),
                           ),
                         ),
@@ -261,11 +345,7 @@ class _BookReadingWidgetState extends ConsumerState<BookReadingWidget> {
                 ),
               );
             },
-            child: _buildChapterCard(
-              book.chapters[index],
-              readState,
-              theme,
-            ),
+            child: _buildPageCard(flatPages[index], readState, theme),
           );
         },
       );
@@ -276,11 +356,15 @@ class _BookReadingWidgetState extends ConsumerState<BookReadingWidget> {
       key: const ValueKey('slide_page_view'),
       controller: _pageController,
       physics: const BouncingScrollPhysics(),
-      onPageChanged: (index) =>
-          ref.read(readProvider.notifier).selectChapter(index),
-      itemCount: book.chapters.length,
+      onPageChanged: (index) {
+        final targetChapter = flatPages[index].chapterIndex;
+        if (targetChapter != readState.slectedBook?.selectedChapter) {
+          ref.read(readProvider.notifier).selectChapter(targetChapter);
+        }
+      },
+      itemCount: flatPages.length,
       itemBuilder: (context, index) {
-        return _buildChapterCard(book.chapters[index], readState, theme);
+        return _buildPageCard(flatPages[index], readState, theme);
       },
     );
   }
@@ -307,7 +391,6 @@ class _BookReadingWidgetState extends ConsumerState<BookReadingWidget> {
       await _startUnlockFlow(updatedChapter);
     }
   }
-
 }
 
 class _ReaderVisualTheme {
@@ -385,20 +468,20 @@ class _ReadingCard extends StatelessWidget {
 
 class _ChapterText extends StatelessWidget {
   const _ChapterText({
-    required this.chapter,
+    required this.content,
     required this.fontSize,
     required this.lineSpacing,
     required this.textColor,
   });
 
-  final BookChapter chapter;
+  final String content;
   final double fontSize;
   final double lineSpacing;
   final Color textColor;
 
   @override
   Widget build(BuildContext context) {
-    final paragraphs = (chapter.content ?? '')
+    final paragraphs = content
         .split('\n\n')
         .where((e) => e.trim().isNotEmpty)
         .toList();
@@ -482,4 +565,20 @@ class _LockedChapterView extends StatelessWidget {
       ),
     );
   }
+}
+
+class _ReaderPage {
+  final BookChapter chapter;
+  final int chapterIndex;
+  final String? content;
+  final int pageIndex;
+  final int totalPages;
+
+  _ReaderPage({
+    required this.chapter,
+    required this.chapterIndex,
+    this.content,
+    required this.pageIndex,
+    required this.totalPages,
+  });
 }

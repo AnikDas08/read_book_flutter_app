@@ -98,14 +98,14 @@ class ReadScreen extends ConsumerWidget {
                         curve: Curves.easeOutCubic,
                         offset: readState.isActionPanelVisible
                             ? Offset.zero
-                            : const Offset(0, 0.22),
+                            : const Offset(0, 0.2),
                         child: AnimatedOpacity(
                           duration: const Duration(milliseconds: 220),
                           curve: Curves.easeOut,
                           opacity: readState.isActionPanelVisible ? 1 : 0,
                           child: ActionBarWidget(
                             onOpenChapters: () =>
-                                Scaffold.of(scaffoldContext).openEndDrawer(),
+                                Scaffold.of(scaffoldContext).openDrawer(),
                             onOpenSettings: () => _showSettings(context),
                             onOpenShare: () => _showShare(context),
                             onOpenBookmark: () => _showBookmark(context),

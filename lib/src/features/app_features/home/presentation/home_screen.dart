@@ -73,6 +73,18 @@ class HomeScreen extends ConsumerWidget {
             );
           }, context),
           _trendingBooks(itemSizeInrow),
+
+          _headline('💜 ${AppString.recommended_for_you}', () {
+            context.router.push(
+              ShowMoreBooksRoute(
+                title: AppString.recommended_for_you,
+                isNew: true,
+                isTrending: false,
+                isListType: false,
+              ),
+            );
+          }, context),
+          _recommendedBooks(itemSizeInrow),
           _headline('✨ ${AppString.new_releases}', () {
             context.router.push(
               ShowMoreBooksRoute(
@@ -84,41 +96,27 @@ class HomeScreen extends ConsumerWidget {
             );
           }, context),
           10.height,
-          ...List.generate(2, (index) => const BookFeedCardWidget()),
+          ...List.generate(5, (index) => const BookFeedCardWidget()),
           10.height,
-          _headline('💜 ${AppString.recommended_for_you}', () {
-            context.router.push(
-              ShowMoreBooksRoute(
-                title: AppString.recommended_for_you,
-                isNew: true,
-                isTrending: false,
-                isListType: false,
-              ),
-            );
-          }, context),
-          10.height,
-          _recommendedBooks(itemSizeInrow),
-          30.height,
         ],
       ),
     );
   }
 
   SizedBox _recommendedBooks(double itemSizeInrow) {
-    final cardWidth = 150.w;
     return SizedBox(
-      height: cardWidth * 1.5,
+      height: 180.h,
       child: SingleChildScrollView(
         scrollDirection: .horizontal,
         child: Row(
           children: [
-            SizedBox(width: cardWidth, child: const BookWidget(isNew: true)),
-            12.width,
-            SizedBox(width: cardWidth, child: const BookWidget(isNew: true)),
-            12.width,
-            SizedBox(width: cardWidth, child: const BookWidget(isNew: true)),
-            12.width,
-            SizedBox(width: cardWidth, child: const BookWidget(isNew: true)),
+            const BookWidget(isTrending: true),
+            8.width,
+            const BookWidget(isTrending: true),
+            8.width,
+            const BookWidget(isTrending: true),
+            8.width,
+            const BookWidget(isTrending: true),
           ],
         ),
       ),
