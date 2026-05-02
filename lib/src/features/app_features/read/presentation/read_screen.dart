@@ -105,7 +105,7 @@ class ReadScreen extends ConsumerWidget {
                           opacity: readState.isActionPanelVisible ? 1 : 0,
                           child: ActionBarWidget(
                             onOpenChapters: () =>
-                                Scaffold.of(scaffoldContext).openDrawer(),
+                                Scaffold.of(scaffoldContext).openEndDrawer(),
                             onOpenSettings: () => _showSettings(context),
                             onOpenShare: () => _showShare(context),
                             onOpenBookmark: () => _showBookmark(context),
