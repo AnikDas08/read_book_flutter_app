@@ -224,7 +224,7 @@ class _PowerStonesSummary extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => context.router.push(const PowerStonesRoute()),
+      onTap: () => context.router.push(const UsedPowerStonesHistoryRoute()),
       child: Container(
         height: 80.h,
         padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -351,7 +351,8 @@ class _SettingsTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: SizedBox(
+      child: Container(
+        color: Colors.white,
         height: 60,
         child: Row(
           children: [

@@ -30,11 +30,9 @@ class _FaqScreenState extends State<FaqScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CommonAppBar(
-        leading: const BackButtonWidget(isDark: true),
+        leading: const BackButtonWidget(isDark: false),
 
         appbarConfig: AppbarConfig(
-          leadingAlignment: .bottomStart,
-          leadingPadding: .zero,
           decoration: () => const BoxDecoration(color: Colors.white),
         ),
       ),

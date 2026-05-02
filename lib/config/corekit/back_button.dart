@@ -25,9 +25,7 @@ class BackButtonWidget extends StatelessWidget {
         child: Center(
           child: Icon(
             Icons.arrow_back_ios,
-            color: (isDark != null && isDark == true)
-                ? iconColor ?? Colors.black
-                : iconColor ?? Colors.white,
+            color: iconColor ?? Colors.white,
             size: 20,
           ),
         ),

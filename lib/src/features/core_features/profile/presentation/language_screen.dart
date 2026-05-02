@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_tamplates/config/corekit/back_button.dart';
 import 'package:riverpod_tamplates/config/theme/app_theme_data.dart';
 import 'package:riverpod_tamplates/src/constants/app_font_sizes.dart';
-
 import 'package:riverpod_tamplates/src/features/core_features/profile/application/language_notifier.dart';
 
 @RoutePage()
@@ -30,10 +29,8 @@ class LanguageScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: CommonAppBar(
-        leading: const BackButtonWidget(isDark: true),
+        leading: const BackButtonWidget(isDark: false),
         appbarConfig: AppbarConfig(
-          leadingAlignment: .bottomStart,
-          leadingPadding: .zero,
           decoration: () => const BoxDecoration(color: Colors.white),
         ),
       ),
@@ -44,14 +41,14 @@ class LanguageScreen extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              24.height,
+              10.height,
               CommonText(
                 text: 'Language',
                 fontSize: AppFontSizes.extraLarge,
                 fontWeight: FontWeight.w700,
                 textColor: context.color.headingBoldText,
               ),
-              34.height,
+              10.height,
               Expanded(
                 child: ListView.builder(
                   itemCount: _languages.length,
@@ -64,7 +61,9 @@ class LanguageScreen extends ConsumerWidget {
                           .changeLanguage(language),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 10),
+                          horizontal: 16,
+                          vertical: 10,
+                        ),
                         child: Row(
                           children: [
                             Container(

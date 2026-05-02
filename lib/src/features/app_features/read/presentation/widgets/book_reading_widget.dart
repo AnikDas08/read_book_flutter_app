@@ -55,12 +55,12 @@ class _BookReadingWidgetState extends ConsumerState<BookReadingWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        CommonText(
-          text: chapter.title ?? 'Chapter',
-          fontSize: AppFontSizes.heading,
-          fontWeight: FontWeight.w700,
-          textColor: theme.titleColor,
-        ),
+        // CommonText(
+        //   text: chapter.title ?? 'Chapter',
+        //   fontSize: AppFontSizes.heading,
+        //   fontWeight: FontWeight.w700,
+        //   textColor: theme.titleColor,
+        // ),
         if (!chapter.isLocked) ...[
           10.height,
           CommonText(

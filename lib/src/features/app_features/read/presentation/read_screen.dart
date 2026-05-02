@@ -30,14 +30,26 @@ class ReadScreen extends ConsumerWidget {
     final pageBackground = readState.slectedBook == null
         ? context.color.bgColor
         : backgroundColors[readState.selectedMode];
+    final book = readState.slectedBook;
 
+    final currentChapterIndex = book?.selectedChapter;
+    final chapter = currentChapterIndex != null
+        ? book?.chapters[currentChapterIndex]
+        : null;
     return Scaffold(
       backgroundColor: pageBackground,
       drawerEnableOpenDragGesture: false,
-      drawer: const ChaptersDrawer(),
+      appBar: CommonAppBar(
+        title: chapter?.title ?? 'Chapter',
+        appbarConfig: AppbarConfig(
+          decoration: () => const BoxDecoration(color: Colors.white),
+        ),
+      ),
+      endDrawer: const ChaptersDrawer(),
       body: Builder(
         builder: (scaffoldContext) {
           return SafeArea(
+            top: false,
             child: Stack(
               children: [
                 Positioned.fill(
@@ -53,7 +65,7 @@ class ReadScreen extends ConsumerWidget {
                     child: Padding(
                       padding: EdgeInsets.fromLTRB(
                         16.w,
-                        14.h,
+                        0,
                         16.w,
                         readState.slectedBook == null
                             ? 16.h
