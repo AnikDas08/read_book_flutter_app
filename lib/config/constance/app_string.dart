@@ -184,6 +184,7 @@ class _AppString {
   final String new_releases = 'New Releases';
   final String recommended_for_you = 'Recommended For You';
   final String show_more = 'Show more';
+  final String show_less = 'Show less';
   final String New = 'New';
   final String Trending = 'Trending';
   final String Rankings = 'Rankings';
@@ -234,4 +235,20 @@ class _AppString {
   final String login_as_guest = 'Login as Guest';
   final top_short_stories = "Top Short Stories";
   final trending_short_stories = "Trending Short Stories";
+  final String book_description_sample =
+      '''<p>The night was darker than usual. Violet stepped out of her apartment, unaware that her life was about to change forever.</p>
+
+<p>The city lights flickered in the distance, casting long shadows across the empty streets. She pulled her coat tighter around her shoulders, feeling a chill that had nothing to do with the weather.</p>
+
+<p>"You're late," a voice said from the shadows.</p>
+
+<p>Violet froze. She knew that voice. It had haunted her dreams for years.</p>
+
+<p>"I didn't think you'd come," she replied, her voice steadier than she felt. The air between them crackled with unspoken words and years of unresolved tension. The stranger stepped into a pool of light from a flickering street lamp, revealing a face that was both familiar and terrifyingly different. His eyes, once bright with laughter, were now cold and calculating, reflecting the harsh reality of the life he had chosen to lead in her absence.</p>
+
+<p>Violet took a step back, her mind racing through a thousand memories. She remembered the way he used to look at her, the promises they had made under the summer stars, and the day everything fell apart. "Why now?" she whispered, her voice barely audible over the distant hum of the city. "Why come back after all this time, after everything you did?"</p>
+
+<p>The man didn't answer immediately. He reached into his pocket and pulled out a small, tarnished silver locket—the very same one she had given him on the night he disappeared. "Because the game has changed, Violet," he said, his voice dropping to a low, dangerous rumble. "And whether you like it or not, you're the most important piece on the board."</p>
+
+<p>She looked at the locket, then back at him, feeling a surge of both anger and curiosity. The world she thought she knew was dissolving, replaced by a complex web of intrigue and danger that she was only beginning to understand. The shadows seemed to lengthen around them, as if the darkness itself was closing in, eager to swallow the secrets they were about to uncover. This was not just a reunion; it was the beginning of a descent into a world she never knew existed, where every choice could be her last.</p>''';
 }

@@ -29,8 +29,8 @@ class BookWidget extends StatelessWidget {
       },
       child: Container(
         margin: .zero,
-        width: 150,
-        height: 180,
+        width: (CoreScreenUtils.deviceSize.width - 32) / 3.2,
+        height: 150.h,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(10.r),
@@ -162,7 +162,7 @@ class BookWidget extends StatelessWidget {
             ),
             // Content Section
             Padding(
-              padding: EdgeInsets.all(8.r),
+              padding: const EdgeInsets.all(8),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -171,6 +171,7 @@ class BookWidget extends StatelessWidget {
                     text: 'Echoes of Tomorrow',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
+                    preventScaling: true,
                     fontSize: AppFontSizes.small,
                     fontWeight: FontWeight(400),
                     textColor: Color(0xFF111111),
@@ -180,9 +181,12 @@ class BookWidget extends StatelessWidget {
                     CommonText(
                       text: 'Dr. Sarah Chen',
                       fontSize: AppFontSizes.small,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      preventScaling: true,
                       textColor: context.color.subtext,
                     ),
-                    8.height,
+                    4.height,
                     Row(
                       children: [
                         const Icon(Icons.star, color: Colors.amber, size: 12),
@@ -194,12 +198,13 @@ class BookWidget extends StatelessWidget {
                           color: Colors.grey.withOpacity(0.4),
                           size: 16,
                         ),
-                        8.width,
-                        const CommonText(
-                          text: '4.0 / 5',
-                          fontSize: AppFontSizes.small,
-                          fontWeight: FontWeight.bold,
-                          textColor: Color(0xFF333333),
+                        const Text(
+                          '4/5',
+                          style: TextStyle(
+                            fontSize: AppFontSizes.small,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF333333),
+                          ),
                         ),
                       ],
                     ),

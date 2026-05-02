@@ -3,6 +3,7 @@ import 'package:core_kit/core_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_tamplates/config/theme/app_theme_data.dart';
+import 'package:riverpod_tamplates/src/constants/app_font_sizes.dart';
 import 'package:riverpod_tamplates/src/features/app_features/read/presentation/widgets/action_bar_widget.dart';
 import 'package:riverpod_tamplates/src/features/app_features/read/presentation/widgets/book_audio_reader_widget.dart';
 import 'package:riverpod_tamplates/src/features/app_features/read/presentation/widgets/book_mark_modal_widget.dart';
@@ -40,7 +41,12 @@ class ReadScreen extends ConsumerWidget {
       backgroundColor: pageBackground,
       drawerEnableOpenDragGesture: false,
       appBar: CommonAppBar(
-        title: chapter?.title ?? 'Chapter',
+        titleWidget: CommonText(
+          text: chapter?.title ?? 'Chapter',
+          textColor: Colors.black,
+          fontSize: AppFontSizes.extraLarge,
+          fontWeight: FontWeight.w700,
+        ),
         appbarConfig: AppbarConfig(
           decoration: () => const BoxDecoration(color: Colors.white),
         ),
@@ -67,11 +73,12 @@ class ReadScreen extends ConsumerWidget {
                         16.w,
                         0,
                         16.w,
-                        readState.slectedBook == null
-                            ? 16.h
-                            : readState.isAudioPlaying
-                            ? 340.h
-                            : 16.h,
+                        0.w,
+                        // readState.slectedBook == null
+                        //     ? 16.h
+                        //     : readState.isAudioPlaying
+                        //     ? 340.h
+                        //     : 16.h,
                       ),
                       child: readState.slectedBook == null
                           ? const NoBookSelectedWidget()
@@ -83,7 +90,7 @@ class ReadScreen extends ConsumerWidget {
                   Positioned(
                     left: 0,
                     right: 0,
-                    bottom: 26.h,
+                    bottom: 0,
                     child: IgnorePointer(
                       ignoring: !readState.isActionPanelVisible,
                       child: AnimatedSlide(
@@ -110,7 +117,7 @@ class ReadScreen extends ConsumerWidget {
                   ),
                 if (readState.isAudioPlaying)
                   Positioned(
-                    bottom: 22.h,
+                    bottom: 16.h,
                     left: 16.w,
                     right: 16.w,
                     child: const BookAudioReaderWidget(),

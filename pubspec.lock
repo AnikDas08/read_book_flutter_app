@@ -261,8 +261,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "1.0.84"
-      resolved-ref: e71c7a17802b9e57095f7fe740aeaed0f4045ed6
+      ref: "1.1.7"
+      resolved-ref: "97907721987389ab2956e8403e8d5dc67b79e22c"
       url: "https://github.com/kmmuzahid/flutter_core_kit.git"
     source: git
     version: "0.0.1"
@@ -1535,5 +1535,5 @@ packages:
     source: hosted
     version: "2.2.4"
 sdks:
-  dart: ">=3.11.4 <4.0.0"
+  dart: ">=3.11.5 <4.0.0"
   flutter: ">=3.38.4"

@@ -20,11 +20,11 @@ class _ReadingSettingsModalState extends ConsumerState<ReadingSettingsModal> {
   late double lineSpacing;
   late int selectedMode;
   late ReadingMode selectedReadingMode;
-
+  late ReadState readState;
   @override
   void initState() {
     super.initState();
-    final readState = ref.read(readProvider);
+    readState = ref.read(readProvider);
     fontSize = readState.fontSize;
     lineSpacing = readState.lineSpacing;
     selectedMode = readState.selectedMode;
@@ -33,7 +33,15 @@ class _ReadingSettingsModalState extends ConsumerState<ReadingSettingsModal> {
 
   @override
   Widget build(BuildContext context) {
+    final readState = ref.watch(readProvider);
     final readNotifier = ref.read(readProvider.notifier);
+
+    // Update local state if provider state changed externally
+    fontSize = readState.fontSize;
+    lineSpacing = readState.lineSpacing;
+    selectedMode = readState.selectedMode;
+    selectedReadingMode = readState.readingMode;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
       decoration: const BoxDecoration(
@@ -67,7 +75,6 @@ class _ReadingSettingsModalState extends ConsumerState<ReadingSettingsModal> {
                 AppString.slide,
                 selectedReadingMode == ReadingMode.slide,
                 () {
-                  setState(() => selectedReadingMode = ReadingMode.slide);
                   readNotifier.updateReadingMode(ReadingMode.slide);
                 },
               ),
@@ -75,7 +82,6 @@ class _ReadingSettingsModalState extends ConsumerState<ReadingSettingsModal> {
                 AppString.flip,
                 selectedReadingMode == ReadingMode.flip,
                 () {
-                  setState(() => selectedReadingMode = ReadingMode.flip);
                   readNotifier.updateReadingMode(ReadingMode.flip);
                 },
               ),
@@ -83,7 +89,6 @@ class _ReadingSettingsModalState extends ConsumerState<ReadingSettingsModal> {
                 AppString.scroll,
                 selectedReadingMode == ReadingMode.scroll,
                 () {
-                  setState(() => selectedReadingMode = ReadingMode.scroll);
                   readNotifier.updateReadingMode(ReadingMode.scroll);
                 },
               ),
@@ -94,10 +99,9 @@ class _ReadingSettingsModalState extends ConsumerState<ReadingSettingsModal> {
             AppString.Font_Size,
             '${fontSize.toInt()}px',
             fontSize,
-            14,
-            18,
+            12,
+            32,
             (val) {
-              setState(() => fontSize = val);
               readNotifier.updateFontSize(val);
             },
           ),
@@ -105,10 +109,9 @@ class _ReadingSettingsModalState extends ConsumerState<ReadingSettingsModal> {
             AppString.Line_Spacing,
             lineSpacing.toStringAsFixed(1),
             lineSpacing,
-            1.4,
-            2.2,
+            1,
+            2.4,
             (val) {
-              setState(() => lineSpacing = val);
               readNotifier.updateLineSpacing(val);
             },
           ),

@@ -38,16 +38,18 @@ class HomeScreenAppBar extends StatelessWidget {
               const NotificationButtonWidget(),
             ],
           ),
-          10.height,
+          6.height,
           SizedBox(
-            height: 115.h,
+            height: 90.h,
             child: Stack(
               children: [
                 Positioned.fill(
                   child: Container(
-                    padding: EdgeInsets.only(top: 8.h, left: 16.w, right: 16.w, bottom: 8.h),
+                    padding: EdgeInsets.only(top: 4.h, left: 16.w, right: 16.w),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.15), // Semi-transparent glass effect
+                      color: Colors.white.withOpacity(
+                        0.15,
+                      ), // Semi-transparent glass effect
                       borderRadius: BorderRadius.circular(24.r),
                       border: Border.all(color: Colors.white.withOpacity(0.2)),
                       boxShadow: [
@@ -65,17 +67,16 @@ class HomeScreenAppBar extends StatelessWidget {
                           textColor: Colors.white70,
                           fontSize: 12,
                         ).start,
-                        6.height,
+                        2.height,
                         Row(
                           children: [
                             // Book Cover
                             const CommonImage(
                               src: Constants.sampleImage,
-                              width: 55,
-                              height: 70,
-                              borderRadius: 12,
+                              size: 48,
+                              borderRadius: 8,
                             ),
-                            const SizedBox(width: 16),
+                            8.width,
                             // Book Progress Info
                             Expanded(
                               child: Column(
@@ -101,7 +102,9 @@ class HomeScreenAppBar extends StatelessWidget {
                                       value: 0.4, // Progress percentage
                                       minHeight: 6,
                                       backgroundColor: Colors.white24,
-                                      valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFFFD700)),
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                        Color(0xFFFFD700),
+                                      ),
                                     ),
                                   ),
                                 ],

@@ -49,7 +49,7 @@ class ShowMoreBooksScreen extends StatelessWidget {
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 10,
-                crossAxisCount: 2,
+                crossAxisCount: 3,
                 childAspectRatio: .80,
               ),
             ),

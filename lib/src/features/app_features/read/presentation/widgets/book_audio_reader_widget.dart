@@ -14,7 +14,6 @@ class BookAudioReaderWidget extends ConsumerWidget {
     final book = readState.slectedBook;
     final chapter = book == null ? null : book.chapters[book.selectedChapter];
     final baseFontSize = readState.fontSize;
-    final titleFontSize = (baseFontSize + 1).clamp(14.0, 18.0);
     final smallFontSize = (baseFontSize - 1).clamp(12.0, 14.0);
 
     return Material(
@@ -39,10 +38,10 @@ class BookAudioReaderWidget extends ConsumerWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 16.w,vertical: 12.h),
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
                 decoration: const BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [Color(0xFF2A26FF),Color(0xFF863BFF)],
+                    colors: [Color(0xFF2A26FF), Color(0xFF863BFF)],
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                   ),
@@ -97,7 +96,7 @@ class BookAudioReaderWidget extends ConsumerWidget {
                           color: Colors.white.withValues(alpha: 0.15),
                           shape: BoxShape.circle,
                         ),
-                        child:  Icon(
+                        child: Icon(
                           Icons.close_rounded,
                           color: Colors.white,
                           size: 16.sp,
@@ -114,7 +113,13 @@ class BookAudioReaderWidget extends ConsumerWidget {
                       activeTrackColor: const Color(0xFF2A26FF),
                       inactiveTrackColor: const Color(0xFFE4E7EE),
                       thumbColor: const Color(0xFF2A26FF),
-                      trackHeight: 4.h,padding: .only(left: 16.w,right: 16.h, top: 30.h,bottom: 12.h),
+                      trackHeight: 4.h,
+                      padding: .only(
+                        left: 16.w,
+                        right: 16.h,
+                        top: 30.h,
+                        bottom: 12.h,
+                      ),
                       thumbShape: const RoundSliderThumbShape(
                         enabledThumbRadius: 5,
                       ),
@@ -145,7 +150,7 @@ class BookAudioReaderWidget extends ConsumerWidget {
                   ),
                   14.height,
                   Padding(
-                    padding:  EdgeInsets.symmetric(horizontal: 16.w),
+                    padding: EdgeInsets.symmetric(horizontal: 16.w),
                     child: Row(
                       children: [
                         const Icon(

@@ -24,7 +24,12 @@ class BookFeedCardWidget extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const CommonImage(src: Constants.sampleImage, width: 85, height: 120, borderRadius: 12),
+            const CommonImage(
+              src: Constants.sampleImage,
+              width: 85,
+              height: 120,
+              borderRadius: 12,
+            ),
             12.width,
             Expanded(
               child: Padding(
@@ -57,9 +62,16 @@ class BookFeedCardWidget extends StatelessWidget {
                     10.height,
                     Row(
                       children: [
-                        _buildActionItem(Icons.star, '4.8', color: Colors.amber),
+                        _buildActionItem(
+                          Icons.star,
+                          '4.8',
+                          color: Colors.amber,
+                        ),
                         20.width,
-                        _buildActionItem(Icons.chat_bubble_outline_rounded, '8932'),
+                        _buildActionItem(
+                          Icons.chat_bubble_outline_rounded,
+                          '8932',
+                        ),
                       ],
                     ),
                   ],

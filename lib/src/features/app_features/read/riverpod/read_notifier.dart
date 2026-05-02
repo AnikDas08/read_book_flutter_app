@@ -1,16 +1,56 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:riverpod_tamplates/config/constance/constants.dart';
+import 'package:riverpod_tamplates/config/storage/storage_service.dart';
 import 'package:riverpod_tamplates/src/features/app_features/read/data/model/book_model.dart';
 import 'package:riverpod_tamplates/src/features/app_features/read/riverpod/read_state.dart';
 
 part 'read_notifier.g.dart';
 
+// Storage keys for reading preferences
+const _kFontSize = 'reading_font_size';
+const _kLineSpacing = 'reading_line_spacing';
+const _kBackgroundMode = 'reading_background_mode';
+const _kReadingMode = 'reading_mode';
+
 @Riverpod(keepAlive: true)
 class ReadNotifier extends _$ReadNotifier {
+  final _storage = StorageService.instance;
+
   @override
   ReadState build() {
     ref.keepAlive();
+    _loadSettings();
     return const ReadState();
+  }
+
+  /// Loads persisted reading settings from storage.
+  Future<void> _loadSettings() async {
+    final fontSize = await _storage.get(_kFontSize);
+    final lineSpacing = await _storage.get(_kLineSpacing);
+    final backgroundMode = await _storage.get(_kBackgroundMode);
+    final readingMode = await _storage.get(_kReadingMode);
+
+    state = state.copyWith(
+      fontSize: fontSize != null ? double.tryParse(fontSize) ?? 14 : 14,
+      lineSpacing:
+          lineSpacing != null ? double.tryParse(lineSpacing) ?? 1.0 : 1.0,
+      selectedMode:
+          backgroundMode != null ? int.tryParse(backgroundMode) ?? 0 : 0,
+      readingMode: readingMode != null
+          ? ReadingMode.values.firstWhere(
+              (e) => e.name == readingMode,
+              orElse: () => ReadingMode.slide,
+            )
+          : ReadingMode.slide,
+    );
+  }
+
+  /// Saves current reading settings to storage.
+  Future<void> _saveSettings() async {
+    await _storage.set(_kFontSize, state.fontSize.toString());
+    await _storage.set(_kLineSpacing, state.lineSpacing.toString());
+    await _storage.set(_kBackgroundMode, state.selectedMode.toString());
+    await _storage.set(_kReadingMode, state.readingMode.name);
   }
 
   void toggleAudioPlaying() {
@@ -50,10 +90,6 @@ class ReadNotifier extends _$ReadNotifier {
         ],
         selectedChapter: 0,
       ),
-      readingMode: ReadingMode.slide,
-      selectedMode: 0,
-      fontSize: 16,
-      lineSpacing: 1.8,
       isAudioPlaying: false,
       isActionPanelVisible: true,
     );
@@ -67,18 +103,22 @@ class ReadNotifier extends _$ReadNotifier {
 
   void updateFontSize(double size) {
     state = state.copyWith(fontSize: size);
+    _saveSettings();
   }
 
   void updateLineSpacing(double spacing) {
     state = state.copyWith(lineSpacing: spacing);
+    _saveSettings();
   }
 
   void updateBackgroundMode(int mode) {
     state = state.copyWith(selectedMode: mode);
+    _saveSettings();
   }
 
   void updateReadingMode(ReadingMode mode) {
     state = state.copyWith(readingMode: mode);
+    _saveSettings();
   }
 
   void toggleActionPanel() {

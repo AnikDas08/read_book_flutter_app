@@ -34,9 +34,9 @@ class BookDetailsScreen extends ConsumerWidget {
         leading: const BackButtonWidget(isDark: false),
 
         appbarConfig: AppbarConfig(
-          actions: [ShareIconButton(isDark: false)],
+          actions: [const ShareIconButton(isDark: false)],
           titleAlignment: .center,
-          decoration: () => BoxDecoration(color: Colors.white),
+          decoration: () => const BoxDecoration(color: Colors.white),
         ),
       ),
       backgroundColor: context.color.bgColor,
@@ -145,12 +145,9 @@ class BookDetailsScreen extends ConsumerWidget {
                                 text: '4.8',
                               ),
                               SizedBox(width: 8),
-                              _InfoChip(
-                                icon: Icons.people_outline,
-                                text: '1.2M reviews',
-                              ),
+                              _InfoChip(icon: Icons.visibility, text: '1.2M'),
                               SizedBox(width: 8),
-                              _InfoChip(text: 'Age Demand: 18+'),
+                              _InfoChip(text: 'Age: 18+'),
                             ],
                           ),
                         ),
@@ -169,25 +166,9 @@ class BookDetailsScreen extends ConsumerWidget {
                   ),
                 ],
               ),
-              20.height,
+              10.height,
 
-              const CommonText(
-                text:
-                    '''<p>The night was darker than usual. Violet stepped out of her apartment, unaware that her life was about to change forever.</p>
-
-<p>The city lights flickered in the distance, casting long shadows across the empty streets. She pulled her coat tighter around her shoulders, feeling a chill that had nothing to do with the weather.</p>
-
-<p>"You're late," a voice said from the shadows.</p>
-
-<p>Violet froze. She knew that voice. It had haunted her dreams for years.</p>
-
-<p>"I didn't think you'd come," she replied, her voice steadier than she felt.</p>''',
-                // isDescription: true,
-                fontSize: AppFontSizes.small,
-                fontWeight: FontWeight.w400,
-                textAlign: TextAlign.left,
-                textColor: const Color(0xFF1F2937),
-              ),
+              _ExpandableDescription(text: AppString.book_description_sample),
 
               8.height,
               GestureDetector(
@@ -427,7 +408,7 @@ class _VoteCard extends StatelessWidget {
         alignment: Alignment.center,
         child: const Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
+          children: [
             Icon(Icons.electric_bolt_outlined, color: Colors.white, size: 12),
             SizedBox(width: 8),
             CommonText(
@@ -549,6 +530,65 @@ class _ActionCard extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _ExpandableDescription extends StatefulWidget {
+  final String text;
+
+  const _ExpandableDescription({required this.text});
+
+  @override
+  State<_ExpandableDescription> createState() => _ExpandableDescriptionState();
+}
+
+class _ExpandableDescriptionState extends State<_ExpandableDescription> {
+  bool _isExpanded = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        AnimatedCrossFade(
+          duration: const Duration(milliseconds: 300),
+          crossFadeState: _isExpanded
+              ? CrossFadeState.showFirst
+              : CrossFadeState.showSecond,
+          firstChild: CommonText(
+            text: widget.text,
+            fontSize: AppFontSizes.medium,
+            fontWeight: FontWeight.w400,
+            textAlign: TextAlign.left,
+            textColor: const Color(0xFF1F2937),
+            maxLines: 12,
+            isDescription: true,
+          ),
+          secondChild: CommonText(
+            text: widget.text,
+            fontSize: AppFontSizes.medium,
+            fontWeight: FontWeight.w400,
+            textAlign: TextAlign.left,
+            textColor: const Color(0xFF1F2937),
+            maxLines: 12,
+            isDescription: false,
+          ),
+        ),
+        4.height,
+        GestureDetector(
+          onTap: () => setState(() => _isExpanded = !_isExpanded),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4),
+            child: CommonText(
+              text: _isExpanded ? AppString.show_less : AppString.show_more,
+              fontSize: AppFontSizes.medium,
+              fontWeight: FontWeight.w600,
+              textColor: const Color(0xFF6B21A8),
+            ),
+          ),
+        ).end,
+      ],
     );
   }
 }

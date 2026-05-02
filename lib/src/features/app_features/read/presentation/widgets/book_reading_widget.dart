@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:core_kit/core_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,7 +18,10 @@ class BookReadingWidget extends ConsumerStatefulWidget {
 }
 
 class _BookReadingWidgetState extends ConsumerState<BookReadingWidget> {
-  late final PageController _pageController;
+  late PageController _pageController;
+  final ScrollController _scrollController = ScrollController();
+  final ValueNotifier<double> _flipPageNotifier = ValueNotifier<double>(0);
+  final Map<int, GlobalKey> _chapterKeys = {};
 
   @override
   void initState() {
@@ -25,11 +30,52 @@ class _BookReadingWidgetState extends ConsumerState<BookReadingWidget> {
     _pageController = PageController(
       initialPage: readState.slectedBook?.selectedChapter ?? 0,
     );
+    _pageController.addListener(_onPageScroll);
+    _scrollController.addListener(_onScrollChapterDetect);
+  }
+
+  void _onPageScroll() {
+    if (_pageController.hasClients) {
+      _flipPageNotifier.value = _pageController.page ?? 0;
+    }
+  }
+
+  /// Detects which chapter is currently most visible during scroll mode
+  /// and updates the app bar title via the provider.
+  void _onScrollChapterDetect() {
+    if (_chapterKeys.isEmpty) return;
+    final scrollBox = context.findRenderObject() as RenderBox?;
+    if (scrollBox == null) return;
+    final scrollTop = scrollBox.localToGlobal(Offset.zero).dy;
+
+    int visibleChapter = 0;
+    for (final entry in _chapterKeys.entries) {
+      final key = entry.value;
+      final renderObj = key.currentContext?.findRenderObject() as RenderBox?;
+      if (renderObj == null) continue;
+      final itemTop = renderObj.localToGlobal(Offset.zero).dy - scrollTop;
+      final itemBottom = itemTop + renderObj.size.height;
+      // If the bottom of this chapter is still below the top of the viewport,
+      // this chapter is (at least partially) visible.
+      if (itemBottom > 0) {
+        visibleChapter = entry.key;
+        break;
+      }
+    }
+
+    final currentSelected = ref.read(readProvider).slectedBook?.selectedChapter ?? 0;
+    if (visibleChapter != currentSelected) {
+      ref.read(readProvider.notifier).selectChapter(visibleChapter);
+    }
   }
 
   @override
   void dispose() {
+    _pageController.removeListener(_onPageScroll);
+    _scrollController.removeListener(_onScrollChapterDetect);
     _pageController.dispose();
+    _scrollController.dispose();
+    _flipPageNotifier.dispose();
     super.dispose();
   }
 
@@ -43,10 +89,11 @@ class _BookReadingWidgetState extends ConsumerState<BookReadingWidget> {
     final currentChapterIndex = book.selectedChapter;
     final chapter = book.chapters[currentChapterIndex];
 
-    if (_pageController.hasClients &&
+    if (readState.readingMode != ReadingMode.scroll &&
+        _pageController.hasClients &&
         (_pageController.page?.round() ?? 0) != currentChapterIndex) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) {
+        if (mounted && _pageController.hasClients) {
           _pageController.jumpToPage(currentChapterIndex);
         }
       });
@@ -55,34 +102,55 @@ class _BookReadingWidgetState extends ConsumerState<BookReadingWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // CommonText(
-        //   text: chapter.title ?? 'Chapter',
-        //   fontSize: AppFontSizes.heading,
-        //   fontWeight: FontWeight.w700,
-        //   textColor: theme.titleColor,
-        // ),
-        if (!chapter.isLocked) ...[
-          10.height,
-          CommonText(
-            text:
-                '${_countWords(chapter.content ?? '').toString()} ${AppString.words}',
-            fontSize: AppFontSizes.title,
-            textColor: theme.subtleTextColor,
-          ),
-        ],
-        16.height,
         Expanded(
           child: chapter.isLocked
               ? _LockedChapterView(chapter: chapter, onUnlock: _startUnlockFlow)
               : _buildReadingContent(context, readState, book, theme),
         ),
-        16.height,
-        CommonText(
-          text: '${currentChapterIndex + 1} of ${book.chapters.length}',
-          fontSize: AppFontSizes.title,
-          textColor: theme.subtleTextColor,
-        ).end,
+        if (readState.readingMode != ReadingMode.scroll) ...[
+          4.height,
+          CommonText(
+            text: '${currentChapterIndex + 1} of ${book.chapters.length}',
+            fontSize: AppFontSizes.medium,
+            textColor: theme.subtleTextColor,
+          ).end,
+        ],
       ],
+    );
+  }
+
+  /// Builds a single chapter card (reused across modes).
+  Widget _buildChapterCard(
+    BookChapter chapter,
+    ReadState readState,
+    _ReaderVisualTheme theme,
+  ) {
+    if (chapter.isLocked) {
+      return _ReadingCard(
+        theme: theme,
+        child: Center(
+          child: Padding(
+            padding: EdgeInsets.all(24.w),
+            child: CommonText(
+              text: AppString.watch_ads_to_unlock,
+              fontSize: AppFontSizes.title,
+              textColor: theme.subtleTextColor,
+            ),
+          ),
+        ),
+      );
+    }
+    return _ReadingCard(
+      theme: theme,
+      child: SingleChildScrollView(
+        padding: EdgeInsets.fromLTRB(20.w, 18.h, 20.w, 24.h),
+        child: _ChapterText(
+          chapter: chapter,
+          fontSize: readState.fontSize,
+          lineSpacing: readState.lineSpacing,
+          textColor: theme.contentColor,
+        ),
+      ),
     );
   }
 
@@ -92,63 +160,127 @@ class _BookReadingWidgetState extends ConsumerState<BookReadingWidget> {
     BookModel book,
     _ReaderVisualTheme theme,
   ) {
+    // ── SCROLL MODE: continuous scrolling through all chapters ──
     if (readState.readingMode == ReadingMode.scroll) {
-      final chapter = book.chapters[book.selectedChapter];
       return _ReadingCard(
         theme: theme,
-        child: SingleChildScrollView(
+        child: ListView.builder(
+          controller: _scrollController,
           padding: EdgeInsets.fromLTRB(20.w, 18.h, 20.w, 24.h),
-          child: _ChapterText(
-            chapter: chapter,
-            fontSize: readState.fontSize,
-            lineSpacing: readState.lineSpacing,
-            textColor: theme.contentColor,
-          ),
+          itemCount: book.chapters.length,
+          itemBuilder: (context, index) {
+            // Ensure a GlobalKey exists for this chapter
+            _chapterKeys.putIfAbsent(index, () => GlobalKey());
+            final chapter = book.chapters[index];
+            if (chapter.isLocked) {
+              return Padding(
+                padding: EdgeInsets.symmetric(vertical: 32.h),
+                child: Center(
+                  child: CommonText(
+                    text: AppString.watch_ads_to_unlock,
+                    fontSize: AppFontSizes.title,
+                    textColor: theme.subtleTextColor,
+                  ),
+                ),
+              );
+            }
+            return Column(
+              key: _chapterKeys[index],
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (index > 0) ...[
+                  Divider(color: theme.borderColor, height: 48.h),
+                  CommonText(
+                    text: chapter.title ?? 'Chapter ${index + 1}',
+                    fontSize: AppFontSizes.title,
+                    fontWeight: FontWeight.w700,
+                    textColor: theme.titleColor,
+                  ),
+                  16.height,
+                ],
+                _ChapterText(
+                  chapter: chapter,
+                  fontSize: readState.fontSize,
+                  lineSpacing: readState.lineSpacing,
+                  textColor: theme.contentColor,
+                ),
+              ],
+            );
+          },
         ),
       );
     }
 
+    // ── FLIP MODE: 3D book page-turn animation ──
+    if (readState.readingMode == ReadingMode.flip) {
+      return PageView.builder(
+        key: const ValueKey('flip_page_view'),
+        controller: _pageController,
+        physics: const BouncingScrollPhysics(),
+        onPageChanged: (index) =>
+            ref.read(readProvider.notifier).selectChapter(index),
+        itemCount: book.chapters.length,
+        itemBuilder: (context, index) {
+          return ValueListenableBuilder<double>(
+            valueListenable: _flipPageNotifier,
+            builder: (context, currentPage, child) {
+              double pageOffset = (currentPage - index).clamp(-1.0, 1.0);
+
+              // rotation: rotate up to 90° (pi/2) based on page offset
+              final angle = pageOffset * math.pi / 2;
+
+              // Scale down slightly as it turns
+              final scale = 1.0 - (pageOffset.abs() * 0.15);
+
+              // Shadow intensity during the flip
+              final shadowOpacity = pageOffset.abs() * 0.3;
+
+              return Transform(
+                alignment: pageOffset >= 0
+                    ? Alignment.centerLeft
+                    : Alignment.centerRight,
+                transform: Matrix4.identity()
+                  ..setEntry(3, 2, 0.0015) // perspective
+                  ..rotateY(-angle)
+                  // ignore: deprecated_member_use
+                  ..scale(scale),
+                child: Stack(
+                  children: [
+                    child!,
+                    // Shadow overlay during page turn
+                    if (shadowOpacity > 0.01)
+                      Positioned.fill(
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                            color: Colors.black.withValues(alpha: shadowOpacity),
+                            borderRadius: BorderRadius.circular(24.r),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              );
+            },
+            child: _buildChapterCard(
+              book.chapters[index],
+              readState,
+              theme,
+            ),
+          );
+        },
+      );
+    }
+
+    // ── SLIDE MODE (default): standard horizontal PageView ──
     return PageView.builder(
+      key: const ValueKey('slide_page_view'),
       controller: _pageController,
       physics: const BouncingScrollPhysics(),
       onPageChanged: (index) =>
           ref.read(readProvider.notifier).selectChapter(index),
       itemCount: book.chapters.length,
       itemBuilder: (context, index) {
-        final chapter = book.chapters[index];
-        if (chapter.isLocked) {
-          return _ReadingCard(
-            theme: theme,
-            child: Center(
-              child: Padding(
-                padding: EdgeInsets.all(24.w),
-                child: CommonText(
-                  text: AppString.watch_ads_to_unlock,
-                  fontSize: AppFontSizes.title,
-                  textColor: theme.subtleTextColor,
-                ),
-              ),
-            ),
-          );
-        }
-
-        return Padding(
-          padding: EdgeInsets.only(
-            right: readState.readingMode == ReadingMode.flip ? 0 : 0,
-          ),
-          child: _ReadingCard(
-            theme: theme,
-            child: SingleChildScrollView(
-              padding: EdgeInsets.fromLTRB(20.w, 18.h, 20.w, 24.h),
-              child: _ChapterText(
-                chapter: chapter,
-                fontSize: readState.fontSize,
-                lineSpacing: readState.lineSpacing,
-                textColor: theme.contentColor,
-              ),
-            ),
-          ),
-        );
+        return _buildChapterCard(book.chapters[index], readState, theme);
       },
     );
   }
@@ -176,9 +308,6 @@ class _BookReadingWidgetState extends ConsumerState<BookReadingWidget> {
     }
   }
 
-  int _countWords(String text) {
-    return text.split(RegExp(r'\s+')).where((word) => word.isNotEmpty).length;
-  }
 }
 
 class _ReaderVisualTheme {

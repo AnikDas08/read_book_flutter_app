@@ -72,9 +72,7 @@ class HomeScreen extends ConsumerWidget {
               ),
             );
           }, context),
-          10.height,
           _trendingBooks(itemSizeInrow),
-          10.height,
           _headline('✨ ${AppString.new_releases}', () {
             context.router.push(
               ShowMoreBooksRoute(
@@ -129,18 +127,17 @@ class HomeScreen extends ConsumerWidget {
 
   SizedBox _trendingBooks(double itemSizeInrow) {
     return SizedBox(
-      width: 400,
-      height: 220.h,
+      height: 180.h,
       child: SingleChildScrollView(
         scrollDirection: .horizontal,
         child: Row(
           children: [
             const BookWidget(isTrending: true),
-            12.width,
+            8.width,
             const BookWidget(isTrending: true),
-            12.width,
+            8.width,
             const BookWidget(isTrending: true),
-            12.width,
+            8.width,
             const BookWidget(isTrending: true),
           ],
         ),

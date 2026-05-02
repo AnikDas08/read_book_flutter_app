@@ -15,8 +15,8 @@ class ReadState extends Equatable {
   const ReadState({
     this.slectedBook,
     this.isAudioPlaying = false,
-    this.fontSize = 16.0,
-    this.lineSpacing = 1.8,
+    this.fontSize = 14,
+    this.lineSpacing = 1,
     this.selectedMode = 0,
     this.readingMode = ReadingMode.slide,
     this.isActionPanelVisible = true,
