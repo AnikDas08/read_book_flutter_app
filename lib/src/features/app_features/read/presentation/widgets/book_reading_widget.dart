@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:core_kit/core_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_tamplates/config/constance/app_string.dart';
 import 'package:riverpod_tamplates/src/constants/app_font_sizes.dart';
@@ -166,12 +167,24 @@ class _BookReadingWidgetState extends ConsumerState<BookReadingWidget> {
         Expanded(
           child: chapter.isLocked
               ? _LockedChapterView(chapter: chapter, onUnlock: _startUnlockFlow)
-              : _buildReadingContent(
-                  context,
-                  readState,
-                  book,
-                  theme,
-                  flatPages,
+              : NotificationListener<UserScrollNotification>(
+                  onNotification: (notification) {
+                    if (notification.direction != ScrollDirection.idle) {
+                      if (ref.read(readProvider).isActionPanelVisible) {
+                        ref
+                            .read(readProvider.notifier)
+                            .setActionPanelVisible(false);
+                      }
+                    }
+                    return false;
+                  },
+                  child: _buildReadingContent(
+                    context,
+                    readState,
+                    book,
+                    theme,
+                    flatPages,
+                  ),
                 ),
         ),
         if (readState.readingMode != ReadingMode.scroll) ...[
@@ -205,15 +218,9 @@ class _BookReadingWidgetState extends ConsumerState<BookReadingWidget> {
     if (page.chapter.isLocked) {
       return _ReadingCard(
         theme: theme,
-        child: Center(
-          child: Padding(
-            padding: EdgeInsets.all(24.w),
-            child: CommonText(
-              text: AppString.watch_ads_to_unlock,
-              fontSize: AppFontSizes.title,
-              textColor: theme.subtleTextColor,
-            ),
-          ),
+        child: _LockedChapterView(
+          chapter: page.chapter,
+          onUnlock: _startUnlockFlow,
         ),
       );
     }
@@ -240,26 +247,23 @@ class _BookReadingWidgetState extends ConsumerState<BookReadingWidget> {
   ) {
     // ── SCROLL MODE: continuous scrolling through all chapters ──
     if (readState.readingMode == ReadingMode.scroll) {
+      final firstLockedIndex = book.chapters.indexWhere((c) => c.isLocked);
       return _ReadingCard(
         theme: theme,
         child: ListView.builder(
           controller: _scrollController,
           padding: EdgeInsets.fromLTRB(20.w, 18.h, 20.w, 24.h),
-          itemCount: book.chapters.length,
+          itemCount: firstLockedIndex == -1
+              ? book.chapters.length
+              : firstLockedIndex + 1,
           itemBuilder: (context, index) {
             // Ensure a GlobalKey exists for this chapter
             _chapterKeys.putIfAbsent(index, () => GlobalKey());
             final chapter = book.chapters[index];
             if (chapter.isLocked) {
-              return Padding(
-                padding: EdgeInsets.symmetric(vertical: 32.h),
-                child: Center(
-                  child: CommonText(
-                    text: AppString.watch_ads_to_unlock,
-                    fontSize: AppFontSizes.title,
-                    textColor: theme.subtleTextColor,
-                  ),
-                ),
+              return _LockedChapterView(
+                chapter: chapter,
+                onUnlock: _startUnlockFlow,
               );
             }
             return Column(
