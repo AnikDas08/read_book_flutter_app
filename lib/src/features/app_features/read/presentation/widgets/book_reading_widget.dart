@@ -480,9 +480,6 @@ class _BookReadingWidgetState extends ConsumerState<BookReadingWidget> {
         final targetChapter = flatPages[index].chapterIndex;
         if (targetChapter != readState.slectedBook?.selectedChapter) {
           ref.read(readProvider.notifier).selectChapter(targetChapter);
-          if (flatPages[index].chapter.isLocked) {
-            _startUnlockFlow(flatPages[index].chapter);
-          }
         }
       },
       itemCount: flatPages.length,
