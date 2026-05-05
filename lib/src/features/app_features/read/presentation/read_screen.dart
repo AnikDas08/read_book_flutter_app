@@ -41,11 +41,20 @@ class ReadScreen extends ConsumerWidget {
       backgroundColor: pageBackground,
       drawerEnableOpenDragGesture: false,
       appBar: CommonAppBar(
-        titleWidget: CommonText(
-          text: chapter?.title ?? 'Chapter',
-          textColor: Colors.black,
-          fontSize: AppFontSizes.extraLarge,
-          fontWeight: FontWeight.w700,
+        titleWidget: Consumer(
+          builder: (context, ref, _) {
+            final book = ref.watch(readProvider.select((s) => s.slectedBook));
+            final currentChapterIndex = book?.selectedChapter;
+            final chapter = currentChapterIndex != null
+                ? book?.chapters[currentChapterIndex]
+                : null;
+            return CommonText(
+              text: chapter?.title ?? 'Chapter',
+              textColor: Colors.black,
+              fontSize: AppFontSizes.extraLarge,
+              fontWeight: FontWeight.w700,
+            );
+          },
         ),
         appbarConfig: AppbarConfig(
           decoration: () => const BoxDecoration(color: Colors.white),
@@ -105,7 +114,7 @@ class ReadScreen extends ConsumerWidget {
                           opacity: readState.isActionPanelVisible ? 1 : 0,
                           child: ActionBarWidget(
                             onOpenChapters: () =>
-                                Scaffold.of(scaffoldContext).openDrawer(),
+                                Scaffold.of(scaffoldContext).openEndDrawer(),
                             onOpenSettings: () => _showSettings(context),
                             onOpenShare: () => _showShare(context),
                             onOpenBookmark: () => _showBookmark(context),

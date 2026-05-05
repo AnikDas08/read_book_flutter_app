@@ -357,7 +357,7 @@ class _StatCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 60.h,
+      height: 65.h,
       padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -521,6 +521,7 @@ class _ActionCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
+        margin: const .only(bottom: 5),
         height: 60.h,
         decoration: BoxDecoration(
           color: Colors.white,
@@ -580,7 +581,7 @@ class _ExpandableDescriptionState extends State<_ExpandableDescription> {
             fontWeight: FontWeight.w400,
             textAlign: TextAlign.left,
             textColor: const Color(0xFF1F2937),
-            maxLines: 14,
+            maxLines: 18,
             isDescription: true,
           ),
           secondChild: CommonText(
@@ -589,7 +590,7 @@ class _ExpandableDescriptionState extends State<_ExpandableDescription> {
             fontWeight: FontWeight.w400,
             textAlign: TextAlign.left,
             textColor: const Color(0xFF1F2937),
-            maxLines: 14,
+            maxLines: 18,
             isDescription: false,
           ),
         ),

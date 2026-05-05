@@ -57,8 +57,30 @@ class _RewardedAdDialogWidgetState extends ConsumerState<RewardedAdDialogWidget>
   void _onAdFinished() {
     if (widget.rewardType == RewardType.reading) {
       ref.read(readProvider.notifier).watchAdForCurrentChapter();
+      
       if (Navigator.canPop(context)) {
         Navigator.of(context).pop();
+      }
+
+      final book = ref.read(readProvider).slectedBook;
+      final currentChapter = book?.chapters[book.selectedChapter];
+      
+      if (currentChapter != null && currentChapter.isLocked) {
+        // Still locked, maybe need another ad? 
+        // We can show another dialog or just let the user click "Watch" again.
+        // For a smoother flow, we could auto-trigger the next one, but 
+        // usually users prefer a break between ads.
+      } else {
+        // Unlocked!
+        showDialog(
+          context: context,
+          builder: (context) => const Dialog(
+            child: SuccessRewardDialogWidget(
+              earnedAmount: 0,
+              totalAmount: 0, // Not applicable for chapter unlock
+            ),
+          ),
+        );
       }
     } else {
       ref.read(powerStoneProvider.notifier).incrementAdsWatched();
