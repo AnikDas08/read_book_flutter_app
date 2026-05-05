@@ -43,35 +43,40 @@ class SuccessRewardDialogWidget extends StatelessWidget {
           16.height,
 
           // 3. RichText for Reward Message
-          RichText(
-            textAlign: TextAlign.center,
-            text: TextSpan(
-              style: const TextStyle(color: Color(0xFF5F6368), fontSize: 16),
-              children: [
-                TextSpan(text: AppString.you_earned),
-                TextSpan(
-                  text: '+$earnedAmount ${AppString.power_stones}',
-                  style: const TextStyle(
-                    color: Color(0xFFFFC107), // Gold/Yellow
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: RichText(
+              textAlign: TextAlign.center,
+              text: TextSpan(
+                style: const TextStyle(color: Color(0xFF5F6368), fontSize: 16),
+                children: [
+                  TextSpan(text: earnedAmount > 0 ? AppString.you_earned : 'Chapter Unlocked Successfully!'),
+                  if (earnedAmount > 0)
+                    TextSpan(
+                      text: ' +$earnedAmount ${AppString.power_stones}',
+                      style: const TextStyle(
+                        color: Color(0xFFFFC107), // Gold/Yellow
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                ],
+              ),
             ),
           ),
           24.height,
 
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(Icons.electric_bolt_outlined, color: Color(0xFFFFC107), size: 40),
-              const SizedBox(width: 8),
-              CommonText(
-                text: '$totalAmount',
-                style: const TextStyle(fontSize: 32, color: Color(0xFF1A1C1E)),
-              ),
-            ],
-          ),
+          if (totalAmount > 0)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.electric_bolt_outlined, color: Color(0xFFFFC107), size: 40),
+                const SizedBox(width: 8),
+                CommonText(
+                  text: '$totalAmount',
+                  style: const TextStyle(fontSize: 32, color: Color(0xFF1A1C1E)),
+                ),
+              ],
+            ),
           20.height,
         ],
       ),

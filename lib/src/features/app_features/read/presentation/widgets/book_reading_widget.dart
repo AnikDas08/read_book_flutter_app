@@ -1,10 +1,12 @@
 import 'dart:math' as math;
 
+import 'package:auto_route/auto_route.dart';
 import 'package:core_kit/core_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_tamplates/config/constance/app_string.dart';
+import 'package:riverpod_tamplates/config/route/app_router.dart';
 import 'package:riverpod_tamplates/src/constants/app_font_sizes.dart';
 import 'package:riverpod_tamplates/src/features/app_features/read/data/model/book_model.dart';
 import 'package:riverpod_tamplates/src/features/app_features/read/presentation/widgets/rewarded_ad_dialog_widget.dart';
@@ -23,6 +25,7 @@ class _BookReadingWidgetState extends ConsumerState<BookReadingWidget> {
   final ScrollController _scrollController = ScrollController();
   final ValueNotifier<double> _flipPageNotifier = ValueNotifier<double>(0);
   final Map<int, GlobalKey> _chapterKeys = {};
+  bool _isNavigatingToLock = false;
 
   @override
   void initState() {
@@ -44,7 +47,10 @@ class _BookReadingWidgetState extends ConsumerState<BookReadingWidget> {
     for (var i = 0; i < book.chapters.length; i++) {
       if (i == book.selectedChapter) return pageIndex;
       final ch = book.chapters[i];
-      if (ch.isLocked || ch.pages.isEmpty) {
+      if (ch.isLocked) {
+        return pageIndex; // Can't go beyond first lock
+      }
+      if (ch.pages.isEmpty) {
         pageIndex += 1;
       } else {
         pageIndex += ch.pages.length;
@@ -74,9 +80,13 @@ class _BookReadingWidgetState extends ConsumerState<BookReadingWidget> {
       if (renderObj == null) continue;
       final itemTop = renderObj.localToGlobal(Offset.zero).dy - scrollTop;
       final itemBottom = itemTop + renderObj.size.height;
-      // If the bottom of this chapter is still below the top of the viewport,
-      // this chapter is (at least partially) visible.
+
       if (itemBottom > 0) {
+        // In Scroll mode, we only want to "select" unlocked chapters via scroll.
+        // Locked chapters are handled as separate screens.
+        final ch = ref.read(readProvider).slectedBook?.chapters[entry.key];
+        if (ch?.isLocked == true) continue;
+
         visibleChapter = entry.key;
         break;
       }
@@ -103,7 +113,22 @@ class _BookReadingWidgetState extends ConsumerState<BookReadingWidget> {
     final pages = <_ReaderPage>[];
     for (var i = 0; i < book.chapters.length; i++) {
       final ch = book.chapters[i];
-      if (ch.isLocked || ch.pages.isEmpty) {
+
+      if (ch.isLocked) {
+        // Append the lock screen as the last "page" if there's a locked chapter
+        pages.add(
+          _ReaderPage(
+            chapter: ch,
+            chapterIndex: i,
+            pageIndex: 0,
+            totalPages: 1,
+            isLockPage: true,
+          ),
+        );
+        break;
+      }
+
+      if (ch.pages.isEmpty) {
         pages.add(
           _ReaderPage(
             chapter: ch,
@@ -141,10 +166,73 @@ class _BookReadingWidgetState extends ConsumerState<BookReadingWidget> {
     final chapter = book.chapters[currentChapterIndex];
 
     final flatPages = _flattenPages(book);
+
+    // If Scroll mode and current chapter is locked, show lock screen as a separate view
+    if (readState.readingMode == ReadingMode.scroll && chapter.isLocked) {
+      return Container(
+        color: theme.surfaceColor,
+        child: _LockedChapterView(
+          theme: theme,
+          chapter: chapter,
+          onUnlock: _startUnlockFlow,
+          onBack: () {
+            if (currentChapterIndex > 0) {
+              ref
+                  .read(readProvider.notifier)
+                  .selectChapter(currentChapterIndex - 1);
+            } else {
+              context.router.back();
+            }
+          },
+        ),
+      );
+    }
+
+    // NEW: Handle automatic scroll/page jump after an unlock happens
+    ref.listen(readProvider, (previous, next) {
+      final prevBook = previous?.slectedBook;
+      final nextBook = next.slectedBook;
+      if (prevBook == null || nextBook == null) return;
+
+      final currentChIdx = nextBook.selectedChapter;
+      final wasLocked = prevBook.chapters[currentChIdx].isLocked;
+      final isNowUnlocked = !nextBook.chapters[currentChIdx].isLocked;
+
+      if (wasLocked && isNowUnlocked) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (!mounted) return;
+          if (next.readingMode != ReadingMode.scroll) {
+            final newFlatPages = _flattenPages(nextBook);
+            final targetIdx =
+                newFlatPages.indexWhere((p) => p.chapterIndex == currentChIdx);
+            if (targetIdx != -1 && _pageController.hasClients) {
+              _pageController.jumpToPage(targetIdx);
+            }
+          } else {
+            // Give the ListView a moment to build the new chapter item
+            Future.delayed(const Duration(milliseconds: 100), () {
+              if (!mounted) return;
+              final key = _chapterKeys[currentChIdx];
+              if (key?.currentContext != null) {
+                Scrollable.ensureVisible(
+                  key!.currentContext!,
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                );
+              }
+            });
+          }
+        });
+      }
+    });
+
     var targetPageIndex = flatPages.indexWhere(
       (p) => p.chapterIndex == currentChapterIndex,
     );
-    if (targetPageIndex == -1) targetPageIndex = 0;
+    if (targetPageIndex == -1) {
+      targetPageIndex = flatPages.indexWhere((p) => p.isLockPage);
+      if (targetPageIndex == -1) targetPageIndex = 0;
+    }
 
     if (readState.readingMode != ReadingMode.scroll &&
         _pageController.hasClients) {
@@ -152,6 +240,8 @@ class _BookReadingWidgetState extends ConsumerState<BookReadingWidget> {
       if (flatPages.isNotEmpty && currentFlatPage < flatPages.length) {
         final currentDisplayedChapter = flatPages[currentFlatPage].chapterIndex;
         if (currentDisplayedChapter != currentChapterIndex) {
+          // If the selected chapter is actually a locked one further down,
+          // the targetPageIndex should already point to the lock page.
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (mounted && _pageController.hasClients) {
               _pageController.jumpToPage(targetPageIndex);
@@ -161,31 +251,44 @@ class _BookReadingWidgetState extends ConsumerState<BookReadingWidget> {
       }
     }
 
+    // Scroll mode jump logic for TOC selections
+    if (readState.readingMode == ReadingMode.scroll &&
+        _scrollController.hasClients) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        final key = _chapterKeys[currentChapterIndex];
+        if (key?.currentContext != null) {
+          // If the selected chapter is rendered but not at the top, we could jump here.
+          // However, we usually rely on ref.listen for explicit changes.
+        }
+      });
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
-          child: chapter.isLocked
-              ? _LockedChapterView(chapter: chapter, onUnlock: _startUnlockFlow)
-              : NotificationListener<UserScrollNotification>(
-                  onNotification: (notification) {
-                    if (notification.direction != ScrollDirection.idle) {
-                      if (ref.read(readProvider).isActionPanelVisible) {
-                        ref
-                            .read(readProvider.notifier)
-                            .setActionPanelVisible(false);
-                      }
-                    }
-                    return false;
-                  },
-                  child: _buildReadingContent(
-                    context,
-                    readState,
-                    book,
-                    theme,
-                    flatPages,
-                  ),
-                ),
+          child: NotificationListener<ScrollNotification>(
+            onNotification: (notification) {
+              if (notification is UserScrollNotification) {
+                if (notification.direction != ScrollDirection.idle) {
+                  if (ref.read(readProvider).isActionPanelVisible) {
+                    ref
+                        .read(readProvider.notifier)
+                        .setActionPanelVisible(false);
+                  }
+                }
+              }
+              return false;
+            },
+            child: _buildReadingContent(
+              context,
+              readState,
+              book,
+              theme,
+              flatPages,
+            ),
+          ),
         ),
         if (readState.readingMode != ReadingMode.scroll) ...[
           4.height,
@@ -209,21 +312,31 @@ class _BookReadingWidgetState extends ConsumerState<BookReadingWidget> {
     );
   }
 
-  /// Builds a single chapter/page card (reused across modes).
   Widget _buildPageCard(
     _ReaderPage page,
     ReadState readState,
     _ReaderVisualTheme theme,
   ) {
-    if (page.chapter.isLocked) {
+    if (page.isLockPage) {
       return _ReadingCard(
         theme: theme,
         child: _LockedChapterView(
+          theme: theme,
           chapter: page.chapter,
           onUnlock: _startUnlockFlow,
+          onBack: () {
+            if (_pageController.hasClients &&
+                (_pageController.page ?? 0) > 0.5) {
+              _pageController.previousPage(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+              );
+            }
+          },
         ),
       );
     }
+
     return _ReadingCard(
       theme: theme,
       child: SingleChildScrollView(
@@ -259,13 +372,16 @@ class _BookReadingWidgetState extends ConsumerState<BookReadingWidget> {
           itemBuilder: (context, index) {
             // Ensure a GlobalKey exists for this chapter
             _chapterKeys.putIfAbsent(index, () => GlobalKey());
-            final chapter = book.chapters[index];
-            if (chapter.isLocked) {
-              return _LockedChapterView(
-                chapter: chapter,
-                onUnlock: _startUnlockFlow,
+
+            if (index == firstLockedIndex) {
+              return _buildNextChapterSection(
+                context,
+                book.chapters[index],
+                theme,
               );
             }
+
+            final chapter = book.chapters[index];
             return Column(
               key: _chapterKeys[index],
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -364,6 +480,9 @@ class _BookReadingWidgetState extends ConsumerState<BookReadingWidget> {
         final targetChapter = flatPages[index].chapterIndex;
         if (targetChapter != readState.slectedBook?.selectedChapter) {
           ref.read(readProvider.notifier).selectChapter(targetChapter);
+          if (flatPages[index].chapter.isLocked) {
+            _startUnlockFlow(flatPages[index].chapter);
+          }
         }
       },
       itemCount: flatPages.length,
@@ -373,27 +492,71 @@ class _BookReadingWidgetState extends ConsumerState<BookReadingWidget> {
     );
   }
 
-  Future<void> _startUnlockFlow(BookChapter chapter) async {
-    final totalSteps = chapter.unlockAdsRequired == 0
-        ? 2
-        : chapter.unlockAdsRequired;
-    final nextStep = chapter.watchedAds + 1;
-    await showDialog<void>(
+  Widget _buildNextChapterSection(
+    BuildContext context,
+    BookChapter chapter,
+    _ReaderVisualTheme theme,
+  ) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 60.h, horizontal: 20.w),
+      child: Column(
+        key: _chapterKeys[ref.read(readProvider).slectedBook?.chapters.indexOf(chapter) ?? -1],
+        children: [
+          Divider(color: theme.borderColor),
+          48.height,
+          Icon(
+            Icons.lock_outline_rounded,
+            color: theme.subtleTextColor,
+            size: 40,
+          ),
+          20.height,
+          CommonText(
+            text: 'The next chapter is locked',
+            fontSize: AppFontSizes.large,
+            fontWeight: FontWeight.w600,
+            textColor: theme.titleColor,
+          ),
+          8.height,
+          CommonText(
+            text: 'Continue reading to unlock more of the story',
+            fontSize: AppFontSizes.medium,
+            textColor: theme.subtleTextColor,
+            textAlign: TextAlign.center,
+          ),
+          40.height,
+          CommonButton(
+            titleText: 'Read Next Chapter',
+            onTap: () {
+              final idx = ref
+                      .read(readProvider)
+                      .slectedBook
+                      ?.chapters
+                      .indexOf(chapter) ??
+                  -1;
+              if (idx != -1) {
+                ref.read(readProvider.notifier).selectChapter(idx);
+              }
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showWatchAdDialog(BookChapter chapter) {
+    showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (_) =>
-          RewardedAdDialogWidget(currentStep: nextStep, totalSteps: totalSteps),
+      builder: (context) => RewardedAdDialogWidget(
+        currentStep: chapter.watchedAds + 1,
+        totalSteps: chapter.unlockAdsRequired,
+        rewardType: RewardType.reading,
+      ),
     );
+  }
 
-    final updatedChapter = ref
-        .read(readProvider)
-        .slectedBook
-        ?.chapters[ref.read(readProvider).slectedBook!.selectedChapter];
-    if (updatedChapter != null &&
-        updatedChapter.isLocked &&
-        updatedChapter.watchedAds < updatedChapter.unlockAdsRequired) {
-      await _startUnlockFlow(updatedChapter);
-    }
+  Future<void> _startUnlockFlow(BookChapter chapter) async {
+    await context.router.push(const PowerStonesRoute());
   }
 }
 
@@ -510,10 +673,18 @@ class _ChapterText extends StatelessWidget {
 }
 
 class _LockedChapterView extends StatelessWidget {
-  const _LockedChapterView({required this.chapter, required this.onUnlock});
+  const _LockedChapterView({
+    super.key,
+    required this.theme,
+    required this.chapter,
+    required this.onUnlock,
+    required this.onBack,
+  });
 
+  final _ReaderVisualTheme theme;
   final BookChapter chapter;
   final Future<void> Function(BookChapter chapter) onUnlock;
+  final VoidCallback onBack;
 
   @override
   Widget build(BuildContext context) {
@@ -545,24 +716,50 @@ class _LockedChapterView extends StatelessWidget {
               text: AppString.chapter_locked,
               fontSize: AppFontSizes.title,
               fontWeight: FontWeight.w700,
-              textColor: const Color(0xFF111111),
+              textColor: theme.titleColor,
             ),
             14.height,
             CommonText(
               text: AppString.unlock_this_chapter_to_continue_reading,
               fontSize: AppFontSizes.medium,
-              textColor: const Color(0xFF697386),
+              textColor: theme.subtleTextColor,
+              textAlign: TextAlign.center,
             ),
             48.height,
             CommonButton(
               titleSize: AppFontSizes.medium,
-              titleText: AppString.watch_2_ads_to_unlock,
+              titleText: chapter.watchedAds > 0
+                  ? 'Watch ${chapter.unlockAdsRequired - chapter.watchedAds} more to Unlock'
+                  : AppString.watch_2_ads_to_unlock,
               gradient: const LinearGradient(
                 colors: [Color(0xFF2A26FF), Color(0xFF8A42FF)],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
               ),
-              onTap: () => onUnlock(chapter),
+              onTap: () {
+                final parent = context
+                    .findAncestorStateOfType<_BookReadingWidgetState>();
+                parent?._showWatchAdDialog(chapter);
+              },
+            ),
+            16.height,
+            CommonButton(
+              titleSize: AppFontSizes.medium,
+              titleText: 'Back to Reading',
+              borderColor: theme.borderColor,
+              buttonColor: theme.surfaceColor,
+              titleColor: theme.contentColor,
+              onTap: onBack,
+            ),
+            16.height,
+            TextButton(
+              onPressed: () => onUnlock(chapter),
+              child: CommonText(
+                text: 'Use Power Stones Instead',
+                fontSize: AppFontSizes.medium,
+                textColor: const Color(0xFF2A26FF),
+                decoration: TextDecoration.underline,
+              ),
             ),
           ],
         ),
@@ -577,6 +774,7 @@ class _ReaderPage {
   final String? content;
   final int pageIndex;
   final int totalPages;
+  final bool isLockPage;
 
   _ReaderPage({
     required this.chapter,
@@ -584,5 +782,6 @@ class _ReaderPage {
     this.content,
     required this.pageIndex,
     required this.totalPages,
+    this.isLockPage = false,
   });
 }

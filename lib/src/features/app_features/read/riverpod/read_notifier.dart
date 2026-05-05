@@ -160,4 +160,21 @@ class ReadNotifier extends _$ReadNotifier {
 
     state = state.copyWith(slectedBook: book.copyWith(chapters: chapters));
   }
+
+  bool unlockChapterWithStones(int cost) {
+    final book = state.slectedBook;
+    if (book == null) return false;
+    
+    final chapterIndex = book.selectedChapter;
+    final chapters = [...book.chapters];
+    final chapter = chapters[chapterIndex];
+    if (!chapter.isLocked) return false;
+
+    chapters[chapterIndex] = chapter.copyWith(
+      isLocked: false,
+    );
+
+    state = state.copyWith(slectedBook: book.copyWith(chapters: chapters));
+    return true;
+  }
 }
