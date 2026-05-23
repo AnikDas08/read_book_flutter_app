@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:riverpod_tamplates/src/features/app_features/read/data/model/book_model.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/read/data/model/book_model.dart';
 
 enum ReadingMode { slide, flip, scroll }
 

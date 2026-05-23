@@ -75,6 +75,53 @@ class ContestRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [CreatePasswordScreen]
+class CreatePasswordRoute extends PageRouteInfo<CreatePasswordRouteArgs> {
+  CreatePasswordRoute({
+    Key? key,
+    required String token,
+    List<PageRouteInfo>? children,
+  }) : super(
+         CreatePasswordRoute.name,
+         args: CreatePasswordRouteArgs(key: key, token: token),
+         initialChildren: children,
+       );
+
+  static const String name = 'CreatePasswordRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<CreatePasswordRouteArgs>();
+      return CreatePasswordScreen(key: args.key, token: args.token);
+    },
+  );
+}
+
+class CreatePasswordRouteArgs {
+  const CreatePasswordRouteArgs({this.key, required this.token});
+
+  final Key? key;
+
+  final String token;
+
+  @override
+  String toString() {
+    return 'CreatePasswordRouteArgs{key: $key, token: $token}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! CreatePasswordRouteArgs) return false;
+    return key == other.key && token == other.token;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ token.hashCode;
+}
+
+/// generated route for
 /// [EditProfileScreen]
 class EditProfileRoute extends PageRouteInfo<void> {
   const EditProfileRoute({List<PageRouteInfo>? children})
@@ -299,18 +346,62 @@ class OnboardingRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [OtpScreen]
-class OtpRoute extends PageRouteInfo<void> {
-  const OtpRoute({List<PageRouteInfo>? children})
-    : super(OtpRoute.name, initialChildren: children);
+class OtpRoute extends PageRouteInfo<OtpRouteArgs> {
+  OtpRoute({
+    Key? key,
+    required String createToken,
+    String argument = "",
+    List<PageRouteInfo>? children,
+  }) : super(
+         OtpRoute.name,
+         args: OtpRouteArgs(
+           key: key,
+           createToken: createToken,
+           argument: argument,
+         ),
+         initialChildren: children,
+       );
 
   static const String name = 'OtpRoute';
 
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      return const OtpScreen();
+      final args = data.argsAs<OtpRouteArgs>();
+      return OtpScreen(
+        key: args.key,
+        createToken: args.createToken,
+        argument: args.argument,
+      );
     },
   );
+}
+
+class OtpRouteArgs {
+  const OtpRouteArgs({this.key, required this.createToken, this.argument = ""});
+
+  final Key? key;
+
+  final String createToken;
+
+  final String argument;
+
+  @override
+  String toString() {
+    return 'OtpRouteArgs{key: $key, createToken: $createToken, argument: $argument}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! OtpRouteArgs) return false;
+    return key == other.key &&
+        createToken == other.createToken &&
+        argument == other.argument;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ createToken.hashCode ^ argument.hashCode;
 }
 
 /// generated route for

@@ -3,14 +3,16 @@ import 'package:core_kit/text/common_text.dart';
 import 'package:core_kit/utils/core_screen_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_tamplates/config/constance/app_string.dart';
-import 'package:riverpod_tamplates/config/constance/constants.dart';
-import 'package:riverpod_tamplates/config/constance/headline_widget.dart';
-import 'package:riverpod_tamplates/config/route/app_router.dart';
-import 'package:riverpod_tamplates/config/theme/app_theme_data.dart';
-import 'package:riverpod_tamplates/src/features/app_features/book/presentation/widgets/power_stones_button_widget.dart';
-import 'package:riverpod_tamplates/src/features/app_features/home/presentation/widget/books_feed_card_widget.dart';
-import 'package:riverpod_tamplates/src/features/app_features/library/presentation/widgets/book_widget.dart';
+import 'package:unkutdrama_kpnovel/config/constance/app_string.dart';
+import 'package:unkutdrama_kpnovel/config/constance/constants.dart';
+import 'package:unkutdrama_kpnovel/config/constance/headline_widget.dart';
+import 'package:unkutdrama_kpnovel/config/route/app_router.dart';
+import 'package:unkutdrama_kpnovel/config/theme/app_theme_data.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/book/presentation/widgets/power_stones_button_widget.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/home/presentation/widget/books_feed_card_widget.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/home/application/home_book_provider.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/home/data/model/home_book_model.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/library/presentation/widgets/book_widget.dart';
 
 @RoutePage()
 class HomeScreen extends ConsumerWidget {
@@ -72,7 +74,7 @@ class HomeScreen extends ConsumerWidget {
               ),
             );
           }, context),
-          _trendingBooks(itemSizeInrow),
+          _trendingBooks(ref),
 
           _headline('💜 ${AppString.recommended_for_you}', () {
             context.router.push(
@@ -84,7 +86,7 @@ class HomeScreen extends ConsumerWidget {
               ),
             );
           }, context),
-          _recommendedBooks(itemSizeInrow),
+          _recommendedBooks(ref),
           _headline('✨ ${AppString.new_releases}', () {
             context.router.push(
               ShowMoreBooksRoute(
@@ -103,42 +105,60 @@ class HomeScreen extends ConsumerWidget {
     );
   }
 
-  SizedBox _recommendedBooks(double itemSizeInrow) {
-    return SizedBox(
-      height: 180.h,
-      child: SingleChildScrollView(
-        scrollDirection: .horizontal,
-        child: Row(
-          children: [
-            const BookWidget(isTrending: true),
-            8.width,
-            const BookWidget(isTrending: true),
-            8.width,
-            const BookWidget(isTrending: true),
-            8.width,
-            const BookWidget(isTrending: true),
-          ],
+  Widget _recommendedBooks(WidgetRef ref) {
+    final recommendedAsync = ref.watch(recommendedBooksProvider);
+
+    return recommendedAsync.when(
+      data: (books) => SizedBox(
+        height: 180.h,
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: books
+                .map((book) => Padding(
+                      padding: const EdgeInsets.only(right: 8),
+                      child: BookWidget(book: book, isNew: true),
+                    ))
+                .toList(),
+          ),
         ),
+      ),
+      loading: () => const SizedBox(
+        height: 180,
+        child: Center(child: CircularProgressIndicator()),
+      ),
+      error: (err, stack) => SizedBox(
+        height: 180,
+        child: Center(child: Text(err.toString())),
       ),
     );
   }
 
-  SizedBox _trendingBooks(double itemSizeInrow) {
-    return SizedBox(
-      height: 180.h,
-      child: SingleChildScrollView(
-        scrollDirection: .horizontal,
-        child: Row(
-          children: [
-            const BookWidget(isTrending: true),
-            8.width,
-            const BookWidget(isTrending: true),
-            8.width,
-            const BookWidget(isTrending: true),
-            8.width,
-            const BookWidget(isTrending: true),
-          ],
+  Widget _trendingBooks(WidgetRef ref) {
+    final trendingAsync = ref.watch(trendingBooksProvider);
+
+    return trendingAsync.when(
+      data: (books) => SizedBox(
+        height: 180.h,
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: books
+                .map((book) => Padding(
+                      padding: const EdgeInsets.only(right: 8),
+                      child: BookWidget(book: book, isTrending: true),
+                    ))
+                .toList(),
+          ),
         ),
+      ),
+      loading: () => const SizedBox(
+        height: 180,
+        child: Center(child: CircularProgressIndicator()),
+      ),
+      error: (err, stack) => SizedBox(
+        height: 180,
+        child: Center(child: Text(err.toString())),
       ),
     );
   }

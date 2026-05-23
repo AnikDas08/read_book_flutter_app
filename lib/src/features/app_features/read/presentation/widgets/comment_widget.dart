@@ -1,7 +1,7 @@
 import 'package:core_kit/core_kit_internal.dart';
 import 'package:flutter/material.dart';
-import 'package:riverpod_tamplates/src/constants/app_font_sizes.dart';
-import 'package:riverpod_tamplates/src/features/app_features/read/data/model/comment_model.dart';
+import 'package:unkutdrama_kpnovel/src/constants/app_font_sizes.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/read/data/model/comment_model.dart';
 
 class CommentSection extends StatelessWidget {
   CommentSection({super.key, required this.scrollController});

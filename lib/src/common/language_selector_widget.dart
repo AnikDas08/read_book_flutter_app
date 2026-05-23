@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:core_kit/core_kit_internal.dart';
-import 'package:riverpod_tamplates/src/features/core_features/profile/application/language_notifier.dart';
+import 'package:unkutdrama_kpnovel/src/features/core_features/profile/application/language_notifier.dart';
 
 class LanguageSelectorWidget extends ConsumerWidget {
   const LanguageSelectorWidget({super.key});

@@ -2,14 +2,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 final storageServiceProvider = Provider.autoDispose<StorageService>(
-  (ref) => StorageService(),
+  (ref) => StorageService.instance,
 );
 
 class StorageService {
-  StorageService() {
+  StorageService._Internal() {
     _secureStorage = const FlutterSecureStorage();
   }
-  static StorageService get instance => StorageService();
+  static final StorageService _instance = StorageService._Internal();
+  static StorageService get instance => _instance;
 
   late final FlutterSecureStorage _secureStorage;
 

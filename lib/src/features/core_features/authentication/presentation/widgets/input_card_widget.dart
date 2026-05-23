@@ -1,6 +1,6 @@
 import 'package:core_kit/utils/core_screen_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:riverpod_tamplates/config/theme/app_theme_data.dart';
+import 'package:unkutdrama_kpnovel/config/theme/app_theme_data.dart';
 
 class InputCardWidget extends StatelessWidget {
   const InputCardWidget({super.key, required this.child});

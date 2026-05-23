@@ -3,16 +3,16 @@ import 'package:core_kit/core_kit.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_tamplates/config/constance/app_string.dart';
-import 'package:riverpod_tamplates/config/route/app_router.dart';
-import 'package:riverpod_tamplates/config/theme/app_theme_data.dart';
-import 'package:riverpod_tamplates/gen/assets.gen.dart';
-import 'package:riverpod_tamplates/src/common/label.dart';
-import 'package:riverpod_tamplates/src/constants/app_ui_constants.dart';
-import 'package:riverpod_tamplates/src/features/core_features/authentication/presentation/widgets/auth_background.dart';
-import 'package:riverpod_tamplates/src/features/core_features/authentication/presentation/widgets/input_card_widget.dart';
-import 'package:riverpod_tamplates/src/features/core_features/authentication/riverpod/auth_notifier.dart';
-import 'package:riverpod_tamplates/src/features/core_features/authentication/riverpod/auth_state.dart';
+import 'package:unkutdrama_kpnovel/config/constance/app_string.dart';
+import 'package:unkutdrama_kpnovel/config/route/app_router.dart';
+import 'package:unkutdrama_kpnovel/config/theme/app_theme_data.dart';
+import 'package:unkutdrama_kpnovel/gen/assets.gen.dart';
+import 'package:unkutdrama_kpnovel/src/common/label.dart';
+import 'package:unkutdrama_kpnovel/src/constants/app_ui_constants.dart';
+import 'package:unkutdrama_kpnovel/src/features/core_features/authentication/presentation/widgets/auth_background.dart';
+import 'package:unkutdrama_kpnovel/src/features/core_features/authentication/presentation/widgets/input_card_widget.dart';
+import 'package:unkutdrama_kpnovel/src/features/core_features/authentication/riverpod/auth_notifier.dart';
+import 'package:unkutdrama_kpnovel/src/features/core_features/authentication/riverpod/auth_state.dart';
 
 @RoutePage()
 class SignupScreen extends ConsumerWidget {
@@ -28,7 +28,7 @@ class SignupScreen extends ConsumerWidget {
 
   FormBuilder<Map<String, String>> _content(AuthState authState, AuthNotifier authNotifier) {
     return FormBuilder<Map<String, String>>(
-      entity: const {'email': '', 'password': ''},
+      entity: {'email': '', 'password': '', 'name': '', 'age': ''},
       builder: (context, formKey, entity) {
         return Padding(
           padding: EdgeInsets.all(AppUiConstants.main_screen_padding),
@@ -115,8 +115,8 @@ class SignupScreen extends ConsumerWidget {
                 isLoading: authState.isLoading,
                 onTap: () {
                   if (formKey.currentState?.validate() ?? false) {
-                    authNotifier.login(entity['email']!, entity['password']!);
-                  }
+                    authNotifier.signup(entity['name']!, entity['email']!, entity['password']!, int.tryParse(entity['age']!) ?? 0);
+                      }
                 },
               ),
               24.height,

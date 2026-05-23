@@ -1,6 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:riverpod_tamplates/config/constance/enums.dart';
-import 'package:riverpod_tamplates/src/features/app_features/library/riverpod/libarary_state.dart';
+import 'package:unkutdrama_kpnovel/config/constance/enums.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/library/riverpod/libarary_state.dart';
 
 part 'library_notifire.g.dart';
 

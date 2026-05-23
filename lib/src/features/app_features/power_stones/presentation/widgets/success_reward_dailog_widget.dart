@@ -1,7 +1,7 @@
 import 'package:core_kit/core_kit_internal.dart';
 import 'package:flutter/material.dart';
-import 'package:riverpod_tamplates/config/constance/app_string.dart';
-import 'package:riverpod_tamplates/config/theme/app_theme_data.dart';
+import 'package:unkutdrama_kpnovel/config/constance/app_string.dart';
+import 'package:unkutdrama_kpnovel/config/theme/app_theme_data.dart';
 
 class SuccessRewardDialogWidget extends StatelessWidget {
   final int earnedAmount;

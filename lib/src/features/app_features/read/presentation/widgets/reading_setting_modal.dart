@@ -1,10 +1,10 @@
 import 'package:core_kit/core_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_tamplates/config/constance/app_string.dart';
-import 'package:riverpod_tamplates/config/theme/app_theme_data.dart';
-import 'package:riverpod_tamplates/src/features/app_features/read/riverpod/read_notifier.dart';
-import 'package:riverpod_tamplates/src/features/app_features/read/riverpod/read_state.dart';
+import 'package:unkutdrama_kpnovel/config/constance/app_string.dart';
+import 'package:unkutdrama_kpnovel/config/theme/app_theme_data.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/read/riverpod/read_notifier.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/read/riverpod/read_state.dart';
 
 class ReadingSettingsModal extends ConsumerStatefulWidget {
   const ReadingSettingsModal({super.key, required this.controller});

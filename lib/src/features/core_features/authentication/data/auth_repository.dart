@@ -1,8 +1,8 @@
 import 'package:core_kit/core_kit.dart';
 import 'package:core_kit/network/request_input.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_tamplates/config/storage/storage_service.dart';
-import 'package:riverpod_tamplates/src/constants/api_endpoints.dart';
+import 'package:unkutdrama_kpnovel/config/storage/storage_service.dart';
+import 'package:unkutdrama_kpnovel/src/constants/api_endpoints.dart';
 
 final authRepositoryProvider = Provider.autoDispose<AuthRepository>(
   (ref) => AuthRepository._(),
@@ -14,18 +14,19 @@ class AuthRepository {
 
   Future<ResponseState<dynamic>> login(String email, String password) async {
     final response = await DioService.instance.request<dynamic>(
+      showMessage: true,
       input: RequestInput(
         endpoint: ApiEndpoints.login,
-        method: .POST,
+        method: RequestMethod.POST,
         jsonBody: {'email': email, 'password': password},
       ),
       responseBuilder: (data) => data,
     );
 
     if (response.isSuccess && response.data != null) {
-      final token = response.data['token'] as String?;
+      final token = response.data['accessToken'];
       if (token != null) {
-        await StorageService.instance.set('auth_token', token);
+        await StorageService.instance.set('auth_token', token.toString());
       }
     }
 
@@ -36,16 +37,20 @@ class AuthRepository {
     String name,
     String email,
     String password,
+      int age
   ) async {
-    return await DioService.instance.request(
+    return  await DioService.instance.request(
       showMessage: true,
       input: RequestInput(
         endpoint: ApiEndpoints.signup,
         method: .POST,
-        jsonBody: {'name': name, 'email': email, 'password': password},
+        jsonBody: {'fullName': name, 'email': email, 'password': password, 'age': age,'role':'user'},
       ),
-      responseBuilder: (data) => data,
+      responseBuilder: (data)  {
+        return data;
+      },
     );
+
   }
 
   @override
@@ -61,13 +66,27 @@ class AuthRepository {
     );
   }
 
-  Future<ResponseState<dynamic>> verifyOtp(String code) async {
+  Future<ResponseState<dynamic>> verifyOtp(String code, String token) async {
     return await DioService.instance.request(
       showMessage: true,
       input: RequestInput(
         endpoint: ApiEndpoints.verifyOtp,
         method: .POST,
-        jsonBody: {'code': code},
+        jsonBody: {'otp': code},
+        headers: {'token': '$token'},
+      ),
+      responseBuilder: (data) => data,
+    );
+  }
+
+  Future<ResponseState<dynamic>> createPassword(String newPassword, String confirmPassword,String token) async {
+    return await DioService.instance.request(
+      showMessage: true,
+      input: RequestInput(
+        endpoint: ApiEndpoints.createPassword,
+        method: .PATCH,
+        jsonBody: {'newPassword': newPassword,'confirmPassword':confirmPassword},
+        headers: {'token': '$token'},
       ),
       responseBuilder: (data) => data,
     );

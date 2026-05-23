@@ -1,9 +1,9 @@
 import 'package:core_kit/core_kit_internal.dart';
 import 'package:flutter/material.dart';
-import 'package:riverpod_tamplates/config/constance/constants.dart';
-import 'package:riverpod_tamplates/config/corekit/back_button.dart';
-import 'package:riverpod_tamplates/src/common/share_icon_button.dart';
-import 'package:riverpod_tamplates/src/constants/app_font_sizes.dart';
+import 'package:unkutdrama_kpnovel/config/constance/constants.dart';
+import 'package:unkutdrama_kpnovel/config/corekit/back_button.dart';
+import 'package:unkutdrama_kpnovel/src/common/share_icon_button.dart';
+import 'package:unkutdrama_kpnovel/src/constants/app_font_sizes.dart';
 
 class BookDetailsAppbarWidget extends StatelessWidget {
   const BookDetailsAppbarWidget({super.key});

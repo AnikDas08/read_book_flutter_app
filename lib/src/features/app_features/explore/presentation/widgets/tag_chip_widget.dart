@@ -1,6 +1,6 @@
 import 'package:core_kit/text/common_text.dart';
 import 'package:flutter/material.dart';
-import 'package:riverpod_tamplates/config/theme/app_theme_data.dart';
+import 'package:unkutdrama_kpnovel/config/theme/app_theme_data.dart';
 
 class TagChip extends StatelessWidget {
   final String label;

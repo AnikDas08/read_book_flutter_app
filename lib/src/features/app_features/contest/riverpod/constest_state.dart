@@ -1,4 +1,4 @@
-import 'package:riverpod_tamplates/src/features/app_features/contest/data/model/contest_item.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/contest/data/model/contest_item.dart';
 
 class ContestState {
   List<ContestItem> contestItems;

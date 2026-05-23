@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_tamplates/config/route/app_router.dart';
-import 'package:riverpod_tamplates/src/features/core_features/authentication/riverpod/auth_notifier.dart';
+import 'package:unkutdrama_kpnovel/config/route/app_router.dart';
+import 'package:unkutdrama_kpnovel/src/features/core_features/authentication/riverpod/auth_notifier.dart';
 
 class AuthGuard extends AutoRouteGuard {
   final WidgetRef ref;

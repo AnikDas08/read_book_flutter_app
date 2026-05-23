@@ -3,13 +3,13 @@ import 'package:core_kit/core_kit_internal.dart';
 import 'package:core_kit/list_loader/smart_tab_list_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_tamplates/config/constance/app_string.dart';
-import 'package:riverpod_tamplates/config/constance/constants.dart';
-import 'package:riverpod_tamplates/config/route/app_router.dart';
-import 'package:riverpod_tamplates/config/theme/app_theme_data.dart';
-import 'package:riverpod_tamplates/src/constants/app_font_sizes.dart';
-import 'package:riverpod_tamplates/src/features/app_features/explore/riverpod/explore_notifire.dart';
-import 'package:riverpod_tamplates/src/features/app_features/library/presentation/widgets/no_books_found.dart';
+import 'package:unkutdrama_kpnovel/config/constance/app_string.dart';
+import 'package:unkutdrama_kpnovel/config/constance/constants.dart';
+import 'package:unkutdrama_kpnovel/config/route/app_router.dart';
+import 'package:unkutdrama_kpnovel/config/theme/app_theme_data.dart';
+import 'package:unkutdrama_kpnovel/src/constants/app_font_sizes.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/explore/riverpod/explore_notifire.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/library/presentation/widgets/no_books_found.dart';
 
 class ExploreResultWidget extends ConsumerWidget {
   const ExploreResultWidget({super.key, this.itemCount, this.selectedGenre});

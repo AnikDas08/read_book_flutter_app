@@ -1,11 +1,14 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:core_kit/core_kit_internal.dart';
 import 'package:flutter/material.dart';
-import 'package:riverpod_tamplates/config/constance/app_string.dart';
-import 'package:riverpod_tamplates/config/constance/constants.dart';
-import 'package:riverpod_tamplates/config/route/app_router.dart';
-import 'package:riverpod_tamplates/config/theme/app_theme_data.dart';
-import 'package:riverpod_tamplates/src/constants/app_font_sizes.dart';
+import 'package:unkutdrama_kpnovel/config/constance/app_string.dart';
+import 'package:unkutdrama_kpnovel/config/constance/constants.dart';
+import 'package:unkutdrama_kpnovel/config/route/app_router.dart';
+import 'package:unkutdrama_kpnovel/config/theme/app_theme_data.dart';
+import 'package:unkutdrama_kpnovel/src/constants/app_font_sizes.dart';
+
+import 'package:unkutdrama_kpnovel/src/features/app_features/home/data/model/home_book_model.dart';
+import 'package:unkutdrama_kpnovel/src/constants/api_endpoints.dart';
 
 class BookWidget extends StatelessWidget {
   const BookWidget({
@@ -14,12 +17,14 @@ class BookWidget extends StatelessWidget {
     this.showProgress = false,
     this.isTrending = false,
     this.isNew = false,
+    this.book,
   });
 
   final bool isCompleted;
   final bool showProgress;
   final bool isTrending;
   final bool isNew;
+  final HomeBookModel? book;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +34,7 @@ class BookWidget extends StatelessWidget {
       },
       child: Container(
         margin: .zero,
-        width: (CoreScreenUtils.deviceSize.width - 32) / 3.2,
+        width: (CoreScreenUtils.deviceSize.width > 0 ? (CoreScreenUtils.deviceSize.width - 32) / 3.2 : 120),
         height: 150.h,
         decoration: BoxDecoration(
           color: Colors.white,
@@ -57,7 +62,11 @@ class BookWidget extends StatelessWidget {
                       borderRadius: BorderRadius.vertical(
                         top: Radius.circular(10.r),
                       ),
-                      child: const CommonImage(src: Constants.sampleImage),
+                      child: CommonImage(
+                      src: book?.coverImage != null
+                          ? '${ApiEndpoints.imageBaseUrl}/${book!.coverImage.replaceAll('\\', '/')}'
+                          : Constants.sampleImage,
+                    ),
                     ),
                   ),
                   if (showProgress) ...[
@@ -166,20 +175,20 @@ class BookWidget extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const CommonText(
+                  CommonText(
                     textAlign: .start,
-                    text: 'Echoes of Tomorrow',
+                    text: book?.title ?? 'Echoes of Tomorrow',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     preventScaling: true,
                     fontSize: AppFontSizes.small,
-                    fontWeight: FontWeight(400),
-                    textColor: Color(0xFF111111),
+                    fontWeight: const FontWeight(400),
+                    textColor: const Color(0xFF111111),
                   ),
                   if (!showProgress) ...[
                     4.height,
                     CommonText(
-                      text: 'Dr. Sarah Chen',
+                      text: book?.author?.fullName ?? 'Dr. Sarah Chen',
                       fontSize: AppFontSizes.small,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -190,17 +199,10 @@ class BookWidget extends StatelessWidget {
                     Row(
                       children: [
                         const Icon(Icons.star, color: Colors.amber, size: 12),
-                        const Icon(Icons.star, color: Colors.amber, size: 12),
-                        const Icon(Icons.star, color: Colors.amber, size: 12),
-                        const Icon(Icons.star, color: Colors.amber, size: 12),
-                        Icon(
-                          Icons.star,
-                          color: Colors.grey.withOpacity(0.4),
-                          size: 16,
-                        ),
-                        const Text(
-                          '4/5',
-                          style: TextStyle(
+                        4.width,
+                        Text(
+                          (book?.ratingCount ?? 4.0).toStringAsFixed(1),
+                          style: const TextStyle(
                             fontSize: AppFontSizes.small,
                             fontWeight: FontWeight.bold,
                             color: Color(0xFF333333),

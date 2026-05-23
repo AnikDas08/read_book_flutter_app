@@ -1,8 +1,8 @@
 import 'package:core_kit/core_kit_internal.dart';
 import 'package:flutter/material.dart';
-import 'package:riverpod_tamplates/config/constance/constants.dart';
-import 'package:riverpod_tamplates/gen/assets.gen.dart';
-import 'package:riverpod_tamplates/src/constants/app_font_sizes.dart';
+import 'package:unkutdrama_kpnovel/config/constance/constants.dart';
+import 'package:unkutdrama_kpnovel/gen/assets.gen.dart';
+import 'package:unkutdrama_kpnovel/src/constants/app_font_sizes.dart';
 
 class TopVotedBooks extends StatelessWidget {
   const TopVotedBooks({super.key});

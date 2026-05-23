@@ -1,6 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:riverpod_tamplates/src/features/app_features/explore/presentation/widgets/explore_result_widget.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/explore/presentation/widgets/explore_result_widget.dart';
 
 @RoutePage()
 class ExploreScreen extends StatelessWidget {

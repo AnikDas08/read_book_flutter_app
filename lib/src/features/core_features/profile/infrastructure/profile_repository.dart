@@ -1,7 +1,7 @@
 import 'package:core_kit/core_kit.dart';
 import 'package:core_kit/network/request_input.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_tamplates/src/constants/api_endpoints.dart';
+import 'package:unkutdrama_kpnovel/src/constants/api_endpoints.dart';
 
 final profileRepositoryProvider = Provider.autoDispose<ProfileRepository>(
   (ref) => ProfileRepository._(),

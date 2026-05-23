@@ -1,10 +1,10 @@
 import 'package:core_kit/text/common_text.dart';
 import 'package:core_kit/utils/core_screen_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:riverpod_tamplates/config/constance/app_string.dart';
-import 'package:riverpod_tamplates/config/theme/app_theme_data.dart';
-import 'package:riverpod_tamplates/src/features/app_features/explore/presentation/widgets/genere_card_widget.dart';
-import 'package:riverpod_tamplates/src/features/app_features/explore/presentation/widgets/tag_chip_widget.dart';
+import 'package:unkutdrama_kpnovel/config/constance/app_string.dart';
+import 'package:unkutdrama_kpnovel/config/theme/app_theme_data.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/explore/presentation/widgets/genere_card_widget.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/explore/presentation/widgets/tag_chip_widget.dart';
 
 class ExploreInitalWidget extends StatelessWidget {
   const ExploreInitalWidget({super.key});

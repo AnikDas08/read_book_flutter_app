@@ -1,4 +1,4 @@
-import 'package:riverpod_tamplates/src/features/app_features/read/data/model/book_model.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/read/data/model/book_model.dart';
 
 class ExploreState {
   final List<BookModel> books;

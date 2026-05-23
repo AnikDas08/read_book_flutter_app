@@ -1,16 +1,16 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:core_kit/core_kit.dart';
 import 'package:flutter/material.dart';
-import 'package:riverpod_tamplates/config/constance/app_string.dart';
-import 'package:riverpod_tamplates/config/route/app_router.dart';
-import 'package:riverpod_tamplates/config/theme/app_theme_data.dart';
-import 'package:riverpod_tamplates/gen/assets.gen.dart';
-import 'package:riverpod_tamplates/src/common/notification_button_widget.dart';
-import 'package:riverpod_tamplates/src/constants/app_ui_constants.dart';
-import 'package:riverpod_tamplates/src/features/app_features/explore/presentation/widgets/explore_screen_appbar.dart';
-import 'package:riverpod_tamplates/src/features/app_features/home/presentation/widget/home_screen_appbar.dart';
-import 'package:riverpod_tamplates/src/features/app_features/profile/presentation/screen/profile_screen.dart';
-import 'package:riverpod_tamplates/src/features/app_features/read/presentation/widgets/chapters_drawer.dart';
+import 'package:unkutdrama_kpnovel/config/constance/app_string.dart';
+import 'package:unkutdrama_kpnovel/config/route/app_router.dart';
+import 'package:unkutdrama_kpnovel/config/theme/app_theme_data.dart';
+import 'package:unkutdrama_kpnovel/gen/assets.gen.dart';
+import 'package:unkutdrama_kpnovel/src/common/notification_button_widget.dart';
+import 'package:unkutdrama_kpnovel/src/constants/app_ui_constants.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/explore/presentation/widgets/explore_screen_appbar.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/home/presentation/widget/home_screen_appbar.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/profile/presentation/screen/profile_screen.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/read/presentation/widgets/chapters_drawer.dart';
 
 @RoutePage()
 class NavigationScreen extends StatelessWidget {
@@ -69,7 +69,6 @@ class NavigationScreen extends StatelessWidget {
           return CommonAppBar(
             disableBack: true,
             hideBack: true,
-
             appbarConfig: AppbarConfig(
               titleSpacing: 16,
               height: 110,

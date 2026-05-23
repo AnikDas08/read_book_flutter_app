@@ -2,12 +2,12 @@ import 'package:auto_route/auto_route.dart';
 import 'package:core_kit/app_bar/common_app_bar.dart';
 import 'package:core_kit/utils/core_screen_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:riverpod_tamplates/config/corekit/back_button.dart';
-import 'package:riverpod_tamplates/config/theme/app_theme_data.dart';
-import 'package:riverpod_tamplates/src/features/app_features/power_stones/presentation/widgets/daily_reward_claim_widget.dart';
-import 'package:riverpod_tamplates/src/features/app_features/power_stones/presentation/widgets/how_to_use_step_widget.dart';
-import 'package:riverpod_tamplates/src/features/app_features/power_stones/presentation/widgets/power_stone_card.dart';
-import 'package:riverpod_tamplates/src/features/app_features/power_stones/presentation/widgets/watch_ad_card_widget.dart';
+import 'package:unkutdrama_kpnovel/config/corekit/back_button.dart';
+import 'package:unkutdrama_kpnovel/config/theme/app_theme_data.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/power_stones/presentation/widgets/daily_reward_claim_widget.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/power_stones/presentation/widgets/how_to_use_step_widget.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/power_stones/presentation/widgets/power_stone_card.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/power_stones/presentation/widgets/watch_ad_card_widget.dart';
 
 @RoutePage()
 class PowerStonesScreen extends StatelessWidget {

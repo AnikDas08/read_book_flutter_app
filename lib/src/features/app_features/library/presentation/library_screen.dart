@@ -3,13 +3,13 @@ import 'package:core_kit/core_kit_internal.dart';
 import 'package:core_kit/list_loader/smart_tab_list_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_tamplates/config/constance/app_string.dart';
-import 'package:riverpod_tamplates/config/constance/enums.dart';
-import 'package:riverpod_tamplates/config/theme/app_theme_data.dart';
-import 'package:riverpod_tamplates/src/constants/app_font_sizes.dart';
-import 'package:riverpod_tamplates/src/features/app_features/library/presentation/widgets/book_widget.dart';
-import 'package:riverpod_tamplates/src/features/app_features/library/presentation/widgets/no_books_found.dart';
-import 'package:riverpod_tamplates/src/features/app_features/library/riverpod/library_notifire.dart';
+import 'package:unkutdrama_kpnovel/config/constance/app_string.dart';
+import 'package:unkutdrama_kpnovel/config/constance/enums.dart';
+import 'package:unkutdrama_kpnovel/config/theme/app_theme_data.dart';
+import 'package:unkutdrama_kpnovel/src/constants/app_font_sizes.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/library/presentation/widgets/book_widget.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/library/presentation/widgets/no_books_found.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/library/riverpod/library_notifire.dart';
 
 @RoutePage()
 class LibraryScreen extends StatelessWidget {

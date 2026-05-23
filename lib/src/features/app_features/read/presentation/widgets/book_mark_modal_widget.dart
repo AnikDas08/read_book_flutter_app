@@ -1,8 +1,8 @@
 import 'package:core_kit/core_kit_internal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_tamplates/src/constants/app_font_sizes.dart';
-import 'package:riverpod_tamplates/src/features/app_features/read/riverpod/read_notifier.dart';
+import 'package:unkutdrama_kpnovel/src/constants/app_font_sizes.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/read/riverpod/read_notifier.dart';
 
 class BookmarkModalWidget extends ConsumerStatefulWidget {
   const BookmarkModalWidget({super.key});

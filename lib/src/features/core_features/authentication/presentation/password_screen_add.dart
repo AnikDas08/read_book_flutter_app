@@ -5,15 +5,21 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unkutdrama_kpnovel/config/corekit/back_button.dart';
 import 'package:unkutdrama_kpnovel/config/theme/app_theme_data.dart';
 import 'package:unkutdrama_kpnovel/src/constants/app_font_sizes.dart';
+import 'package:unkutdrama_kpnovel/src/features/core_features/authentication/riverpod/auth_notifier.dart';
 import 'package:unkutdrama_kpnovel/src/features/core_features/profile/application/profile_notifier.dart';
 
 @RoutePage()
-class ChangePasswordScreen extends ConsumerWidget {
-  const ChangePasswordScreen({super.key});
+class CreatePasswordScreen extends ConsumerWidget {
+  final String token;
+  const CreatePasswordScreen({
+    super.key,
+    required this.token
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final profileState = ref.watch(profileNotifierProvider);
+    final authState = ref.watch(authProvider);
+    final authNotifier = ref.read(authProvider.notifier);
 
     return Scaffold(
       appBar: CommonAppBar(
@@ -24,7 +30,7 @@ class ChangePasswordScreen extends ConsumerWidget {
       ),
       backgroundColor: context.color.bgColor,
       body: FormBuilder<Map<String, String>>(
-        entity: const {'old': '', 'new': '', 'confirm': ''},
+        entity: {},
         builder: (context, formKey, entity) {
           return SingleChildScrollView(
             child: Padding(
@@ -41,12 +47,6 @@ class ChangePasswordScreen extends ConsumerWidget {
                   ),
                   32.height,
                   _PasswordField(
-                    label: 'Current Password',
-                    hint: 'Please enter your current  password.',
-                    onChanged: (val) => entity['old'] = val,
-                  ),
-                  22.height,
-                  _PasswordField(
                     label: 'New Password',
                     hint: 'Please enter your new  password.',
                     onChanged: (val) => entity['new'] = val,
@@ -59,12 +59,10 @@ class ChangePasswordScreen extends ConsumerWidget {
                   ),
                   60.height,
                   _SaveButton(
-                    isLoading: profileState.isLoading,
+                    isLoading: authState.isLoading,
                     onTap: () {
                       if (formKey.currentState?.validate() ?? false) {
-                        ref
-                            .read(profileNotifierProvider.notifier)
-                            .changePassword(entity['old']!, entity['new']!);
+                        authNotifier.createPassword(entity['new']!, entity['confirm']!,token);
                       }
                     },
                   ),
@@ -99,19 +97,19 @@ class _SaveButton extends StatelessWidget {
         ),
         child: isLoading
             ? const SizedBox(
-                width: 24,
-                height: 24,
-                child: CircularProgressIndicator(
-                  color: Colors.white,
-                  strokeWidth: 2,
-                ),
-              )
+          width: 24,
+          height: 24,
+          child: CircularProgressIndicator(
+            color: Colors.white,
+            strokeWidth: 2,
+          ),
+        )
             : const CommonText(
-                text: 'Save all Changes',
-                fontSize: AppFontSizes.large,
-                fontWeight: FontWeight.w700,
-                textColor: Colors.white,
-              ),
+          text: 'Save all Changes',
+          fontSize: AppFontSizes.large,
+          fontWeight: FontWeight.w700,
+          textColor: Colors.white,
+        ),
       ),
     );
   }

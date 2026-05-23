@@ -1,36 +1,37 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_tamplates/config/route/auth_guard.dart';
-import 'package:riverpod_tamplates/src/features/app_features/book/presentation/book_details_screen.dart';
-import 'package:riverpod_tamplates/src/features/app_features/book/presentation/review_screen.dart';
-import 'package:riverpod_tamplates/src/features/app_features/contest/presentation/contest_screen.dart';
-import 'package:riverpod_tamplates/src/features/app_features/explore/presentation/explore_result_screen.dart';
-import 'package:riverpod_tamplates/src/features/app_features/explore/presentation/explore_screen.dart';
-import 'package:riverpod_tamplates/src/features/app_features/home/presentation/home_screen.dart';
-import 'package:riverpod_tamplates/src/features/app_features/home/presentation/show_more_books_screen.dart';
-import 'package:riverpod_tamplates/src/features/app_features/library/presentation/library_screen.dart';
-import 'package:riverpod_tamplates/src/features/app_features/power_stones/presentation/power_stones_screen.dart';
-import 'package:riverpod_tamplates/src/features/app_features/profile/presentation/screen/profile_screen.dart';
-import 'package:riverpod_tamplates/src/features/app_features/rankings/presentation/ranking_screen.dart';
-import 'package:riverpod_tamplates/src/features/app_features/read/presentation/read_screen.dart';
-import 'package:riverpod_tamplates/src/features/app_features/story/presentation/story_screen.dart';
-import 'package:riverpod_tamplates/src/features/core_features/authentication/presentation/forgot_password_screen.dart';
-import 'package:riverpod_tamplates/src/features/core_features/authentication/presentation/login_screen.dart';
-import 'package:riverpod_tamplates/src/features/core_features/authentication/presentation/otp_screen.dart';
-import 'package:riverpod_tamplates/src/features/core_features/authentication/presentation/signup_screen.dart';
-import 'package:riverpod_tamplates/src/features/core_features/navigation/presentation/navigation_screen.dart';
-import 'package:riverpod_tamplates/src/features/core_features/onboarding/presentation/onboarding_screen.dart';
-import 'package:riverpod_tamplates/src/features/core_features/presentation/splash_screen.dart';
-import 'package:riverpod_tamplates/src/features/core_features/profile/presentation/about_us_screen.dart';
-import 'package:riverpod_tamplates/src/features/core_features/profile/presentation/change_password_screen.dart';
-import 'package:riverpod_tamplates/src/features/core_features/profile/presentation/edit_profile_screen.dart';
-import 'package:riverpod_tamplates/src/features/core_features/profile/presentation/faq_screen.dart';
-import 'package:riverpod_tamplates/src/features/core_features/profile/presentation/language_screen.dart';
-import 'package:riverpod_tamplates/src/features/core_features/profile/presentation/notification_screen.dart';
-import 'package:riverpod_tamplates/src/features/core_features/profile/presentation/privacy_screen.dart';
-import 'package:riverpod_tamplates/src/features/core_features/profile/presentation/terms_screen.dart';
-import 'package:riverpod_tamplates/src/features/core_features/profile/presentation/used_power_stones_history_screen.dart';
+import 'package:unkutdrama_kpnovel/config/route/auth_guard.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/book/presentation/book_details_screen.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/book/presentation/review_screen.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/contest/presentation/contest_screen.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/explore/presentation/explore_result_screen.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/explore/presentation/explore_screen.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/home/presentation/home_screen.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/home/presentation/show_more_books_screen.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/library/presentation/library_screen.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/power_stones/presentation/power_stones_screen.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/profile/presentation/screen/profile_screen.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/rankings/presentation/ranking_screen.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/read/presentation/read_screen.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/story/presentation/story_screen.dart';
+import 'package:unkutdrama_kpnovel/src/features/core_features/authentication/presentation/forgot_password_screen.dart';
+import 'package:unkutdrama_kpnovel/src/features/core_features/authentication/presentation/login_screen.dart';
+import 'package:unkutdrama_kpnovel/src/features/core_features/authentication/presentation/otp_screen.dart';
+import 'package:unkutdrama_kpnovel/src/features/core_features/authentication/presentation/password_screen_add.dart';
+import 'package:unkutdrama_kpnovel/src/features/core_features/authentication/presentation/signup_screen.dart';
+import 'package:unkutdrama_kpnovel/src/features/core_features/navigation/presentation/navigation_screen.dart';
+import 'package:unkutdrama_kpnovel/src/features/core_features/onboarding/presentation/onboarding_screen.dart';
+import 'package:unkutdrama_kpnovel/src/features/core_features/presentation/splash_screen.dart';
+import 'package:unkutdrama_kpnovel/src/features/core_features/profile/presentation/about_us_screen.dart';
+import 'package:unkutdrama_kpnovel/src/features/core_features/profile/presentation/change_password_screen.dart';
+import 'package:unkutdrama_kpnovel/src/features/core_features/profile/presentation/edit_profile_screen.dart';
+import 'package:unkutdrama_kpnovel/src/features/core_features/profile/presentation/faq_screen.dart';
+import 'package:unkutdrama_kpnovel/src/features/core_features/profile/presentation/language_screen.dart';
+import 'package:unkutdrama_kpnovel/src/features/core_features/profile/presentation/notification_screen.dart';
+import 'package:unkutdrama_kpnovel/src/features/core_features/profile/presentation/privacy_screen.dart';
+import 'package:unkutdrama_kpnovel/src/features/core_features/profile/presentation/terms_screen.dart';
+import 'package:unkutdrama_kpnovel/src/features/core_features/profile/presentation/used_power_stones_history_screen.dart';
 
 part 'app_router.gr.dart';
 
@@ -68,6 +69,7 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: ReadRoute.page, guards: [AuthGuard(ref)]),
     AutoRoute(page: EditProfileRoute.page, guards: [AuthGuard(ref)]),
     AutoRoute(page: ChangePasswordRoute.page, guards: [AuthGuard(ref)]),
+    AutoRoute(page: CreatePasswordRoute.page, guards: [AuthGuard(ref)]),
     AutoRoute(page: TermsRoute.page),
     AutoRoute(page: PrivacyRoute.page),
     AutoRoute(page: FaqRoute.page),

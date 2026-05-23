@@ -1,12 +1,12 @@
 import 'package:core_kit/core_kit_internal.dart';
 import 'package:flutter/material.dart';
-import 'package:riverpod_tamplates/config/constance/app_string.dart';
-import 'package:riverpod_tamplates/gen/assets.gen.dart';
-import 'package:riverpod_tamplates/src/constants/app_font_sizes.dart';
-import 'package:riverpod_tamplates/src/features/app_features/power_stones/presentation/widgets/success_reward_dailog_widget.dart';
+import 'package:unkutdrama_kpnovel/config/constance/app_string.dart';
+import 'package:unkutdrama_kpnovel/gen/assets.gen.dart';
+import 'package:unkutdrama_kpnovel/src/constants/app_font_sizes.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/power_stones/presentation/widgets/success_reward_dailog_widget.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_tamplates/src/features/app_features/power_stones/riverpod/power_stone_notifier.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/power_stones/riverpod/power_stone_notifier.dart';
 
 class DailyBonusBanner extends ConsumerWidget {
   const DailyBonusBanner({super.key});

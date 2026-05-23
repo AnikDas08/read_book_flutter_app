@@ -1,6 +1,6 @@
 import 'package:core_kit/core_kit_internal.dart';
 import 'package:flutter/material.dart';
-import 'package:riverpod_tamplates/src/constants/app_font_sizes.dart';
+import 'package:unkutdrama_kpnovel/src/constants/app_font_sizes.dart';
 
 class SuccessVoteDialogWidget extends StatelessWidget {
   final int earnedAmount;

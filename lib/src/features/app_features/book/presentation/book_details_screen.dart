@@ -2,17 +2,17 @@ import 'package:auto_route/auto_route.dart';
 import 'package:core_kit/core_kit_internal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_tamplates/config/constance/app_string.dart';
-import 'package:riverpod_tamplates/config/constance/constants.dart';
-import 'package:riverpod_tamplates/config/corekit/back_button.dart';
-import 'package:riverpod_tamplates/config/route/app_router.dart';
-import 'package:riverpod_tamplates/config/theme/app_theme_data.dart';
-import 'package:riverpod_tamplates/src/common/share_icon_button.dart';
-import 'package:riverpod_tamplates/src/constants/app_font_sizes.dart';
-import 'package:riverpod_tamplates/src/features/app_features/book/presentation/widgets/success_vote_dailog_widget.dart';
-import 'package:riverpod_tamplates/src/features/app_features/read/presentation/widgets/book_mark_modal_widget.dart';
-import 'package:riverpod_tamplates/src/features/app_features/read/presentation/widgets/comment_widget.dart';
-import 'package:riverpod_tamplates/src/features/app_features/read/riverpod/read_notifier.dart';
+import 'package:unkutdrama_kpnovel/config/constance/app_string.dart';
+import 'package:unkutdrama_kpnovel/config/constance/constants.dart';
+import 'package:unkutdrama_kpnovel/config/corekit/back_button.dart';
+import 'package:unkutdrama_kpnovel/config/route/app_router.dart';
+import 'package:unkutdrama_kpnovel/config/theme/app_theme_data.dart';
+import 'package:unkutdrama_kpnovel/src/common/share_icon_button.dart';
+import 'package:unkutdrama_kpnovel/src/constants/app_font_sizes.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/book/presentation/widgets/success_vote_dailog_widget.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/read/presentation/widgets/book_mark_modal_widget.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/read/presentation/widgets/comment_widget.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/read/riverpod/read_notifier.dart';
 
 @RoutePage()
 class BookDetailsScreen extends ConsumerWidget {

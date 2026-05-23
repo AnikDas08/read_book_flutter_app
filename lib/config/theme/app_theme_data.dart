@@ -2,9 +2,9 @@
 
 import 'package:core_kit/core_kit_internal.dart';
 import 'package:flutter/material.dart';
-import 'package:riverpod_tamplates/config/theme/extension/app_colors.dart';
-import 'package:riverpod_tamplates/config/theme/extension/app_spacing.dart';
-import 'package:riverpod_tamplates/config/theme/extension/app_text_style.dart';
+import 'package:unkutdrama_kpnovel/config/theme/extension/app_colors.dart';
+import 'package:unkutdrama_kpnovel/config/theme/extension/app_spacing.dart';
+import 'package:unkutdrama_kpnovel/config/theme/extension/app_text_style.dart';
 
 extension AppThemeX on BuildContext {
   AppColors get color => Theme.of(this).extension<AppColors>()!;

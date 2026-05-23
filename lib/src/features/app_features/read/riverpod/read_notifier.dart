@@ -1,8 +1,8 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:riverpod_tamplates/config/constance/constants.dart';
-import 'package:riverpod_tamplates/config/storage/storage_service.dart';
-import 'package:riverpod_tamplates/src/features/app_features/read/data/model/book_model.dart';
-import 'package:riverpod_tamplates/src/features/app_features/read/riverpod/read_state.dart';
+import 'package:unkutdrama_kpnovel/config/constance/constants.dart';
+import 'package:unkutdrama_kpnovel/config/storage/storage_service.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/read/data/model/book_model.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/read/riverpod/read_state.dart';
 
 part 'read_notifier.g.dart';
 

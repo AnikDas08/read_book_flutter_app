@@ -1,6 +1,6 @@
 import 'package:core_kit/text/common_text.dart';
 import 'package:flutter/material.dart';
-import 'package:riverpod_tamplates/config/constance/app_string.dart';
+import 'package:unkutdrama_kpnovel/config/constance/app_string.dart';
 
 class RankingFilterWidget extends StatefulWidget {
   const RankingFilterWidget({super.key});

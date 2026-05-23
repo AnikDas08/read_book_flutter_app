@@ -1,7 +1,7 @@
 
 import 'package:core_kit/core_kit.dart';
 import 'package:flutter/material.dart';
-import 'package:riverpod_tamplates/config/constance/app_string.dart';
+import 'package:unkutdrama_kpnovel/config/constance/app_string.dart';
 
 class ContestWriterWidget extends StatelessWidget {
   final String name;

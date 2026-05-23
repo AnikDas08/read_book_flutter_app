@@ -1,11 +1,11 @@
 import 'package:core_kit/core_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_tamplates/config/corekit/corekit_config_impl.dart';
-import 'package:riverpod_tamplates/config/route/app_router.dart';
-import 'package:riverpod_tamplates/config/route/app_router_observer.dart';
-import 'package:riverpod_tamplates/config/route/provider_observer.dart';
-import 'package:riverpod_tamplates/config/theme/app_theme_data.dart';
+import 'package:unkutdrama_kpnovel/config/corekit/corekit_config_impl.dart';
+import 'package:unkutdrama_kpnovel/config/route/app_router.dart';
+import 'package:unkutdrama_kpnovel/config/route/app_router_observer.dart';
+import 'package:unkutdrama_kpnovel/config/route/provider_observer.dart';
+import 'package:unkutdrama_kpnovel/config/theme/app_theme_data.dart';
 class CustomScrollBehavior extends MaterialScrollBehavior {
   @override
   ScrollPhysics getScrollPhysics(BuildContext context) {

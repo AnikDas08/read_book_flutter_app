@@ -1,7 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:riverpod_tamplates/config/route/app_router.dart';
-import 'package:riverpod_tamplates/src/features/core_features/authentication/data/auth_repository.dart';
-import 'package:riverpod_tamplates/src/features/core_features/authentication/riverpod/auth_state.dart';
+import 'package:unkutdrama_kpnovel/config/route/app_router.dart';
+import 'package:unkutdrama_kpnovel/src/features/core_features/authentication/data/auth_repository.dart';
+import 'package:unkutdrama_kpnovel/src/features/core_features/authentication/riverpod/auth_state.dart';
 
 part 'auth_notifier.g.dart';
 
@@ -19,13 +19,17 @@ class AuthNotifier extends _$AuthNotifier {
     state = state.copyWith(isLoading: true, error: null);
 
     final response = await _repository.login(email, password);
-    if (true) {
+    if (response.isSuccess) {
+      print("Successfull Login");
       state = state.copyWith(isLoading: false, isAuthenticated: true);
       appRouter.replaceAll([
         NavigationRoute(
           children: [const HomeRoute()],
         ),
       ]);
+    }
+    else{
+      state = state.copyWith(isLoading: false, isAuthenticated: true);
     }
   }
 
@@ -38,13 +42,19 @@ class AuthNotifier extends _$AuthNotifier {
     ]);
   }
 
-  Future<void> signup(String name, String email, String password) async {
+  Future<void> signup(String name, String email, String password, int age) async {
     state = state.copyWith(isLoading: true, error: null);
-
-    final response = await _repository.signup(name, email, password);
+    final response = await _repository.signup(name, email, password, age);
     if (response.isSuccess) {
       state = state.copyWith(isLoading: false);
-      appRouter.push(const OtpRoute());
+      final token = response.data?['createUserToken']?.toString();
+      if (token != null) {
+        appRouter.push(OtpRoute(createToken: token,argument: "signup"));
+      } else {
+        state = state.copyWith(error: "Token not found in response");
+      }
+    } else {
+      state = state.copyWith(isLoading: false, error: response.message);
     }
   }
 
@@ -64,16 +74,48 @@ class AuthNotifier extends _$AuthNotifier {
     final response = await _repository.sendOtp(email);
     if (response.isSuccess) {
       state = state.copyWith(isLoading: false);
+      final token = response.data?['forgetToken']?.toString();
+      if (token != null) {
+        appRouter.push(OtpRoute(createToken: token,argument: "forget_password"));
+      } else {
+        state = state.copyWith(error: "Token not found in response");
+      }
     }
   }
 
-  Future<void> verifyOtp(String code) async {
+  Future<void> verifyOtp(String code, String token) async {
     state = state.copyWith(isLoading: true, error: null);
 
-    final response = await _repository.verifyOtp(code);
+    final response = await _repository.verifyOtp(code, token);
     if (response.isSuccess) {
       state = state.copyWith(isLoading: false, isAuthenticated: true);
-      appRouter.replaceAll([const NavigationRoute()]);
+      appRouter.push(CreatePasswordRoute(token: token));
+    } else {
+      state = state.copyWith(isLoading: false, error: response.message);
+    }
+  }
+
+  Future<void> verifyScreen(String code, String token) async {
+    state = state.copyWith(isLoading: true, error: null);
+
+    final response = await _repository.verifyOtp(code, token);
+    if (response.isSuccess) {
+      state = state.copyWith(isLoading: false, isAuthenticated: true);
+      appRouter.replaceAll([const LoginRoute()]);
+    } else {
+      state = state.copyWith(isLoading: false, error: response.message);
+    }
+  }
+
+  Future<void> createPassword(String newPassword, String confirmPassword,String token) async {
+    state = state.copyWith(isLoading: true, error: null);
+
+    final response = await _repository.createPassword(newPassword, confirmPassword,token);
+    if (response.isSuccess) {
+      state = state.copyWith(isLoading: false, isAuthenticated: true);
+      appRouter.replaceAll([const LoginRoute()]);
+    } else {
+      state = state.copyWith(isLoading: false, error: response.message);
     }
   }
 

@@ -1,6 +1,6 @@
 // ignore_for_file: constant_identifier_names
 
-import 'package:riverpod_tamplates/config/constance/app_string.dart';
+import 'package:unkutdrama_kpnovel/config/constance/app_string.dart';
 
 enum ContestType {
   Writers('Writers'),

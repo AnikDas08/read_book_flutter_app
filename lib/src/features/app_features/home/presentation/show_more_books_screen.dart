@@ -1,10 +1,10 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:core_kit/core_kit_internal.dart';
 import 'package:flutter/material.dart';
-import 'package:riverpod_tamplates/config/constance/constants.dart';
-import 'package:riverpod_tamplates/config/corekit/back_button.dart';
-import 'package:riverpod_tamplates/src/features/app_features/home/presentation/widget/books_feed_card_widget.dart';
-import 'package:riverpod_tamplates/src/features/app_features/library/presentation/widgets/book_widget.dart';
+import 'package:unkutdrama_kpnovel/config/constance/constants.dart';
+import 'package:unkutdrama_kpnovel/config/corekit/back_button.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/home/presentation/widget/books_feed_card_widget.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/library/presentation/widgets/book_widget.dart';
 
 @RoutePage()
 class ShowMoreBooksScreen extends StatelessWidget {

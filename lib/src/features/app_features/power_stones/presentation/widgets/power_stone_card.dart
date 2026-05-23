@@ -1,12 +1,12 @@
 import 'package:core_kit/text/common_text.dart';
 import 'package:core_kit/utils/core_screen_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:riverpod_tamplates/config/constance/app_string.dart';
-import 'package:riverpod_tamplates/config/theme/app_theme_data.dart';
-import 'package:riverpod_tamplates/src/constants/app_font_sizes.dart';
+import 'package:unkutdrama_kpnovel/config/constance/app_string.dart';
+import 'package:unkutdrama_kpnovel/config/theme/app_theme_data.dart';
+import 'package:unkutdrama_kpnovel/src/constants/app_font_sizes.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_tamplates/src/features/app_features/power_stones/riverpod/power_stone_notifier.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/power_stones/riverpod/power_stone_notifier.dart';
 
 class PowerStonesCard extends ConsumerWidget {
   const PowerStonesCard({super.key});

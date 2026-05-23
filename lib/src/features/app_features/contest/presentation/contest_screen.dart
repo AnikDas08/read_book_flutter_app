@@ -3,14 +3,14 @@ import 'package:core_kit/core_kit.dart';
 import 'package:core_kit/list_loader/smart_tab_list_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_tamplates/config/constance/app_string.dart';
-import 'package:riverpod_tamplates/config/constance/constants.dart';
-import 'package:riverpod_tamplates/config/constance/enums.dart';
-import 'package:riverpod_tamplates/config/theme/app_theme_data.dart';
-import 'package:riverpod_tamplates/src/common/app_sigmented_control.dart';
-import 'package:riverpod_tamplates/src/features/app_features/contest/presentation/widget/contest_book_widget.dart';
-import 'package:riverpod_tamplates/src/features/app_features/contest/presentation/widget/contest_writer_widget.dart';
-import 'package:riverpod_tamplates/src/features/app_features/contest/riverpod/contest_notifier.dart';
+import 'package:unkutdrama_kpnovel/config/constance/app_string.dart';
+import 'package:unkutdrama_kpnovel/config/constance/constants.dart';
+import 'package:unkutdrama_kpnovel/config/constance/enums.dart';
+import 'package:unkutdrama_kpnovel/config/theme/app_theme_data.dart';
+import 'package:unkutdrama_kpnovel/src/common/app_sigmented_control.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/contest/presentation/widget/contest_book_widget.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/contest/presentation/widget/contest_writer_widget.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/contest/riverpod/contest_notifier.dart';
 
 @RoutePage()
 class ContestScreen extends StatelessWidget {

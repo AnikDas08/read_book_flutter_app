@@ -2,14 +2,14 @@ import 'package:auto_route/auto_route.dart';
 import 'package:core_kit/core_kit_internal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_tamplates/config/constance/app_string.dart';
-import 'package:riverpod_tamplates/config/constance/constants.dart';
-import 'package:riverpod_tamplates/config/constance/headline_widget.dart';
-import 'package:riverpod_tamplates/config/corekit/back_button.dart';
-import 'package:riverpod_tamplates/config/theme/app_theme_data.dart';
-import 'package:riverpod_tamplates/src/features/app_features/rankings/presentation/widgets/general_rank_widget.dart';
-import 'package:riverpod_tamplates/src/features/app_features/rankings/presentation/widgets/ranking_filter_widget.dart';
-import 'package:riverpod_tamplates/src/features/app_features/rankings/presentation/widgets/top_voted_books.dart';
+import 'package:unkutdrama_kpnovel/config/constance/app_string.dart';
+import 'package:unkutdrama_kpnovel/config/constance/constants.dart';
+import 'package:unkutdrama_kpnovel/config/constance/headline_widget.dart';
+import 'package:unkutdrama_kpnovel/config/corekit/back_button.dart';
+import 'package:unkutdrama_kpnovel/config/theme/app_theme_data.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/rankings/presentation/widgets/general_rank_widget.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/rankings/presentation/widgets/ranking_filter_widget.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/rankings/presentation/widgets/top_voted_books.dart';
 
 @RoutePage()
 class RankingScreen extends ConsumerWidget {

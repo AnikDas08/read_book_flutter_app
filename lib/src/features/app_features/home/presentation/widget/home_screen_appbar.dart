@@ -1,9 +1,9 @@
 import 'package:core_kit/core_kit_internal.dart';
 import 'package:flutter/material.dart';
-import 'package:riverpod_tamplates/config/constance/app_string.dart';
-import 'package:riverpod_tamplates/config/constance/constants.dart';
-import 'package:riverpod_tamplates/gen/assets.gen.dart';
-import 'package:riverpod_tamplates/src/common/notification_button_widget.dart';
+import 'package:unkutdrama_kpnovel/config/constance/app_string.dart';
+import 'package:unkutdrama_kpnovel/config/constance/constants.dart';
+import 'package:unkutdrama_kpnovel/gen/assets.gen.dart';
+import 'package:unkutdrama_kpnovel/src/common/notification_button_widget.dart';
 
 class HomeScreenAppBar extends StatelessWidget {
   const HomeScreenAppBar({super.key});

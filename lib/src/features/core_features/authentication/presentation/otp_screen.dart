@@ -4,20 +4,26 @@ import 'package:core_kit/text_field/input_formatters/input_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-import 'package:riverpod_tamplates/config/constance/app_string.dart';
-import 'package:riverpod_tamplates/config/route/app_router.dart';
-import 'package:riverpod_tamplates/config/theme/app_theme_data.dart';
-import 'package:riverpod_tamplates/gen/assets.gen.dart';
-import 'package:riverpod_tamplates/src/common/label.dart';
-import 'package:riverpod_tamplates/src/constants/app_ui_constants.dart';
-import 'package:riverpod_tamplates/src/features/core_features/authentication/presentation/widgets/auth_background.dart';
-import 'package:riverpod_tamplates/src/features/core_features/authentication/presentation/widgets/input_card_widget.dart';
-import 'package:riverpod_tamplates/src/features/core_features/authentication/riverpod/auth_notifier.dart';
-import 'package:riverpod_tamplates/src/features/core_features/authentication/riverpod/auth_state.dart';
+import 'package:unkutdrama_kpnovel/config/constance/app_string.dart';
+import 'package:unkutdrama_kpnovel/config/route/app_router.dart';
+import 'package:unkutdrama_kpnovel/config/theme/app_theme_data.dart';
+import 'package:unkutdrama_kpnovel/gen/assets.gen.dart';
+import 'package:unkutdrama_kpnovel/src/common/label.dart';
+import 'package:unkutdrama_kpnovel/src/constants/app_ui_constants.dart';
+import 'package:unkutdrama_kpnovel/src/features/core_features/authentication/presentation/widgets/auth_background.dart';
+import 'package:unkutdrama_kpnovel/src/features/core_features/authentication/presentation/widgets/input_card_widget.dart';
+import 'package:unkutdrama_kpnovel/src/features/core_features/authentication/riverpod/auth_notifier.dart';
+import 'package:unkutdrama_kpnovel/src/features/core_features/authentication/riverpod/auth_state.dart';
 
 @RoutePage()
 class OtpScreen extends ConsumerWidget {
-  const OtpScreen({super.key});
+  final String createToken;
+  final String argument;
+  const OtpScreen({
+    super.key,
+    required this.createToken,
+    this.argument=""
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -29,7 +35,7 @@ class OtpScreen extends ConsumerWidget {
 
   FormBuilder<Map<String, String>> _content(AuthState authState, AuthNotifier authNotifier) {
     return FormBuilder<Map<String, String>>(
-      entity: const {'email': '', 'password': ''},
+      entity: {},
       builder: (context, formKey, entity) {
         return Padding(
           padding: EdgeInsets.all(AppUiConstants.main_screen_padding),
@@ -94,9 +100,14 @@ class OtpScreen extends ConsumerWidget {
                 buttonColor: context.color.bgColor,
                 titleGradient: context.color.ctaGradientLogo,
                 titleText: AppString.verify,
-                isLoading: authState.isLoading,
+                isLoading: authState.otpLoading,
                 onTap: () {
-                   appRouter.pop();
+                  if(argument=="signup"){
+                    authNotifier.verifyScreen(entity['otp'] ?? '',createToken);
+                  }
+                  else if(argument=="forget_password"){
+                    authNotifier.verifyOtp(entity['otp'] ?? '',createToken);
+                  }
                 },
               ),
             ],
@@ -111,14 +122,15 @@ class OtpScreen extends ConsumerWidget {
       crossAxisAlignment: .start,
       children: [
         Align(alignment: .centerLeft, child: inputLabel(AppString.otp_code, context)),
-        _otpBuilder(context),
+        _otpBuilder(context, entity),
       ],
     );
   }
 
-  Widget _otpBuilder(BuildContext context) {
+  Widget _otpBuilder(BuildContext context, Map<String, String> entity) {
     return PinInputFormField(
       length: 6,
+      onChanged: (value) => entity['otp'] = value,
       pinBuilder: (BuildContext context, List<PinCellData> cells) {
         return Wrap(
           spacing: 10,

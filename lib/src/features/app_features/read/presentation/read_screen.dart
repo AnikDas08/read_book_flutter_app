@@ -2,18 +2,18 @@ import 'package:auto_route/auto_route.dart';
 import 'package:core_kit/core_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_tamplates/config/theme/app_theme_data.dart';
-import 'package:riverpod_tamplates/src/constants/app_font_sizes.dart';
-import 'package:riverpod_tamplates/src/features/app_features/read/presentation/widgets/action_bar_widget.dart';
-import 'package:riverpod_tamplates/src/features/app_features/read/presentation/widgets/book_audio_reader_widget.dart';
-import 'package:riverpod_tamplates/src/features/app_features/read/presentation/widgets/book_mark_modal_widget.dart';
-import 'package:riverpod_tamplates/src/features/app_features/read/presentation/widgets/book_reading_widget.dart';
-import 'package:riverpod_tamplates/src/features/app_features/read/presentation/widgets/chapters_drawer.dart';
-import 'package:riverpod_tamplates/src/features/app_features/read/presentation/widgets/comment_widget.dart';
-import 'package:riverpod_tamplates/src/features/app_features/read/presentation/widgets/no_book_selected_widget.dart';
-import 'package:riverpod_tamplates/src/features/app_features/read/presentation/widgets/reading_setting_modal.dart';
-import 'package:riverpod_tamplates/src/features/app_features/read/presentation/widgets/share_book_modal_widget.dart';
-import 'package:riverpod_tamplates/src/features/app_features/read/riverpod/read_notifier.dart';
+import 'package:unkutdrama_kpnovel/config/theme/app_theme_data.dart';
+import 'package:unkutdrama_kpnovel/src/constants/app_font_sizes.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/read/presentation/widgets/action_bar_widget.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/read/presentation/widgets/book_audio_reader_widget.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/read/presentation/widgets/book_mark_modal_widget.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/read/presentation/widgets/book_reading_widget.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/read/presentation/widgets/chapters_drawer.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/read/presentation/widgets/comment_widget.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/read/presentation/widgets/no_book_selected_widget.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/read/presentation/widgets/reading_setting_modal.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/read/presentation/widgets/share_book_modal_widget.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/read/riverpod/read_notifier.dart';
 
 @RoutePage()
 class ReadScreen extends ConsumerWidget {

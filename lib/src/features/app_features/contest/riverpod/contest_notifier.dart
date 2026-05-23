@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:riverpod_tamplates/config/constance/enums.dart';
-import 'package:riverpod_tamplates/src/features/app_features/contest/riverpod/constest_state.dart';
+import 'package:unkutdrama_kpnovel/config/constance/enums.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/contest/riverpod/constest_state.dart';
 
 part 'contest_notifier.g.dart';
 
