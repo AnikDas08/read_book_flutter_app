@@ -9,14 +9,14 @@ final libraryRepositoryProvider = Provider.autoDispose<LibararyRepository>(
 );
 
 class LibararyRepository {
-  Future<ResponseState<List<LibraryBookModel>?>> getLibrary({required String status}) async {
+  Future<ResponseState<List<LibraryBookModel>?>> getLibrary({
+    required String status,
+  }) async {
     final response = await DioService.instance.request<List<LibraryBookModel>>(
       input: RequestInput(
         endpoint: ApiEndpoints.getLibrary,
         method: RequestMethod.GET,
-        queryParams: {
-          'status':status
-        }
+        jsonBody: {'status': status},
       ),
       responseBuilder: (data) {
         return List<LibraryBookModel>.from(
