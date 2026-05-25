@@ -12,7 +12,7 @@ class ApiEndpoints {
   static const String checkAuth = '$baseUrl/auth/check';
 
   // Profile endpoints
-  static const String getProfile = '$baseUrl/profile';
+  static const String getProfile = '$baseUrl/users/my-profile';
   static const String updateProfile = '$baseUrl/profile';
   static const String changePassword = '$baseUrl/profile/change-password';
 

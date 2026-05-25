@@ -1,40 +1,67 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:core_kit/core_kit_internal.dart';
+import 'package:core_kit/core_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unkutdrama_kpnovel/config/route/app_router.dart';
+import 'package:unkutdrama_kpnovel/src/features/core_features/profile/application/profile_notifier.dart';
+import 'package:unkutdrama_kpnovel/src/features/core_features/profile/model/profile_model.dart';
 
 @RoutePage()
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
 
   @override
-  Widget build(BuildContext context, _) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final profileState = ref.watch(profileNotifierProvider);
+    final profile = profileState.profile;
+
     return Scaffold(
       appBar: const CommonAppBar(title: 'Setting'),
       backgroundColor: const Color(0xFFF5F6F8), // Light grey background
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 10),
-            
-                // --- Account Section ---
-                _buildSectionTitle('Account'),
-                _buildSettingsCard(
-                  child: _buildListTile(
-                    icon: Icons.lock_outline,
-                    title: 'Change Password',
-                    onTap: () {
-                      appRouter.push(const ChangePasswordRoute());
-                    },
-                  ),
-                ),
-            
-                const SizedBox(height: 25),
+          child: profileState.isLoading && profile == null
+              ? const Center(child: CircularProgressIndicator())
+              : RefreshIndicator(
+                  onRefresh: () => ref.read(profileNotifierProvider.notifier).loadProfile(),
+                  child: SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 20),
+
+                        // --- Profile Header ---
+                        _buildProfileHeader(context, profile),
+
+                        const SizedBox(height: 30),
+
+                        // --- Account Section ---
+                        _buildSectionTitle('Account'),
+                        _buildSettingsCard(
+                          child: Column(
+                            children: [
+                              _buildListTile(
+                                icon: Icons.person_outline,
+                                title: 'Edit Profile',
+                                onTap: () {
+                                  appRouter.push(const EditProfileRoute());
+                                },
+                              ),
+                              const Divider(height: 1, indent: 70),
+                              _buildListTile(
+                                icon: Icons.lock_outline,
+                                title: 'Change Password',
+                                onTap: () {
+                                  appRouter.push(const ChangePasswordRoute());
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        const SizedBox(height: 25),
             
                 // --- Preferences Section ---
                 _buildSectionTitle('Preferences'),
@@ -151,11 +178,64 @@ class ProfileScreen extends ConsumerWidget {
             ),
           ),
         ),
-      ),
+      ),)
     );
   }
 
   // Helper to build section titles
+  Widget _buildProfileHeader(BuildContext context, ProfileModel? profile) {
+    return Center(
+      child: Column(
+        children: [
+          Container(
+            width: 100,
+            height: 100,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: Colors.white, width: 4),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 10,
+                  offset: const Offset(0, 5),
+                ),
+              ],
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(50),
+              child: CommonImage(
+                src: profile?.profile ?? '',
+                fill: BoxFit.cover,
+                // placeholder: (context, url) => const CircularProgressIndicator(),
+                // errorWidget: Container(
+                //   color: Colors.grey.shade200,
+                //   child: Icon(Icons.person, size: 50, color: Colors.grey.shade400),
+                // ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 15),
+          Text(
+            profile?.fullName ?? '...',
+            style: const TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF4A4E69),
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            profile?.email ?? '...',
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.grey.shade600,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildSectionTitle(String title) {
     return Padding(
       padding: const EdgeInsets.only(left: 4, bottom: 12),

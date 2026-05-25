@@ -1,17 +1,25 @@
+import '../model/profile_model.dart';
+
 class ProfileState {
   final bool isLoading;
-  final Map<String, dynamic>? profileData;
+  final ProfileModel? profile;
+  final String? error;
 
-  const ProfileState({this.isLoading = false, this.profileData});
+  const ProfileState({
+    this.isLoading = false,
+    this.profile,
+    this.error,
+  });
 
   ProfileState copyWith({
     bool? isLoading,
+    ProfileModel? profile,
     String? error,
-    Map<String, dynamic>? profileData,
   }) {
     return ProfileState(
       isLoading: isLoading ?? this.isLoading,
-      profileData: profileData ?? this.profileData,
+      profile: profile ?? this.profile,
+      error: error ?? this.error,
     );
   }
 }
