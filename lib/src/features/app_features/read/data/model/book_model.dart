@@ -11,6 +11,8 @@ class BookModel {
   final String? updatedAt;
   final List<BookChapter> chapters;
   final int selectedChapter;
+  final bool isFavorite;
+  final bool isWantToRead;
 
   BookModel({
     this.id,
@@ -25,6 +27,8 @@ class BookModel {
     this.updatedAt,
     this.chapters = const [],
     this.selectedChapter = 0,
+    this.isFavorite = false,
+    this.isWantToRead = false,
   });
 
   factory BookModel.fromJson(Map<String, dynamic> json) => BookModel(
@@ -44,6 +48,8 @@ class BookModel {
             json["chapters"]!.map((x) => BookChapter.fromJson(x)),
           ),
     selectedChapter: json["selected_chapter"] ?? 0,
+    isFavorite: json["isFavorite"] ?? false,
+    isWantToRead: json["isWantToRead"] ?? false,
   );
 
   Map<String, dynamic> toJson() => {
@@ -59,6 +65,8 @@ class BookModel {
     "updated_at": updatedAt,
     "chapters": List<dynamic>.from(chapters.map((x) => x.toJson())),
     "selected_chapter": selectedChapter,
+    "isFavorite": isFavorite,
+    "isWantToRead": isWantToRead,
   };
 
   BookModel copyWith({
@@ -74,6 +82,8 @@ class BookModel {
     String? updatedAt,
     List<BookChapter>? chapters,
     int? selectedChapter,
+    bool? isFavorite,
+    bool? isWantToRead,
   }) {
     return BookModel(
       id: id ?? this.id,
@@ -88,6 +98,8 @@ class BookModel {
       updatedAt: updatedAt ?? this.updatedAt,
       chapters: chapters ?? this.chapters,
       selectedChapter: selectedChapter ?? this.selectedChapter,
+      isFavorite: isFavorite ?? this.isFavorite,
+      isWantToRead: isWantToRead ?? this.isWantToRead,
     );
   }
 }

@@ -26,4 +26,24 @@ class LibararyRepository {
     );
     return response;
   }
+
+  Future<ResponseState<dynamic>> addToLibrary({
+    required String bookId,
+    bool isWantToRead = false,
+  }) async {
+    final response = await DioService.instance.request<dynamic>(
+      input: RequestInput(
+        endpoint: ApiEndpoints.addToLibrary,
+        method: RequestMethod.POST,
+        jsonBody: {
+          "type": "book",
+          "bookId": bookId,
+          if (isWantToRead) "isWantToRead": true,
+        },
+      ),
+      responseBuilder: (data) => data,
+      showMessage: true,
+    );
+    return response;
+  }
 }

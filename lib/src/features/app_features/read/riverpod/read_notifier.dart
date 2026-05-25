@@ -120,6 +120,8 @@ class ReadNotifier extends _$ReadNotifier {
             status: bookDetails?.status ?? 'approved',
             chapters: parsedChapters,
             selectedChapter: initialChapterIndex,
+            isFavorite: bookDetails?.isFavorite ?? false,
+            isWantToRead: bookDetails?.isWantToRead ?? false,
           ),
         );
 

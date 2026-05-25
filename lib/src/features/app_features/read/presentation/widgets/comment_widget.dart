@@ -6,14 +6,60 @@ import 'package:unkutdrama_kpnovel/src/features/app_features/read/data/model/boo
 import 'package:unkutdrama_kpnovel/src/features/app_features/read/data/repository/comment_repository.dart';
 import 'package:unkutdrama_kpnovel/src/features/app_features/read/riverpod/comment_provider.dart';
 
-class CommentSection extends ConsumerWidget {
+class CommentSection extends ConsumerStatefulWidget {
   const CommentSection({super.key, required this.scrollController, required this.bookId});
   final String bookId;
   final ScrollController scrollController;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final commentsAsync = ref.watch(bookCommentsProvider(bookId));
+  ConsumerState<CommentSection> createState() => _CommentSectionState();
+}
+
+class _CommentSectionState extends ConsumerState<CommentSection> {
+  final TextEditingController _commentController = TextEditingController();
+  String? _parentId;
+  String? _replyingToName;
+  bool _isLoading = false;
+
+  @override
+  void dispose() {
+    _commentController.dispose();
+    super.dispose();
+  }
+
+  void _onReply(BookComment comment) {
+    setState(() {
+      _parentId = comment.id;
+      _replyingToName = comment.userId.fullName;
+    });
+  }
+
+  Future<void> _submitComment() async {
+    if (_commentController.text.trim().isEmpty) return;
+
+    setState(() => _isLoading = true);
+
+    final response = await ref.read(commentRepositoryProvider).createCommentOrReply(
+          bookId: widget.bookId,
+          message: _commentController.text.trim(),
+          parentId: _parentId,
+        );
+
+    setState(() => _isLoading = false);
+
+    if (response.isSuccess) {
+      _commentController.clear();
+      setState(() {
+        _parentId = null;
+        _replyingToName = null;
+      });
+      ref.invalidate(bookCommentsProvider(widget.bookId));
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final commentsAsync = ref.watch(bookCommentsProvider(widget.bookId));
 
     return Container(
       padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 16.h),
@@ -66,14 +112,15 @@ class CommentSection extends ConsumerWidget {
               data: (comments) {
                 final flattenedComments = _flattenComments(comments);
                 return ListView.builder(
-                  controller: scrollController,
+                  controller: widget.scrollController,
                   itemCount: flattenedComments.length,
                   itemBuilder: (context, index) {
                     final item = flattenedComments[index];
                     return _CommentCard(
                       comment: item.comment,
                       isReply: item.isReply,
-                      bookId: bookId,
+                      bookId: widget.bookId,
+                      onReply: () => _onReply(item.comment),
                     );
                   },
                 );
@@ -82,15 +129,31 @@ class CommentSection extends ConsumerWidget {
               error: (err, stack) => Center(child: Text(err.toString())),
             ),
           ),
-          4.height,
-          const CommonText(
-            text: 'Load More Comments',
-            fontSize: AppFontSizes.medium,
-            fontWeight: FontWeight.w400,
-            textColor: Color(0xFF4D8DFF),
-          ),
+          if (_replyingToName != null) ...[
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: Row(
+                children: [
+                  CommonText(
+                    text: 'Replying to $_replyingToName',
+                    fontSize: AppFontSizes.small,
+                    textColor: const Color(0xFF4D8DFF),
+                  ),
+                  const Spacer(),
+                  GestureDetector(
+                    onTap: () => setState(() {
+                      _parentId = null;
+                      _replyingToName = null;
+                    }),
+                    child: const Icon(Icons.close, size: 16, color: Color(0xFF758195)),
+                  ),
+                ],
+              ),
+            ),
+          ],
           16.height,
           TextField(
+            controller: _commentController,
             decoration: InputDecoration(
               hintText: 'Share your thoughts about this chapter...',
               hintStyle: const TextStyle(
@@ -99,17 +162,28 @@ class CommentSection extends ConsumerWidget {
               ),
               suffixIcon: Padding(
                 padding: const EdgeInsets.all(10),
-                child: Container(
-                  width: 30.w,
-                  height: 30.w,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFA98EF7),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: const Icon(
-                    Icons.send_outlined,
-                    color: Colors.white,
-                    size: 14,
+                child: GestureDetector(
+                  onTap: _isLoading ? null : _submitComment,
+                  child: Container(
+                    width: 30.w,
+                    height: 30.w,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFA98EF7),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: _isLoading
+                        ? const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.white,
+                            ),
+                          )
+                        : const Icon(
+                            Icons.send_outlined,
+                            color: Colors.white,
+                            size: 14,
+                          ),
                   ),
                 ),
               ),
@@ -182,11 +256,17 @@ class _FlattenedComment {
 }
 
 class _CommentCard extends ConsumerWidget {
-  const _CommentCard({required this.comment, this.isReply = false, required this.bookId});
+  const _CommentCard({
+    required this.comment,
+    this.isReply = false,
+    required this.bookId,
+    required this.onReply,
+  });
 
   final BookComment comment;
   final bool isReply;
   final String bookId;
+  final VoidCallback onReply;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -198,9 +278,7 @@ class _CommentCard extends ConsumerWidget {
           color: isReply ? const Color(0xFFF0F6FF) : Colors.white,
           borderRadius: BorderRadius.circular(24),
           border: Border.all(
-            color: isReply
-                ? const Color(0xFFD9E8FF)
-                : const Color(0xFFEEEEEE),
+            color: isReply ? const Color(0xFFD9E8FF) : const Color(0xFFEEEEEE),
           ),
         ),
         child: Row(
@@ -284,9 +362,7 @@ class _CommentCard extends ConsumerWidget {
                     children: [
                       GestureDetector(
                         onTap: () async {
-                          final response = await ref
-                              .read(commentRepositoryProvider)
-                              .likeComment(commentId: comment.id);
+                          final response = await ref.read(commentRepositoryProvider).likeComment(commentId: comment.id);
                           if (response.isSuccess) {
                             ref.invalidate(bookCommentsProvider(bookId));
                           }
@@ -319,11 +395,14 @@ class _CommentCard extends ConsumerWidget {
                           ),
                         ),
                       ),
-                      const CommonText(
-                        text: 'Reply',
-                        fontSize: AppFontSizes.medium,
-                        fontWeight: FontWeight.w400,
-                        textColor: Color(0xFF4D8DFF),
+                      GestureDetector(
+                        onTap: onReply,
+                        child: const CommonText(
+                          text: 'Reply',
+                          fontSize: AppFontSizes.medium,
+                          fontWeight: FontWeight.w400,
+                          textColor: Color(0xFF4D8DFF),
+                        ),
                       ),
                     ],
                   ),
