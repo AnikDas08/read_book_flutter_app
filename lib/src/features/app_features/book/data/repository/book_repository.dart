@@ -22,4 +22,20 @@ class BookRepository {
     );
     return response;
   }
+
+  Future<ResponseState<dynamic>> voteBook(String bookId) async {
+    final response = await DioService.instance.request<dynamic>(
+      showMessage: true,
+      input: RequestInput(
+        endpoint: ApiEndpoints.voteBook,
+        method: RequestMethod.POST,
+
+        jsonBody: {'bookId': bookId},
+      ),
+      responseBuilder: (data) {
+        return data;
+      },
+    );
+    return response;
+  }
 }

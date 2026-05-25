@@ -21,6 +21,7 @@ class ApiEndpoints {
   static String bookDetails = '$baseUrl/book/';
   static String chapters = '$baseUrl/chapter/book/';
   static const String chapterReadCount = '$baseUrl/chapter/read-count';
+  static const String voteBook = '$baseUrl/book-vote/create';
 
   static const String refreshToken = '$baseUrl/auth/refresh-token';
 }

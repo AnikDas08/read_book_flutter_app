@@ -8,7 +8,6 @@ import 'package:unkutdrama_kpnovel/src/features/app_features/read/riverpod/read_
 
 part 'read_notifier.g.dart';
 
-// Storage keys for reading preferences
 const _kFontSize = 'reading_font_size';
 const _kLineSpacing = 'reading_line_spacing';
 const _kBackgroundMode = 'reading_background_mode';
@@ -25,7 +24,6 @@ class ReadNotifier extends _$ReadNotifier {
     return const ReadState();
   }
 
-  /// Loads persisted reading settings from storage.
   Future<void> _loadSettings() async {
     final fontSize = await _storage.get(_kFontSize);
     final lineSpacing = await _storage.get(_kLineSpacing);
@@ -49,7 +47,6 @@ class ReadNotifier extends _$ReadNotifier {
     );
   }
 
-  /// Saves current reading settings to storage.
   Future<void> _saveSettings() async {
     await _storage.set(_kFontSize, state.fontSize.toString());
     await _storage.set(_kLineSpacing, state.lineSpacing.toString());
@@ -89,7 +86,6 @@ class ReadNotifier extends _$ReadNotifier {
 
         final bookDetails = bookResponse.data;
 
-        // Determine the initial chapter index to resume reading
         var initialChapterIndex = 0;
         for (var i = 0; i < parsedChapters.length; i++) {
           final ch = parsedChapters[i];
@@ -99,7 +95,8 @@ class ReadNotifier extends _$ReadNotifier {
 
           initialChapterIndex = i;
 
-          if (ch.readCharacterCount > 0 && ch.readCharacterCount < ch.totalCharacterCount) {
+          if (ch.readCharacterCount > 0 &&
+              ch.readCharacterCount < ch.totalCharacterCount) {
             break;
           }
           if (ch.readCharacterCount == 0) {
@@ -122,13 +119,16 @@ class ReadNotifier extends _$ReadNotifier {
             genre: bookDetails?.genre ?? 'Fantasy',
             status: bookDetails?.status ?? 'approved',
             chapters: parsedChapters,
-            selectedChapter: initialChapterIndex, // Take user to active resume chapter!
+            selectedChapter: initialChapterIndex,
           ),
         );
 
         if (parsedChapters.isNotEmpty) {
           final resumeChapter = parsedChapters[initialChapterIndex];
-          final resumePage = _getPageForReadCount(resumeChapter, resumeChapter.readCharacterCount);
+          final resumePage = _getPageForReadCount(
+            resumeChapter,
+            resumeChapter.readCharacterCount,
+          );
           updatePageProgress(initialChapterIndex, resumePage);
         }
       } else {
@@ -164,9 +164,7 @@ class ReadNotifier extends _$ReadNotifier {
       chapters[chapterIndex] = chapters[chapterIndex].copyWith(
         readCharacterCount: currentChapterRead,
       );
-      state = state.copyWith(
-        slectedBook: book.copyWith(chapters: chapters),
-      );
+      state = state.copyWith(slectedBook: book.copyWith(chapters: chapters));
     }
   }
 
@@ -178,18 +176,14 @@ class ReadNotifier extends _$ReadNotifier {
     }
     final ch = state.slectedBook?.chapters[chapterIndex];
     if (ch != null) {
-      // 1. Calculate characters read in the current chapter up to pageIndex
       var currentChapterRead = 0;
       for (var p = 0; p <= pageIndex && p < ch.pages.length; p++) {
         currentChapterRead += ch.pages[p].length;
       }
 
-      // 2. Only update if the new read count is greater than the saved readCharacterCount
       if (currentChapterRead > ch.readCharacterCount) {
-        // Send only this chapter's exact character progress!
         updateChapterReadCount(ch.id ?? '', currentChapterRead);
 
-        // Update local state to prevent repeated requests
         _updateLocalChapterReadCount(chapterIndex, currentChapterRead);
       }
     }
@@ -201,7 +195,6 @@ class ReadNotifier extends _$ReadNotifier {
     );
     final ch = state.slectedBook?.chapters[index];
     if (ch != null) {
-      // For Scroll mode, we update only if the full chapter is read
       if (ch.totalCharacterCount > ch.readCharacterCount) {
         updateChapterReadCount(ch.id ?? '', ch.totalCharacterCount);
         _updateLocalChapterReadCount(index, ch.totalCharacterCount);
@@ -212,13 +205,19 @@ class ReadNotifier extends _$ReadNotifier {
   Future<void> updateChapterReadCount(String chapterId, int readCount) async {
     if (chapterId.isEmpty) return;
     try {
-      final response = await ref.read(readRepositoryProvider).updateReadCount(chapterId, readCount);
+      final response = await ref
+          .read(readRepositoryProvider)
+          .updateReadCount(chapterId, readCount);
       if (response.isSuccess) {
         // ignore: avoid_print
-        print("Read count successfully updated for chapter $chapterId to $readCount");
+        print(
+          "Read count successfully updated for chapter $chapterId to $readCount",
+        );
       } else {
         // ignore: avoid_print
-        print("Failed to update read count for chapter $chapterId: ${response.message}");
+        print(
+          "Failed to update read count for chapter $chapterId: ${response.message}",
+        );
       }
     } catch (e) {
       // ignore: avoid_print
@@ -260,7 +259,6 @@ class ReadNotifier extends _$ReadNotifier {
     final chapterIndex = book.selectedChapter;
     final chapters = [...book.chapters];
 
-    // Find the first locked chapter starting from current or after
     var targetIndex = -1;
     for (var i = chapterIndex; i < chapters.length; i++) {
       if (chapters[i].isLocked) {
@@ -283,7 +281,7 @@ class ReadNotifier extends _$ReadNotifier {
     state = state.copyWith(
       slectedBook: book.copyWith(
         chapters: chapters,
-        selectedChapter: targetIndex, // Ensure we are targeting this chapter
+        selectedChapter: targetIndex,
       ),
     );
   }

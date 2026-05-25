@@ -24,6 +24,20 @@ class BookDetailsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final bookDetailsAsync = ref.watch(bookDetailsProvider(bookId));
+    final voteState = ref.watch(bookVoteProvider);
+
+    ref.listen<BookVoteState>(bookVoteProvider, (previous, next) {
+      if (next.isSuccess) {
+        showDialog<void>(
+          context: context,
+          builder: (_) => const Dialog(
+            backgroundColor: Colors.transparent,
+            insetPadding: EdgeInsets.symmetric(horizontal: 20),
+            child: SuccessVoteDialogWidget(earnedAmount: 2, totalAmount: 5),
+          ),
+        );
+      }
+    });
 
     return Scaffold(
       appBar: CommonAppBar(
@@ -113,20 +127,11 @@ class BookDetailsScreen extends ConsumerWidget {
 
                               Expanded(
                                 child: _VoteCard(
+                                  isLoading: voteState.isLoading,
                                   onTap: () {
-                                    showDialog<void>(
-                                      context: context,
-                                      builder: (_) => const Dialog(
-                                        backgroundColor: Colors.transparent,
-                                        insetPadding: EdgeInsets.symmetric(
-                                          horizontal: 20,
-                                        ),
-                                        child: SuccessVoteDialogWidget(
-                                          earnedAmount: 2,
-                                          totalAmount: 5,
-                                        ),
-                                      ),
-                                    );
+                                    ref
+                                        .read(bookVoteProvider.notifier)
+                                        .vote(bookId);
                                   },
                                 ),
                               ),
@@ -220,15 +225,15 @@ class BookDetailsScreen extends ConsumerWidget {
                                             ),
                                             const SizedBox(width: 8),
                                           ],
-                                          if (bookDetails.tags != null)
-                                            ...bookDetails.tags!.map(
-                                              (tag) => Padding(
-                                                padding: const EdgeInsets.only(
-                                                  right: 8.0,
-                                                ),
-                                                child: _GenreChip(label: tag),
-                                              ),
-                                            ),
+                                          // if (bookDetails.tags != null)
+                                          //   ...bookDetails.tags!.map(
+                                          //     (tag) => Padding(
+                                          //       padding: const EdgeInsets.only(
+                                          //         right: 8.0,
+                                          //       ),
+                                          //       child: _GenreChip(label: tag),
+                                          //     ),
+                                          //   ),
                                         ],
                                       ),
                                     ),
@@ -460,14 +465,15 @@ class _StatCard extends StatelessWidget {
 }
 
 class _VoteCard extends StatelessWidget {
-  const _VoteCard({required this.onTap});
+  const _VoteCard({required this.onTap, this.isLoading = false});
 
   final VoidCallback onTap;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: isLoading ? null : onTap,
       child: Container(
         height: 60.h,
         decoration: BoxDecoration(
@@ -486,19 +492,32 @@ class _VoteCard extends StatelessWidget {
           ],
         ),
         alignment: Alignment.center,
-        child: const Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.electric_bolt_outlined, color: Colors.white, size: 12),
-            SizedBox(width: 8),
-            CommonText(
-              text: 'Vote',
-              fontSize: AppFontSizes.small,
-              fontWeight: FontWeight.w500,
-              textColor: Colors.white,
-            ),
-          ],
-        ),
+        child: isLoading
+            ? const SizedBox(
+                width: 16,
+                height: 16,
+                child: CircularProgressIndicator(
+                  color: Colors.white,
+                  strokeWidth: 2,
+                ),
+              )
+            : const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.electric_bolt_outlined,
+                    color: Colors.white,
+                    size: 12,
+                  ),
+                  SizedBox(width: 8),
+                  CommonText(
+                    text: 'Vote',
+                    fontSize: AppFontSizes.small,
+                    fontWeight: FontWeight.w500,
+                    textColor: Colors.white,
+                  ),
+                ],
+              ),
       ),
     );
   }
