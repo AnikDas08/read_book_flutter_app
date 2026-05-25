@@ -17,7 +17,8 @@ import 'package:unkutdrama_kpnovel/src/features/app_features/read/riverpod/read_
 
 @RoutePage()
 class ReadScreen extends ConsumerWidget {
-  const ReadScreen({super.key});
+  const ReadScreen({super.key, required this.bookId});
+  final String bookId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -182,7 +183,7 @@ class ReadScreen extends ConsumerWidget {
           maxChildSize: 0.82,
           expand: false,
           builder: (sheetContext, sheetController) {
-            return const BookmarkModalWidget();
+            return   BookmarkModalWidget(bookId: bookId,);
           },
         );
       },
@@ -202,7 +203,7 @@ class ReadScreen extends ConsumerWidget {
           maxChildSize: 0.94,
           expand: false,
           builder: (_, scrollController) {
-            return CommentSection(scrollController: scrollController);
+            return CommentSection(scrollController: scrollController, bookId: bookId);
           },
         );
       },

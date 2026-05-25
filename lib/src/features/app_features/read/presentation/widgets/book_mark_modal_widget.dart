@@ -5,7 +5,8 @@ import 'package:unkutdrama_kpnovel/src/constants/app_font_sizes.dart';
 import 'package:unkutdrama_kpnovel/src/features/app_features/read/riverpod/read_notifier.dart';
 
 class BookmarkModalWidget extends ConsumerStatefulWidget {
-  const BookmarkModalWidget({super.key});
+  const BookmarkModalWidget({super.key, required this.bookId});
+  final String bookId;
 
   @override
   ConsumerState<BookmarkModalWidget> createState() =>

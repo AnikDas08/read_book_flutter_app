@@ -30,7 +30,7 @@ class StoryCardWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        context.router.push(const BookDetailsRoute());
+        context.router.push( BookDetailsRoute(bookId: ''));
       },
       child: Container(
         padding: const EdgeInsets.all(8),

@@ -4,8 +4,8 @@ import 'package:unkutdrama_kpnovel/src/constants/app_font_sizes.dart';
 import 'package:unkutdrama_kpnovel/src/features/app_features/read/data/model/comment_model.dart';
 
 class CommentSection extends StatelessWidget {
-  CommentSection({super.key, required this.scrollController});
-
+  CommentSection({super.key, required this.scrollController, required this.bookId});
+ final String bookId;
   final ScrollController scrollController;
 
   final List<Comment> comments = [

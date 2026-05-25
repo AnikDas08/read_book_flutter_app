@@ -16,7 +16,8 @@ import 'package:unkutdrama_kpnovel/src/features/app_features/read/riverpod/read_
 
 @RoutePage()
 class BookDetailsScreen extends ConsumerWidget {
-  const BookDetailsScreen({super.key});
+  const BookDetailsScreen({super.key, required this.bookId});
+  final String bookId;
 
   static const List<String> _storyParagraphs = [
     'The night was darker than usual. Violet stepped out of her apartment, unaware that her life was about to change forever.',
@@ -192,7 +193,7 @@ class BookDetailsScreen extends ConsumerWidget {
               GestureDetector(
                 onTap: () {
                   ref.read(readProvider.notifier).selectBook();
-                  context.router.push(const ReadRoute());
+                  context.router.push(  ReadRoute(bookId: bookId));
                 },
                 child: Container(
                   height: 48.h,
@@ -234,7 +235,7 @@ class BookDetailsScreen extends ConsumerWidget {
                     child: _ActionCard(
                       icon: Icons.star_border_rounded,
                       label: 'Review',
-                      onTap: () => context.router.push(const ReviewRoute()),
+                      onTap: () => context.router.push( ReviewRoute(bookId: bookId)),
                     ),
                   ),
                   8.width,
@@ -255,7 +256,7 @@ class BookDetailsScreen extends ConsumerWidget {
                               maxChildSize: 0.82,
                               expand: false,
                               builder: (_, scrollController) {
-                                return const BookmarkModalWidget();
+                                return   BookmarkModalWidget(bookId: bookId);
                               },
                             );
                           },
@@ -282,6 +283,7 @@ class BookDetailsScreen extends ConsumerWidget {
                               expand: false,
                               builder: (_, scrollController) {
                                 return CommentSection(
+                                  bookId: bookId,
                                   scrollController: scrollController,
                                 );
                               },

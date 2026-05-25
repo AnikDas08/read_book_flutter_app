@@ -16,7 +16,7 @@ class BookFeedCardWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        context.router.push(const BookDetailsRoute());
+        context.router.push(  BookDetailsRoute(bookId: book?.id ?? ''));
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 16),

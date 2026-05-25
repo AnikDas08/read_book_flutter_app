@@ -11,7 +11,7 @@ import 'package:unkutdrama_kpnovel/src/features/app_features/book/presentation/w
 
 @RoutePage()
 class ReviewScreen extends StatelessWidget {
-  const ReviewScreen({super.key,  this.bookId = ''});
+  const ReviewScreen({super.key, required this.bookId });
   final String bookId;
 
   @override
