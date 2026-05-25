@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unkutdrama_kpnovel/src/constants/app_font_sizes.dart';
 import 'package:unkutdrama_kpnovel/src/features/app_features/read/riverpod/read_notifier.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/library/library_repository/library_repository.dart';
 
 class BookmarkModalWidget extends ConsumerStatefulWidget {
   const BookmarkModalWidget({super.key, required this.bookId});
@@ -14,7 +15,25 @@ class BookmarkModalWidget extends ConsumerStatefulWidget {
 }
 
 class _BookmarkModalWidgetState extends ConsumerState<BookmarkModalWidget> {
-  int selectedOption = 1;
+  int? selectedOption;
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final book = ref.read(readProvider).slectedBook;
+      if (book != null) {
+        setState(() {
+          if (book.isFavorite) {
+            selectedOption = 0;
+          } else if (book.isWantToRead) {
+            selectedOption = 1;
+          }
+        });
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -96,24 +115,51 @@ class _BookmarkModalWidgetState extends ConsumerState<BookmarkModalWidget> {
           ),
           24.height,
           GestureDetector(
-            onTap: () => Navigator.of(context).pop(),
+            onTap: _isLoading || selectedOption == null
+                ? null
+                : () async {
+                    setState(() => _isLoading = true);
+                    final response = await ref
+                        .read(libraryRepositoryProvider)
+                        .addToLibrary(
+                          bookId: widget.bookId,
+                          isWantToRead: selectedOption == 1,
+                        );
+                    setState(() => _isLoading = false);
+                    if (response.isSuccess) {
+                      if (mounted) Navigator.of(context).pop();
+                    }
+                  },
             child: Container(
               height: 48.h,
               decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [Color(0xFF2B26FF), Color(0xFF7A3FFF)],
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                ),
+                gradient: selectedOption == null
+                    ? LinearGradient(
+                        colors: [Colors.grey.shade400, Colors.grey.shade400],
+                      )
+                    : const LinearGradient(
+                        colors: [Color(0xFF2B26FF), Color(0xFF7A3FFF)],
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                      ),
                 borderRadius: BorderRadius.circular(28),
               ),
               alignment: Alignment.center,
-              child: const CommonText(
-                text: 'Done',
-                fontSize: AppFontSizes.large,
-                fontWeight: FontWeight.w700,
-                textColor: Colors.white,
-              ),
+              child: _isLoading
+                  ? const SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 2,
+                      ),
+                    )
+                  : const CommonText(
+                      text: 'Done',
+                      fontSize: AppFontSizes.large,
+                      fontWeight: FontWeight.w700,
+                      textColor: Colors.white,
+                    ),
             ),
           ),
         ],

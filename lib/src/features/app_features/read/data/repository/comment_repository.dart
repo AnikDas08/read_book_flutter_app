@@ -30,7 +30,26 @@ class CommentRepository {
         jsonBody: {"commentId": commentId},
       ),
       responseBuilder: (data) => data,
-      showMessage: true,
+    );
+    return response;
+  }
+
+  Future<ResponseState<dynamic>> createCommentOrReply({
+    required String bookId,
+    required String message,
+    String? parentId,
+  }) async {
+    final response = await DioService.instance.request<dynamic>(
+      input: RequestInput(
+        endpoint: ApiEndpoints.createCommentOrReply,
+        method: RequestMethod.POST,
+        jsonBody: {
+          "bookId": bookId,
+          "message": message,
+          if (parentId != null) "parentId": parentId,
+        },
+      ),
+      responseBuilder: (data) => data,
     );
     return response;
   }

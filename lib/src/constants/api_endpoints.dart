@@ -26,6 +26,7 @@ class ApiEndpoints {
   static const String refreshToken = '$baseUrl/auth/refresh-token';
 
   static const String getLibrary = '$baseUrl/favorite/saved';
+  static const String addToLibrary = '$baseUrl/favorite/saved';
 
   //
 
@@ -35,5 +36,6 @@ class ApiEndpoints {
 
   // Comment endpoints
   static const String likeComment = '$baseUrl/comments/like-comment';
+  static const String createCommentOrReply = '$baseUrl/comments/create-comment-or-reply';
 
 }

@@ -21,6 +21,8 @@ class BookDetailsModel {
   final String? updatedAt;
   final int? v;
   final int? pageCount;
+  final bool? isFavorite;
+  final bool? isWantToRead;
 
   BookDetailsModel({
     this.id,
@@ -45,6 +47,8 @@ class BookDetailsModel {
     this.updatedAt,
     this.v,
     this.pageCount,
+    this.isFavorite,
+    this.isWantToRead,
   });
 
   factory BookDetailsModel.fromJson(Map<String, dynamic> json) {
@@ -71,6 +75,8 @@ class BookDetailsModel {
       updatedAt: json['updatedAt'] as String?,
       v: json['__v'] as int?,
       pageCount: json['pageCount'] as int?,
+      isFavorite: json['isFavorite'] as bool?,
+      isWantToRead: json['isWantToRead'] as bool?,
     );
   }
 
@@ -98,6 +104,8 @@ class BookDetailsModel {
       'updatedAt': updatedAt,
       '__v': v,
       'pageCount': pageCount,
+      'isFavorite': isFavorite,
+      'isWantToRead': isWantToRead,
     };
   }
 }
