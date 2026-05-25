@@ -24,6 +24,7 @@ class HomeScreen extends ConsumerWidget {
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: Constants.padding),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           10.height,
           Row(
@@ -98,10 +99,22 @@ class HomeScreen extends ConsumerWidget {
             );
           }, context),
           10.height,
-          ...List.generate(5, (index) => const BookFeedCardWidget()),
+          _newReleases(ref),
           10.height,
         ],
       ),
+    );
+  }
+
+  Widget _newReleases(WidgetRef ref) {
+    final newReleasesAsync = ref.watch(newReleasesProvider);
+
+    return newReleasesAsync.when(
+      data: (books) => Column(
+        children: books.map((book) => BookFeedCardWidget(book: book)).toList(),
+      ),
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (err, stack) => Center(child: Text(err.toString())),
     );
   }
 
@@ -110,7 +123,7 @@ class HomeScreen extends ConsumerWidget {
 
     return recommendedAsync.when(
       data: (books) => SizedBox(
-        height: 180.h,
+        height: 200,
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
@@ -124,11 +137,11 @@ class HomeScreen extends ConsumerWidget {
         ),
       ),
       loading: () => const SizedBox(
-        height: 180,
+        height: 200,
         child: Center(child: CircularProgressIndicator()),
       ),
       error: (err, stack) => SizedBox(
-        height: 180,
+        height: 200,
         child: Center(child: Text(err.toString())),
       ),
     );
@@ -139,7 +152,7 @@ class HomeScreen extends ConsumerWidget {
 
     return trendingAsync.when(
       data: (books) => SizedBox(
-        height: 180.h,
+        height: 200,
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
@@ -153,11 +166,11 @@ class HomeScreen extends ConsumerWidget {
         ),
       ),
       loading: () => const SizedBox(
-        height: 180,
+        height: 200,
         child: Center(child: CircularProgressIndicator()),
       ),
       error: (err, stack) => SizedBox(
-        height: 180,
+        height: 200,
         child: Center(child: Text(err.toString())),
       ),
     );

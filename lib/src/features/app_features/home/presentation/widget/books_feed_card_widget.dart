@@ -5,8 +5,12 @@ import 'package:unkutdrama_kpnovel/config/constance/constants.dart';
 import 'package:unkutdrama_kpnovel/config/route/app_router.dart';
 import 'package:unkutdrama_kpnovel/config/theme/app_theme_data.dart';
 
+import 'package:unkutdrama_kpnovel/src/constants/api_endpoints.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/home/data/model/home_book_model.dart';
+
 class BookFeedCardWidget extends StatelessWidget {
-  const BookFeedCardWidget({super.key});
+  final HomeBookModel? book;
+  const BookFeedCardWidget({super.key, this.book});
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +28,10 @@ class BookFeedCardWidget extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const CommonImage(
-              src: Constants.sampleImage,
+            CommonImage(
+              src: book?.coverImage != null
+                  ? '${ApiEndpoints.imageBaseUrl}/${book!.coverImage.replaceAll('\\', '/')}'
+                  : Constants.sampleImage,
               width: 85,
               height: 120,
               borderRadius: 12,
@@ -37,40 +43,40 @@ class BookFeedCardWidget extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const CommonText(
-                      text: 'Love in the Boardroom',
+                    CommonText(
+                      text: book?.title ?? 'Love in the Boardroom',
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
-                      textColor: Color(0xFF333333),
+                      textColor: const Color(0xFF333333),
                     ),
                     2.height,
                     CommonText(
-                      text: 'Victoria Sterling',
+                      text: book?.author?.fullName ?? 'Victoria Sterling',
                       fontSize: 12,
                       textColor: context.color.subtext,
                     ),
                     6.height,
-                    const CommonText(
-                      text:
+                    CommonText(
+                      text: book?.description ??
                           'She was his assistant. He was her boss. But the lines between business and pleasure blur in this steamy romance.',
                       maxLines: 2,
                       textAlign: .left,
                       overflow: TextOverflow.ellipsis,
                       fontSize: 11,
-                      textColor: Color(0xFF6B7280),
+                      textColor: const Color(0xFF6B7280),
                     ),
                     10.height,
                     Row(
                       children: [
                         _buildActionItem(
                           Icons.star,
-                          '4.8',
+                          (book?.ratingCount ?? 4.8).toStringAsFixed(1),
                           color: Colors.amber,
                         ),
                         20.width,
                         _buildActionItem(
                           Icons.chat_bubble_outline_rounded,
-                          '8932',
+                          (book?.commentCount ?? 0).toString(),
                         ),
                       ],
                     ),
