@@ -26,4 +26,14 @@ class ApiEndpoints {
   static const String refreshToken = '$baseUrl/auth/refresh-token';
 
   static const String getLibrary = '$baseUrl/favorite/saved';
+
+  //
+
+  // Book endpoints
+  static const String getReviews = '$baseUrl/review-rating/book';
+  static const String createReview = '$baseUrl/review-rating/create';
+
+  // Comment endpoints
+  static const String likeComment = '$baseUrl/comments/like-comment';
+
 }
