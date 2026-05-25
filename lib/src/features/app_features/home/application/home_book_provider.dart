@@ -21,3 +21,13 @@ final recommendedBooksProvider = FutureProvider.autoDispose<List<HomeBookModel>>
     throw response.message ?? 'Failed to fetch recommended books';
   }
 });
+
+final newReleasesProvider = FutureProvider.autoDispose<List<HomeBookModel>>((ref) async {
+  final repository = ref.watch(homeRepositoryProvider);
+  final response = await repository.getBooks(type: 'new_release');
+  if (response.isSuccess) {
+    return response.data ?? [];
+  } else {
+    throw response.message ?? 'Failed to fetch new releases';
+  }
+});
