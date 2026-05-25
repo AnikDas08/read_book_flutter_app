@@ -193,7 +193,7 @@ class BookWidget extends StatelessWidget {
                   if (!showProgress) ...[
                     4.height,
                     CommonText(
-                      text: book?.author?.fullName ?? 'Unknown Author',
+                      text: book?.author?.fullName ?? 'Dr. Sarah Chen',
                       fontSize: AppFontSizes.small,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,

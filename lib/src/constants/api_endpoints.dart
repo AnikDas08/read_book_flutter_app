@@ -18,10 +18,22 @@ class ApiEndpoints {
 
   // Book endpoints
   static const String getBooks = '$baseUrl/book/user';
+  static String bookDetails = '$baseUrl/book/';
+  static String chapters = '$baseUrl/chapter/book/';
+  static const String chapterReadCount = '$baseUrl/chapter/read-count';
+  static const String voteBook = '$baseUrl/book-vote/create';
 
   static const String refreshToken = '$baseUrl/auth/refresh-token';
 
-  //library
-
   static const String getLibrary = '$baseUrl/favorite/saved';
+
+  //
+
+  // Book endpoints
+  static const String getReviews = '$baseUrl/review-rating/book';
+  static const String createReview = '$baseUrl/review-rating/create';
+
+  // Comment endpoints
+  static const String likeComment = '$baseUrl/comments/like-comment';
+
 }

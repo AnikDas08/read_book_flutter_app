@@ -5,7 +5,8 @@ import 'package:unkutdrama_kpnovel/config/theme/app_theme_data.dart';
 import 'package:unkutdrama_kpnovel/src/features/app_features/book/presentation/widgets/write_review_modal_widget.dart';
 
 class RatingWidget extends StatelessWidget {
-  const RatingWidget({super.key});
+  const RatingWidget({super.key, required this.bookId});
+  final String bookId;
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +61,7 @@ class RatingWidget extends StatelessWidget {
             onTap: () {
               showDialog(
                 context: context,
-                builder: (context) => const Dialog(child: WriteReviewModalWidget()),
+                builder: (context) => Dialog(child: WriteReviewModalWidget(bookId: bookId)),
               );
             },
           ),

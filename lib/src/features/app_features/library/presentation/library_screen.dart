@@ -29,17 +29,17 @@ class LibraryScreen extends StatelessWidget {
 
           // Pre-fetch counts for tabs
           final readingCount = ref
-                  .watch(libraryProvider(LibrayType.Reading))
-                  .libraryBooks
-                  .length;
+              .watch(libraryProvider(LibrayType.Reading))
+              .libraryBooks
+              .length;
           final completedCount = ref
-                  .watch(libraryProvider(LibrayType.Completed))
-                  .libraryBooks
-                  .length;
+              .watch(libraryProvider(LibrayType.Completed))
+              .libraryBooks
+              .length;
           final wantToReadCount = ref
-                  .watch(libraryProvider(LibrayType.WantToRead))
-                  .libraryBooks
-                  .length;
+              .watch(libraryProvider(LibrayType.WantToRead))
+              .libraryBooks
+              .length;
 
           return Column(
             children: [
@@ -76,7 +76,7 @@ class LibraryScreen extends StatelessWidget {
                     final libraryBook = libraryState.libraryBooks[index];
                     final progress = libraryBook.totalCharacterCount > 0
                         ? (libraryBook.readCharacterCount /
-                            libraryBook.totalCharacterCount)
+                              libraryBook.totalCharacterCount)
                         : 0.0;
                     return BookWidget(
                       book: libraryBook.toHomeBookModel(),
@@ -160,9 +160,9 @@ class LibraryScreen extends StatelessWidget {
     required int completedCount,
     required int wantToReadCount,
   }) {
-    final tabs = LibrayType.values
-        .where((e) => e != LibrayType.Paused)
-        .map((e) {
+    final tabs = LibrayType.values.where((e) => e != LibrayType.Paused).map((
+      e,
+    ) {
       IconData icon;
       int count;
       switch (e) {

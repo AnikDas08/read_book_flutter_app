@@ -102,6 +102,8 @@ class BookChapter {
   final int watchedAds;
   final bool showSparkle;
   final List<String> pages;
+  final int totalCharacterCount;
+  final int readCharacterCount;
 
   const BookChapter({
     this.id,
@@ -113,6 +115,8 @@ class BookChapter {
     this.watchedAds = 0,
     this.showSparkle = false,
     this.pages = const [],
+    this.totalCharacterCount = 0,
+    this.readCharacterCount = 0,
   });
 
   factory BookChapter.fromJson(Map<String, dynamic> json) => BookChapter(
@@ -127,6 +131,8 @@ class BookChapter {
     unlockAdsRequired: json["unlock_ads_required"] ?? 0,
     watchedAds: json["watched_ads"] ?? 0,
     showSparkle: json["show_sparkle"] ?? false,
+    totalCharacterCount: json["totalCharacterCount"] ?? 0,
+    readCharacterCount: json["readCharacterCount"] ?? 0,
   );
 
   Map<String, dynamic> toJson() => {
@@ -139,6 +145,8 @@ class BookChapter {
     "watched_ads": watchedAds,
     "show_sparkle": showSparkle,
     "pages": List<dynamic>.from(pages.map((x) => x)),
+    "totalCharacterCount": totalCharacterCount,
+    "readCharacterCount": readCharacterCount,
   };
 
   BookChapter copyWith({
@@ -151,6 +159,8 @@ class BookChapter {
     int? watchedAds,
     List<String>? pages,
     bool? showSparkle,
+    int? totalCharacterCount,
+    int? readCharacterCount,
   }) {
     return BookChapter(
       id: id ?? this.id,
@@ -162,6 +172,97 @@ class BookChapter {
       unlockAdsRequired: unlockAdsRequired ?? this.unlockAdsRequired,
       watchedAds: watchedAds ?? this.watchedAds,
       showSparkle: showSparkle ?? this.showSparkle,
+      totalCharacterCount: totalCharacterCount ?? this.totalCharacterCount,
+      readCharacterCount: readCharacterCount ?? this.readCharacterCount,
     );
+  }
+
+  factory BookChapter.fromBackendJson(Map<String, dynamic> json, int index) {
+    final rawText = json['text'] as String? ?? '';
+    final plainText = _convertHtmlToPlainText(rawText);
+    final pagesList = _paginateText(plainText);
+
+    // First 2 chapters are unlocked, subsequent are locked
+    final isChLocked = index >= 2;
+    
+    final totalChar = json['totalCharacterCount'] as int? ?? 0;
+    final readChar = json['readCharacterCount'] as int? ?? 0;
+
+    return BookChapter(
+      id: json['_id'] as String?,
+      title: json['title'] as String? ?? 'Chapter ${index + 1}',
+      createdAt: json['createdAt'] as String?,
+      updatedAt: json['updatedAt'] as String?,
+      isLocked: isChLocked,
+      unlockAdsRequired: isChLocked ? (index == 2 ? 2 : 3) : 0,
+      watchedAds: 0,
+      showSparkle: index == 2,
+      pages: pagesList,
+      totalCharacterCount: totalChar,
+      readCharacterCount: readChar,
+    );
+  }
+
+  static String _convertHtmlToPlainText(String html) {
+    var text = html;
+    text = text.replaceAll('</h1>', '\n\n');
+    text = text.replaceAll('</h2>', '\n\n');
+    text = text.replaceAll('</h3>', '\n\n');
+    text = text.replaceAll('</p>', '\n\n');
+    text = text.replaceAll('<br>', '\n');
+    text = text.replaceAll('<br/>', '\n');
+    text = text.replaceAll('<br />', '\n');
+
+    text = text.replaceAll(RegExp(r'<[^>]*>'), '');
+
+    text = text.replaceAll('&nbsp;', ' ');
+    text = text.replaceAll('&amp;', '&');
+    text = text.replaceAll('&lt;', '<');
+    text = text.replaceAll('&gt;', '>');
+    text = text.replaceAll('&quot;', '"');
+    text = text.replaceAll('&#39;', "'");
+
+    return text.trim();
+  }
+
+  static List<String> _paginateText(String plainText) {
+    final paragraphs = plainText
+        .split('\n\n')
+        .where((p) => p.trim().isNotEmpty)
+        .toList();
+    if (paragraphs.isEmpty) return [];
+
+    final pages = <String>[];
+    var currentPageParagraphs = <String>[];
+    var currentLinesCount = 0;
+    const maxLinesPerPage = 30;
+    const charsPerLine = 40;
+
+    for (final p in paragraphs) {
+      var pLines = 0;
+      final subLines = p.split('\n');
+      for (final line in subLines) {
+        pLines += (line.length / charsPerLine).ceil();
+      }
+
+      final spacingLines = currentPageParagraphs.isEmpty ? 0 : 1;
+      final addedLines = pLines + spacingLines;
+
+      if (currentLinesCount + addedLines > maxLinesPerPage &&
+          currentPageParagraphs.isNotEmpty) {
+        pages.add(currentPageParagraphs.join('\n\n'));
+        currentPageParagraphs = [p];
+        currentLinesCount = pLines;
+      } else {
+        currentPageParagraphs.add(p);
+        currentLinesCount += addedLines;
+      }
+    }
+
+    if (currentPageParagraphs.isNotEmpty) {
+      pages.add(currentPageParagraphs.join('\n\n'));
+    }
+
+    return pages;
   }
 }

@@ -26,6 +26,7 @@ class _BookReadingWidgetState extends ConsumerState<BookReadingWidget> {
   final ValueNotifier<double> _flipPageNotifier = ValueNotifier<double>(0);
   final Map<int, GlobalKey> _chapterKeys = {};
   bool _isNavigatingToLock = false;
+  bool _hasScrolledToInitial = false;
 
   @override
   void initState() {
@@ -45,8 +46,11 @@ class _BookReadingWidgetState extends ConsumerState<BookReadingWidget> {
   int _getInitialPage(BookModel book) {
     var pageIndex = 0;
     for (var i = 0; i < book.chapters.length; i++) {
-      if (i == book.selectedChapter) return pageIndex;
       final ch = book.chapters[i];
+      if (i == book.selectedChapter) {
+        final resumePage = _getPageForReadCount(ch, ch.readCharacterCount);
+        return pageIndex + resumePage;
+      }
       if (ch.isLocked) {
         return pageIndex; // Can't go beyond first lock
       }
@@ -57,6 +61,19 @@ class _BookReadingWidgetState extends ConsumerState<BookReadingWidget> {
       }
     }
     return pageIndex;
+  }
+
+  int _getPageForReadCount(BookChapter chapter, int readCount) {
+    if (readCount <= 0 || chapter.pages.isEmpty) return 0;
+
+    var accumulated = 0;
+    for (var p = 0; p < chapter.pages.length; p++) {
+      accumulated += chapter.pages[p].length;
+      if (accumulated >= readCount) {
+        return p;
+      }
+    }
+    return chapter.pages.length - 1;
   }
 
   void _onPageScroll() {
@@ -251,17 +268,34 @@ class _BookReadingWidgetState extends ConsumerState<BookReadingWidget> {
       }
     }
 
-    // Scroll mode jump logic for TOC selections
+    // Scroll mode jump logic for TOC selections & initial load
     if (readState.readingMode == ReadingMode.scroll &&
         _scrollController.hasClients) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (!mounted) return;
-        final key = _chapterKeys[currentChapterIndex];
-        if (key?.currentContext != null) {
-          // If the selected chapter is rendered but not at the top, we could jump here.
-          // However, we usually rely on ref.listen for explicit changes.
-        }
-      });
+      if (!_hasScrolledToInitial) {
+        _hasScrolledToInitial = true;
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          Future.delayed(const Duration(milliseconds: 250), () {
+            if (!mounted) return;
+            final key = _chapterKeys[currentChapterIndex];
+            if (key?.currentContext != null && _scrollController.hasClients) {
+              Scrollable.ensureVisible(
+                key!.currentContext!,
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+              );
+            }
+          });
+        });
+      } else {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (!mounted) return;
+          final key = _chapterKeys[currentChapterIndex];
+          if (key?.currentContext != null) {
+            // If the selected chapter is rendered but not at the top, we could jump here.
+            // However, we usually rely on ref.listen for explicit changes.
+          }
+        });
+      }
     }
 
     return Column(
@@ -416,9 +450,12 @@ class _BookReadingWidgetState extends ConsumerState<BookReadingWidget> {
         controller: _pageController,
         physics: const BouncingScrollPhysics(),
         onPageChanged: (index) {
-          final targetChapter = flatPages[index].chapterIndex;
-          if (targetChapter != readState.slectedBook?.selectedChapter) {
-            ref.read(readProvider.notifier).selectChapter(targetChapter);
+          final pageObj = flatPages[index];
+          if (!pageObj.isLockPage) {
+            ref.read(readProvider.notifier).updatePageProgress(
+                  pageObj.chapterIndex,
+                  pageObj.pageIndex,
+                );
           }
         },
         itemCount: flatPages.length,
@@ -477,9 +514,12 @@ class _BookReadingWidgetState extends ConsumerState<BookReadingWidget> {
       controller: _pageController,
       physics: const BouncingScrollPhysics(),
       onPageChanged: (index) {
-        final targetChapter = flatPages[index].chapterIndex;
-        if (targetChapter != readState.slectedBook?.selectedChapter) {
-          ref.read(readProvider.notifier).selectChapter(targetChapter);
+        final pageObj = flatPages[index];
+        if (!pageObj.isLockPage) {
+          ref.read(readProvider.notifier).updatePageProgress(
+                pageObj.chapterIndex,
+                pageObj.pageIndex,
+              );
         }
       },
       itemCount: flatPages.length,
