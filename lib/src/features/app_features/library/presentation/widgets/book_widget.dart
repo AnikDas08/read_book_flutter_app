@@ -30,7 +30,7 @@ class BookWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        context.router.navigate(  BookDetailsRoute(bookId: ''));
+        context.router.navigate(  BookDetailsRoute(bookId: book?.id ?? ''));
       },
       child: Container(
         margin: .zero,

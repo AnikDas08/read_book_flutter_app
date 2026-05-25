@@ -18,6 +18,11 @@ class ApiEndpoints {
 
   // Book endpoints
   static const String getBooks = '$baseUrl/book/user';
+  static const String getReviews = '$baseUrl/review-rating/book';
+  static const String createReview = '$baseUrl/review-rating/create';
+
+  // Comment endpoints
+  static const String likeComment = '$baseUrl/comments/like-comment';
 
  static const String refreshToken = '$baseUrl/auth/refresh-token';
 }
