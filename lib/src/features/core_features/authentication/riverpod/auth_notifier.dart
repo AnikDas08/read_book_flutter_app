@@ -1,5 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:unkutdrama_kpnovel/config/route/app_router.dart';
+import 'package:unkutdrama_kpnovel/config/storage/storage_service.dart';
 import 'package:unkutdrama_kpnovel/src/features/core_features/authentication/data/auth_repository.dart';
 import 'package:unkutdrama_kpnovel/src/features/core_features/authentication/riverpod/auth_state.dart';
 
@@ -22,6 +23,7 @@ class AuthNotifier extends _$AuthNotifier {
     if (response.isSuccess) {
       print("Successfull Login");
       state = state.copyWith(isLoading: false, isAuthenticated: true);
+
       appRouter.replaceAll([
         NavigationRoute(
           children: [const HomeRoute()],
@@ -32,6 +34,7 @@ class AuthNotifier extends _$AuthNotifier {
       state = state.copyWith(isLoading: false, isAuthenticated: true);
     }
   }
+
 
   loginAsGuest() async {
     state = state.copyWith(isLoading: false, isAuthenticated: true);
@@ -121,5 +124,15 @@ class AuthNotifier extends _$AuthNotifier {
 
   void clearError() {
     state = state.copyWith(error: null);
+  }
+}
+
+
+Future<void> saveToken({ required String? accessToken, required String? refreshToken}) async {
+  if(accessToken != null && accessToken.isNotEmpty) {
+    StorageService.instance.set(StorageKeys.accessToken, accessToken);
+  }
+  if(refreshToken != null && refreshToken.isNotEmpty) {
+    StorageService.instance.set(StorageKeys.refreshToken, refreshToken);
   }
 }

@@ -18,4 +18,6 @@ class ApiEndpoints {
 
   // Book endpoints
   static const String getBooks = '$baseUrl/book/user';
+
+ static const String refreshToken = '$baseUrl/auth/refresh-token';
 }

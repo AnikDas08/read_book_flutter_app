@@ -6,11 +6,12 @@ import 'package:core_kit/utils/core_screen_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:unkutdrama_kpnovel/config/constance/constants.dart';
 import 'package:unkutdrama_kpnovel/config/corekit/back_button.dart';
+import 'package:unkutdrama_kpnovel/config/storage/storage_service.dart';
 import 'package:unkutdrama_kpnovel/config/theme/app_theme_data.dart';
 import 'package:unkutdrama_kpnovel/config/theme/extension/app_colors.dart';
 import 'package:unkutdrama_kpnovel/src/constants/api_endpoints.dart';
 
-import 'package:unkutdrama_kpnovel/config/storage/storage_service.dart';
+import 'package:unkutdrama_kpnovel/src/features/core_features/authentication/riverpod/auth_notifier.dart';
 
 class CorekitConfigImpl extends CoreKitConfig with CoreKitConfigDefaults {
   @override
@@ -30,7 +31,7 @@ class CorekitConfigImpl extends CoreKitConfig with CoreKitConfigDefaults {
       DioServiceConfig(
          enableDebugLogs: true,
           baseUrl: ApiEndpoints.baseUrl,
-          refreshTokenEndpoint: '');
+          refreshTokenEndpoint: ApiEndpoints.refreshToken);
 
   @override
   String get imageBaseUrl => ApiEndpoints.imageBaseUrl;
@@ -38,9 +39,14 @@ class CorekitConfigImpl extends CoreKitConfig with CoreKitConfigDefaults {
 
   @override
   TokenProvider get tokenProvider => TokenProvider(
-    accessToken: () async => await StorageService.instance.get('auth_token') ?? '',
-    refreshToken: () async => '',
-    updateTokens: (data) async {},
+    accessToken: () async => await StorageService.instance.get(StorageKeys.accessToken) ?? '',
+    refreshToken: () async =>await StorageService.instance.get(StorageKeys.refreshToken) ?? '',
+    updateTokens: (data) async {
+     saveToken(
+        accessToken: data['accessToken'],
+        refreshToken: data['refreshToken'],
+      );
+    },
   );
 
   @override

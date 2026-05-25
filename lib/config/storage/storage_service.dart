@@ -5,21 +5,36 @@ final storageServiceProvider = Provider.autoDispose<StorageService>(
   (ref) => StorageService.instance,
 );
 
+class StorageKeys {
+  static const String accessToken = 'accessToken';
+  static const String refreshToken = 'refreshToken';
+}
+
 class StorageService {
   StorageService._Internal() {
     _secureStorage = const FlutterSecureStorage();
   }
+  static Map<String, dynamic> _storage = {};
   static final StorageService _instance = StorageService._Internal();
   static StorageService get instance => _instance;
+
+
 
   late final FlutterSecureStorage _secureStorage;
 
   Future<void> set(String key, String value) async {
-    await _secureStorage.write(key: key, value: value);
+    _storage[key] = value;
+     _secureStorage.write(key: key, value: value);
   }
 
   Future<String?> get(String key) async {
-    return await _secureStorage.read(key: key);
+    final result = _storage[key];
+    if (result != null) {
+      return result;
+    }
+    final value = await _secureStorage.read(key: key);
+    _storage[key] = value;
+    return value;
   }
 
   Future<void> delete(String key) async {

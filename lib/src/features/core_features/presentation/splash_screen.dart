@@ -25,24 +25,25 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   void initState() {
     super.initState();
     _repository = ref.read(authRepositoryProvider);
-    // _navigateToNext();
+    _navigateToNext();
   }
 
   Future<void> _navigateToNext() async {
-    await Future.delayed(const Duration(seconds: 2));
 
-    if (!mounted) return;
+
+
 
     final isAuthenticated = await _repository.isAuthenticated();
 
-    if (!mounted) return;
-
     if (isAuthenticated) {
-      appRouter.replace(const NavigationRoute());
+      print("😊 Authenticated");
+      appRouter.replaceAll([
+      const  NavigationRoute()],
+      );
     }
-    //  else {
-    //   appRouter.replace(const OnboardingRoute());
-    // }
+     else {
+      appRouter.replace(const OnboardingRoute());
+    } await Future.delayed(const Duration(seconds: 2));
   }
 
   @override

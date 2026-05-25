@@ -3,6 +3,7 @@ import 'package:core_kit/network/request_input.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unkutdrama_kpnovel/config/storage/storage_service.dart';
 import 'package:unkutdrama_kpnovel/src/constants/api_endpoints.dart';
+import 'package:unkutdrama_kpnovel/src/features/core_features/authentication/riverpod/auth_notifier.dart';
 
 final authRepositoryProvider = Provider.autoDispose<AuthRepository>(
   (ref) => AuthRepository._(),
@@ -10,7 +11,7 @@ final authRepositoryProvider = Provider.autoDispose<AuthRepository>(
 
 class AuthRepository {
   AuthRepository._();
-  final String _authTokenKey = 'auth_token';
+  final String _authTokenKey = StorageKeys.accessToken;
 
   Future<ResponseState<dynamic>> login(String email, String password) async {
     final response = await DioService.instance.request<dynamic>(
@@ -24,10 +25,8 @@ class AuthRepository {
     );
 
     if (response.isSuccess && response.data != null) {
-      final token = response.data['accessToken'];
-      if (token != null) {
-        await StorageService.instance.set('auth_token', token.toString());
-      }
+      saveToken(accessToken: response.data['accessToken'],
+          refreshToken: response.data['refreshToken']);
     }
 
     return response;
@@ -109,16 +108,18 @@ class AuthRepository {
     final token = await StorageService.instance.get(_authTokenKey);
     if (token == null || token.isEmpty) {
       return false;
+    }else{
+      return true;
     }
 
-    final response = await DioService.instance.request<bool>(
-      input: RequestInput(
-        endpoint: ApiEndpoints.checkAuth,
-        method: .GET,
-        headers: {'Authorization': 'Bearer $token'},
-      ),
-      responseBuilder: (data) => data['authenticated'] as bool? ?? false,
-    );
-    return response.isSuccess;
+    // final response = await DioService.instance.request<bool>(
+    //   input: RequestInput(
+    //     endpoint: ApiEndpoints.checkAuth,
+    //     method: .GET,
+    //     headers: {'Authorization': 'Bearer $token'},
+    //   ),
+    //   responseBuilder: (data) => data['authenticated'] as bool? ?? false,
+    // );
+    // return response.isSuccess;
   }
 }
