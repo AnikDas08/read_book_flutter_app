@@ -128,10 +128,12 @@ class HomeScreen extends ConsumerWidget {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: books
-                .map((book) => Padding(
-                      padding: const EdgeInsets.only(right: 8),
-                      child: BookWidget(book: book, isNew: true),
-                    ))
+                .map(
+                  (book) => Padding(
+                    padding: const EdgeInsets.only(right: 8),
+                    child: BookWidget(book: book, isNew: true),
+                  ),
+                )
                 .toList(),
           ),
         ),
@@ -140,10 +142,8 @@ class HomeScreen extends ConsumerWidget {
         height: 200,
         child: Center(child: CircularProgressIndicator()),
       ),
-      error: (err, stack) => SizedBox(
-        height: 200,
-        child: Center(child: Text(err.toString())),
-      ),
+      error: (err, stack) =>
+          SizedBox(height: 200, child: Center(child: Text(err.toString()))),
     );
   }
 
@@ -157,10 +157,12 @@ class HomeScreen extends ConsumerWidget {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: books
-                .map((book) => Padding(
-                      padding: const EdgeInsets.only(right: 8),
-                      child: BookWidget(book: book, isTrending: true),
-                    ))
+                .map(
+                  (book) => Padding(
+                    padding: const EdgeInsets.only(right: 8),
+                    child: BookWidget(book: book, isTrending: true),
+                  ),
+                )
                 .toList(),
           ),
         ),
@@ -169,10 +171,8 @@ class HomeScreen extends ConsumerWidget {
         height: 200,
         child: Center(child: CircularProgressIndicator()),
       ),
-      error: (err, stack) => SizedBox(
-        height: 200,
-        child: Center(child: Text(err.toString())),
-      ),
+      error: (err, stack) =>
+          SizedBox(height: 200, child: Center(child: Text(err.toString()))),
     );
   }
 
