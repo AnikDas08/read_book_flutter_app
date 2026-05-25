@@ -46,7 +46,8 @@ class ReadState extends Equatable {
       readingMode: readingMode ?? this.readingMode,
       isActionPanelVisible: isActionPanelVisible ?? this.isActionPanelVisible,
       isLoading: isLoading ?? this.isLoading,
-      errorMessage: errorMessage, // Notice we don't do ?? here because we want to be able to set it to null
+      errorMessage:
+          errorMessage, // Notice we don't do ?? here because we want to be able to set it to null
     );
   }
 

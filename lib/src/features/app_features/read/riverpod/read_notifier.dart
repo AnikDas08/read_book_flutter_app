@@ -68,8 +68,12 @@ class ReadNotifier extends _$ReadNotifier {
   Future<void> selectBook(String bookId) async {
     state = state.copyWith(isLoading: true, errorMessage: null);
     try {
-      final chaptersResponse = await ref.read(readRepositoryProvider).getChapters(bookId);
-      final bookResponse = await ref.read(bookRepositoryProvider).getBookDetails(bookId);
+      final chaptersResponse = await ref
+          .read(readRepositoryProvider)
+          .getChapters(bookId);
+      final bookResponse = await ref
+          .read(bookRepositoryProvider)
+          .getBookDetails(bookId);
 
       if (chaptersResponse.isSuccess && chaptersResponse.data != null) {
         final chaptersList = chaptersResponse.data!;
@@ -85,21 +89,48 @@ class ReadNotifier extends _$ReadNotifier {
 
         final bookDetails = bookResponse.data;
 
+        // Determine the initial chapter index to resume reading
+        var initialChapterIndex = 0;
+        for (var i = 0; i < parsedChapters.length; i++) {
+          final ch = parsedChapters[i];
+          if (ch.isLocked) {
+            break;
+          }
+
+          initialChapterIndex = i;
+
+          if (ch.readCharacterCount > 0 && ch.readCharacterCount < ch.totalCharacterCount) {
+            break;
+          }
+          if (ch.readCharacterCount == 0) {
+            break;
+          }
+        }
+
         state = state.copyWith(
           isLoading: false,
           slectedBook: BookModel(
             id: bookId,
-            title: bookDetails?.title ??
-                (parsedChapters.isNotEmpty ? parsedChapters.first.title : 'Book Title'),
+            title:
+                bookDetails?.title ??
+                (parsedChapters.isNotEmpty
+                    ? parsedChapters.first.title
+                    : 'Book Title'),
             description: bookDetails?.description ?? '',
             coverImage: bookDetails?.coverImage ?? Constants.sampleImage,
             author: bookDetails?.userId ?? 'Elena Nightshade',
             genre: bookDetails?.genre ?? 'Fantasy',
             status: bookDetails?.status ?? 'approved',
             chapters: parsedChapters,
-            selectedChapter: 0,
+            selectedChapter: initialChapterIndex, // Take user to active resume chapter!
           ),
         );
+
+        if (parsedChapters.isNotEmpty) {
+          final resumeChapter = parsedChapters[initialChapterIndex];
+          final resumePage = _getPageForReadCount(resumeChapter, resumeChapter.readCharacterCount);
+          updatePageProgress(initialChapterIndex, resumePage);
+        }
       } else {
         state = state.copyWith(
           isLoading: false,
@@ -107,10 +138,60 @@ class ReadNotifier extends _$ReadNotifier {
         );
       }
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        errorMessage: e.toString(),
+      state = state.copyWith(isLoading: false, errorMessage: e.toString());
+    }
+  }
+
+  int _getPageForReadCount(BookChapter chapter, int readCount) {
+    if (readCount <= 0 || chapter.pages.isEmpty) return 0;
+
+    var accumulated = 0;
+    for (var p = 0; p < chapter.pages.length; p++) {
+      accumulated += chapter.pages[p].length;
+      if (accumulated >= readCount) {
+        return p;
+      }
+    }
+    return chapter.pages.length - 1;
+  }
+
+  void _updateLocalChapterReadCount(int chapterIndex, int currentChapterRead) {
+    final book = state.slectedBook;
+    if (book == null) return;
+
+    final chapters = [...book.chapters];
+    if (chapterIndex >= 0 && chapterIndex < chapters.length) {
+      chapters[chapterIndex] = chapters[chapterIndex].copyWith(
+        readCharacterCount: currentChapterRead,
       );
+      state = state.copyWith(
+        slectedBook: book.copyWith(chapters: chapters),
+      );
+    }
+  }
+
+  void updatePageProgress(int chapterIndex, int pageIndex) {
+    if (state.slectedBook?.selectedChapter != chapterIndex) {
+      state = state.copyWith(
+        slectedBook: state.slectedBook?.copyWith(selectedChapter: chapterIndex),
+      );
+    }
+    final ch = state.slectedBook?.chapters[chapterIndex];
+    if (ch != null) {
+      // 1. Calculate characters read in the current chapter up to pageIndex
+      var currentChapterRead = 0;
+      for (var p = 0; p <= pageIndex && p < ch.pages.length; p++) {
+        currentChapterRead += ch.pages[p].length;
+      }
+
+      // 2. Only update if the new read count is greater than the saved readCharacterCount
+      if (currentChapterRead > ch.readCharacterCount) {
+        // Send only this chapter's exact character progress!
+        updateChapterReadCount(ch.id ?? '', currentChapterRead);
+
+        // Update local state to prevent repeated requests
+        _updateLocalChapterReadCount(chapterIndex, currentChapterRead);
+      }
     }
   }
 
@@ -118,6 +199,31 @@ class ReadNotifier extends _$ReadNotifier {
     state = state.copyWith(
       slectedBook: state.slectedBook?.copyWith(selectedChapter: index),
     );
+    final ch = state.slectedBook?.chapters[index];
+    if (ch != null) {
+      // For Scroll mode, we update only if the full chapter is read
+      if (ch.totalCharacterCount > ch.readCharacterCount) {
+        updateChapterReadCount(ch.id ?? '', ch.totalCharacterCount);
+        _updateLocalChapterReadCount(index, ch.totalCharacterCount);
+      }
+    }
+  }
+
+  Future<void> updateChapterReadCount(String chapterId, int readCount) async {
+    if (chapterId.isEmpty) return;
+    try {
+      final response = await ref.read(readRepositoryProvider).updateReadCount(chapterId, readCount);
+      if (response.isSuccess) {
+        // ignore: avoid_print
+        print("Read count successfully updated for chapter $chapterId to $readCount");
+      } else {
+        // ignore: avoid_print
+        print("Failed to update read count for chapter $chapterId: ${response.message}");
+      }
+    } catch (e) {
+      // ignore: avoid_print
+      print("Error updating chapter read count: $e");
+    }
   }
 
   void updateFontSize(double size) {
@@ -153,16 +259,16 @@ class ReadNotifier extends _$ReadNotifier {
     if (book == null) return;
     final chapterIndex = book.selectedChapter;
     final chapters = [...book.chapters];
-    
+
     // Find the first locked chapter starting from current or after
-    int targetIndex = -1;
-    for (int i = chapterIndex; i < chapters.length; i++) {
+    var targetIndex = -1;
+    for (var i = chapterIndex; i < chapters.length; i++) {
       if (chapters[i].isLocked) {
         targetIndex = i;
         break;
       }
     }
-    
+
     if (targetIndex == -1) return;
     final chapter = chapters[targetIndex];
 
@@ -174,38 +280,40 @@ class ReadNotifier extends _$ReadNotifier {
       isLocked: shouldUnlock ? false : chapter.isLocked,
     );
 
-    state = state.copyWith(slectedBook: book.copyWith(
-      chapters: chapters,
-      selectedChapter: targetIndex, // Ensure we are targeting this chapter
-    ));
+    state = state.copyWith(
+      slectedBook: book.copyWith(
+        chapters: chapters,
+        selectedChapter: targetIndex, // Ensure we are targeting this chapter
+      ),
+    );
   }
 
   bool unlockChapterWithStones(int cost) {
     final book = state.slectedBook;
     if (book == null) return false;
-    
+
     final chapterIndex = book.selectedChapter;
     final chapters = [...book.chapters];
-    
+
     // Find the first locked chapter
-    int targetIndex = -1;
-    for (int i = chapterIndex; i < chapters.length; i++) {
+    var targetIndex = -1;
+    for (var i = chapterIndex; i < chapters.length; i++) {
       if (chapters[i].isLocked) {
         targetIndex = i;
         break;
       }
     }
-    
+
     if (targetIndex == -1) return false;
 
-    chapters[targetIndex] = chapters[targetIndex].copyWith(
-      isLocked: false,
-    );
+    chapters[targetIndex] = chapters[targetIndex].copyWith(isLocked: false);
 
-    state = state.copyWith(slectedBook: book.copyWith(
-      chapters: chapters,
-      selectedChapter: targetIndex,
-    ));
+    state = state.copyWith(
+      slectedBook: book.copyWith(
+        chapters: chapters,
+        selectedChapter: targetIndex,
+      ),
+    );
     return true;
   }
 }

@@ -20,6 +20,7 @@ class ApiEndpoints {
   static const String getBooks = '$baseUrl/book/user';
   static String bookDetails = '$baseUrl/book/';
   static String chapters = '$baseUrl/chapter/book/';
+  static const String chapterReadCount = '$baseUrl/chapter/read-count';
 
   static const String refreshToken = '$baseUrl/auth/refresh-token';
 }

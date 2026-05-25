@@ -102,6 +102,8 @@ class BookChapter {
   final int watchedAds;
   final bool showSparkle;
   final List<String> pages;
+  final int totalCharacterCount;
+  final int readCharacterCount;
 
   const BookChapter({
     this.id,
@@ -113,6 +115,8 @@ class BookChapter {
     this.watchedAds = 0,
     this.showSparkle = false,
     this.pages = const [],
+    this.totalCharacterCount = 0,
+    this.readCharacterCount = 0,
   });
 
   factory BookChapter.fromJson(Map<String, dynamic> json) => BookChapter(
@@ -127,6 +131,8 @@ class BookChapter {
     unlockAdsRequired: json["unlock_ads_required"] ?? 0,
     watchedAds: json["watched_ads"] ?? 0,
     showSparkle: json["show_sparkle"] ?? false,
+    totalCharacterCount: json["totalCharacterCount"] ?? 0,
+    readCharacterCount: json["readCharacterCount"] ?? 0,
   );
 
   Map<String, dynamic> toJson() => {
@@ -139,6 +145,8 @@ class BookChapter {
     "watched_ads": watchedAds,
     "show_sparkle": showSparkle,
     "pages": List<dynamic>.from(pages.map((x) => x)),
+    "totalCharacterCount": totalCharacterCount,
+    "readCharacterCount": readCharacterCount,
   };
 
   BookChapter copyWith({
@@ -151,6 +159,8 @@ class BookChapter {
     int? watchedAds,
     List<String>? pages,
     bool? showSparkle,
+    int? totalCharacterCount,
+    int? readCharacterCount,
   }) {
     return BookChapter(
       id: id ?? this.id,
@@ -162,6 +172,8 @@ class BookChapter {
       unlockAdsRequired: unlockAdsRequired ?? this.unlockAdsRequired,
       watchedAds: watchedAds ?? this.watchedAds,
       showSparkle: showSparkle ?? this.showSparkle,
+      totalCharacterCount: totalCharacterCount ?? this.totalCharacterCount,
+      readCharacterCount: readCharacterCount ?? this.readCharacterCount,
     );
   }
 
@@ -172,6 +184,9 @@ class BookChapter {
 
     // First 2 chapters are unlocked, subsequent are locked
     final isChLocked = index >= 2;
+    
+    final totalChar = json['totalCharacterCount'] as int? ?? 0;
+    final readChar = json['readCharacterCount'] as int? ?? 0;
 
     return BookChapter(
       id: json['_id'] as String?,
@@ -183,6 +198,8 @@ class BookChapter {
       watchedAds: 0,
       showSparkle: index == 2,
       pages: pagesList,
+      totalCharacterCount: totalChar,
+      readCharacterCount: readChar,
     );
   }
 

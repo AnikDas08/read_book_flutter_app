@@ -21,4 +21,21 @@ class ReadRepository {
     );
     return response;
   }
+
+  Future<ResponseState<dynamic>> updateReadCount(String chapterId, int readCount) async {
+    final response = await DioService.instance.request<dynamic>(
+      input: RequestInput(
+        endpoint: ApiEndpoints.chapterReadCount,
+        method: RequestMethod.POST,
+        jsonBody: {
+          'chapterId': chapterId,
+          'readCount': readCount,
+        },
+      ),
+      responseBuilder: (data) {
+        return data;
+      },
+    );
+    return response;
+  }
 }
