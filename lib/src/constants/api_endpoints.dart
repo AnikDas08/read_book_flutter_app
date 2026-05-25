@@ -10,7 +10,7 @@ class ApiEndpoints {
   static const String verifyOtp = '$baseUrl/users/verify-otp';
   static const String createPassword = '$baseUrl/auth/forgot-password-reset';
   static const String checkAuth = '$baseUrl/auth/check';
-  
+
   // Profile endpoints
   static const String getProfile = '$baseUrl/profile';
   static const String updateProfile = '$baseUrl/profile';
@@ -18,6 +18,8 @@ class ApiEndpoints {
 
   // Book endpoints
   static const String getBooks = '$baseUrl/book/user';
+  static String bookDetails = '$baseUrl/book/';
+  static String chapters = '$baseUrl/chapter/book/';
 
- static const String refreshToken = '$baseUrl/auth/refresh-token';
+  static const String refreshToken = '$baseUrl/auth/refresh-token';
 }

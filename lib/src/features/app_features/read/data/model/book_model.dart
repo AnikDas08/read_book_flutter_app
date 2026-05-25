@@ -164,4 +164,88 @@ class BookChapter {
       showSparkle: showSparkle ?? this.showSparkle,
     );
   }
+
+  factory BookChapter.fromBackendJson(Map<String, dynamic> json, int index) {
+    final rawText = json['text'] as String? ?? '';
+    final plainText = _convertHtmlToPlainText(rawText);
+    final pagesList = _paginateText(plainText);
+
+    // First 2 chapters are unlocked, subsequent are locked
+    final isChLocked = index >= 2;
+
+    return BookChapter(
+      id: json['_id'] as String?,
+      title: json['title'] as String? ?? 'Chapter ${index + 1}',
+      createdAt: json['createdAt'] as String?,
+      updatedAt: json['updatedAt'] as String?,
+      isLocked: isChLocked,
+      unlockAdsRequired: isChLocked ? (index == 2 ? 2 : 3) : 0,
+      watchedAds: 0,
+      showSparkle: index == 2,
+      pages: pagesList,
+    );
+  }
+
+  static String _convertHtmlToPlainText(String html) {
+    var text = html;
+    text = text.replaceAll('</h1>', '\n\n');
+    text = text.replaceAll('</h2>', '\n\n');
+    text = text.replaceAll('</h3>', '\n\n');
+    text = text.replaceAll('</p>', '\n\n');
+    text = text.replaceAll('<br>', '\n');
+    text = text.replaceAll('<br/>', '\n');
+    text = text.replaceAll('<br />', '\n');
+
+    text = text.replaceAll(RegExp(r'<[^>]*>'), '');
+
+    text = text.replaceAll('&nbsp;', ' ');
+    text = text.replaceAll('&amp;', '&');
+    text = text.replaceAll('&lt;', '<');
+    text = text.replaceAll('&gt;', '>');
+    text = text.replaceAll('&quot;', '"');
+    text = text.replaceAll('&#39;', "'");
+
+    return text.trim();
+  }
+
+  static List<String> _paginateText(String plainText) {
+    final paragraphs = plainText
+        .split('\n\n')
+        .where((p) => p.trim().isNotEmpty)
+        .toList();
+    if (paragraphs.isEmpty) return [];
+
+    final pages = <String>[];
+    var currentPageParagraphs = <String>[];
+    var currentLinesCount = 0;
+    const maxLinesPerPage = 30;
+    const charsPerLine = 40;
+
+    for (final p in paragraphs) {
+      var pLines = 0;
+      final subLines = p.split('\n');
+      for (final line in subLines) {
+        pLines += (line.length / charsPerLine).ceil();
+      }
+
+      final spacingLines = currentPageParagraphs.isEmpty ? 0 : 1;
+      final addedLines = pLines + spacingLines;
+
+      if (currentLinesCount + addedLines > maxLinesPerPage &&
+          currentPageParagraphs.isNotEmpty) {
+        pages.add(currentPageParagraphs.join('\n\n'));
+        currentPageParagraphs = [p];
+        currentLinesCount = pLines;
+      } else {
+        currentPageParagraphs.add(p);
+        currentLinesCount += addedLines;
+      }
+    }
+
+    if (currentPageParagraphs.isNotEmpty) {
+      pages.add(currentPageParagraphs.join('\n\n'));
+    }
+
+    return pages;
+  }
 }

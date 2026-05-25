@@ -23,6 +23,65 @@ class ReadScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final readState = ref.watch(readProvider);
+
+    // Automatically load the book if it's not loaded yet or if we navigate to a different book
+    if (readState.slectedBook?.id != bookId && !readState.isLoading && readState.errorMessage == null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ref.read(readProvider.notifier).selectBook(bookId);
+      });
+    }
+
+    if (readState.isLoading) {
+      return Scaffold(
+        backgroundColor: context.color.bgColor,
+        appBar: CommonAppBar(
+          title: "Loading...",
+          appbarConfig: AppbarConfig(
+            decoration: () => const BoxDecoration(color: Colors.white),
+          ),
+        ),
+        body: const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
+    if (readState.errorMessage != null) {
+      return Scaffold(
+        backgroundColor: context.color.bgColor,
+        appBar: CommonAppBar(
+          title: "Error",
+          appbarConfig: AppbarConfig(
+            decoration: () => const BoxDecoration(color: Colors.white),
+          ),
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: CommonText(
+                  text: 'Error: ${readState.errorMessage}',
+                  fontSize: AppFontSizes.medium,
+                  textColor: Colors.red,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              16.height,
+              ElevatedButton(
+                onPressed: () => ref.read(readProvider.notifier).selectBook(bookId),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF6B21A8),
+                ),
+                child: const Text('Retry', style: TextStyle(color: Colors.white)),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     final backgroundColors = [
       Colors.white,
       const Color(0xFF131313),

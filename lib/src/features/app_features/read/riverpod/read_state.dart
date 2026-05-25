@@ -11,6 +11,8 @@ class ReadState extends Equatable {
   final int selectedMode;
   final ReadingMode readingMode;
   final bool isActionPanelVisible;
+  final bool isLoading;
+  final String? errorMessage;
 
   const ReadState({
     this.slectedBook,
@@ -20,6 +22,8 @@ class ReadState extends Equatable {
     this.selectedMode = 0,
     this.readingMode = ReadingMode.slide,
     this.isActionPanelVisible = false,
+    this.isLoading = false,
+    this.errorMessage,
   });
 
   ReadState copyWith({
@@ -30,6 +34,8 @@ class ReadState extends Equatable {
     int? selectedMode,
     ReadingMode? readingMode,
     bool? isActionPanelVisible,
+    bool? isLoading,
+    String? errorMessage,
   }) {
     return ReadState(
       slectedBook: slectedBook ?? this.slectedBook,
@@ -39,6 +45,8 @@ class ReadState extends Equatable {
       selectedMode: selectedMode ?? this.selectedMode,
       readingMode: readingMode ?? this.readingMode,
       isActionPanelVisible: isActionPanelVisible ?? this.isActionPanelVisible,
+      isLoading: isLoading ?? this.isLoading,
+      errorMessage: errorMessage, // Notice we don't do ?? here because we want to be able to set it to null
     );
   }
 
@@ -51,5 +59,7 @@ class ReadState extends Equatable {
     selectedMode,
     readingMode,
     isActionPanelVisible,
+    isLoading,
+    errorMessage,
   ];
 }

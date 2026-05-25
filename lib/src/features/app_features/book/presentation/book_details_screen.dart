@@ -8,7 +8,9 @@ import 'package:unkutdrama_kpnovel/config/corekit/back_button.dart';
 import 'package:unkutdrama_kpnovel/config/route/app_router.dart';
 import 'package:unkutdrama_kpnovel/config/theme/app_theme_data.dart';
 import 'package:unkutdrama_kpnovel/src/common/share_icon_button.dart';
+import 'package:unkutdrama_kpnovel/src/constants/api_endpoints.dart';
 import 'package:unkutdrama_kpnovel/src/constants/app_font_sizes.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/book/application/book_provider.dart';
 import 'package:unkutdrama_kpnovel/src/features/app_features/book/presentation/widgets/success_vote_dailog_widget.dart';
 import 'package:unkutdrama_kpnovel/src/features/app_features/read/presentation/widgets/book_mark_modal_widget.dart';
 import 'package:unkutdrama_kpnovel/src/features/app_features/read/presentation/widgets/comment_widget.dart';
@@ -19,16 +21,10 @@ class BookDetailsScreen extends ConsumerWidget {
   const BookDetailsScreen({super.key, required this.bookId});
   final String bookId;
 
-  static const List<String> _storyParagraphs = [
-    'The night was darker than usual. Violet stepped out of her apartment, unaware that her life was about to change forever.',
-    'The city lights flickered in the distance, casting long shadows across the empty streets. She pulled her coat tighter around her shoulders, feeling a chill that had nothing to do with the weather.',
-    '"You\'re late," a voice said from the shadows.',
-    'Violet froze. She knew that voice. It had haunted her dreams for years.',
-    '"I didn\'t think you\'d come," she replied, her voice steadier than she felt.',
-  ];
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final bookDetailsAsync = ref.watch(bookDetailsProvider(bookId));
+
     return Scaffold(
       appBar: CommonAppBar(
         title: "Book Details",
@@ -49,151 +45,214 @@ class BookDetailsScreen extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Row(
-                        spacing: 5,
+                child: bookDetailsAsync.when(
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
+                  error: (error, stack) => Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CommonText(
+                          text: 'Error loading book details: $error',
+                          fontSize: AppFontSizes.medium,
+                          textColor: Colors.red,
+                          textAlign: TextAlign.center,
+                        ),
+                        16.height,
+                        ElevatedButton(
+                          onPressed: () =>
+                              ref.invalidate(bookDetailsProvider(bookId)),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF6B21A8),
+                          ),
+                          child: const Text(
+                            'Retry',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  data: (bookDetails) {
+                    return SingleChildScrollView(
+                      child: Column(
                         children: [
-                          const Expanded(
-                            child: _StatCard(
-                              icon: Icons.menu_book_outlined,
-                              iconColor: Color(0xFF6B21A8),
-                              title: '87',
-                              subtitle: 'Chapters',
-                            ),
-                          ),
-
-                          const Expanded(
-                            child: _StatCard(
-                              icon: Icons.access_time_outlined,
-                              iconColor: Color(0xFF6B21A8),
-                              title: 'Completed',
-                              subtitle: 'Status',
-                            ),
-                          ),
-
-                          const Expanded(
-                            child: _StatCard(
-                              icon: Icons.electric_bolt_outlined,
-                              iconColor: Color(0xFFFFC107),
-                              title: '7',
-                              subtitle: 'Power Stones',
-                            ),
-                          ),
-
-                          Expanded(
-                            child: _VoteCard(
-                              onTap: () {
-                                showDialog<void>(
-                                  context: context,
-                                  builder: (_) => const Dialog(
-                                    backgroundColor: Colors.transparent,
-                                    insetPadding: EdgeInsets.symmetric(
-                                      horizontal: 20,
-                                    ),
-                                    child: SuccessVoteDialogWidget(
-                                      earnedAmount: 2,
-                                      totalAmount: 5,
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                      10.height,
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            width: 94.w,
-                            height: 140.h,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(14),
-                              border: Border.all(
-                                color: const Color(0xFF1F2937),
-                                width: 1.1,
+                          Row(
+                            spacing: 5,
+                            children: [
+                              Expanded(
+                                child: _StatCard(
+                                  icon: Icons.menu_book_outlined,
+                                  iconColor: const Color(0xFF6B21A8),
+                                  title: '${bookDetails.chapterCount ?? 0}',
+                                  subtitle: 'Chapters',
+                                ),
                               ),
-                            ),
-                            clipBehavior: Clip.antiAlias,
-                            child: const CommonImage(
-                              src: Constants.sampleImage,
-                              fill: BoxFit.fill,
-                            ),
+
+                              Expanded(
+                                child: _StatCard(
+                                  icon: Icons.access_time_outlined,
+                                  iconColor: const Color(0xFF6B21A8),
+                                  title:
+                                      bookDetails.status != null &&
+                                          bookDetails.status!.isNotEmpty
+                                      ? '${bookDetails.status![0].toUpperCase()}${bookDetails.status!.substring(1)}'
+                                      : 'Unknown',
+                                  subtitle: 'Status',
+                                ),
+                              ),
+
+                              Expanded(
+                                child: _StatCard(
+                                  icon: Icons.electric_bolt_outlined,
+                                  iconColor: const Color(0xFFFFC107),
+                                  title: '${bookDetails.voteCount ?? 0}',
+                                  subtitle: 'Power Stones',
+                                ),
+                              ),
+
+                              Expanded(
+                                child: _VoteCard(
+                                  onTap: () {
+                                    showDialog<void>(
+                                      context: context,
+                                      builder: (_) => const Dialog(
+                                        backgroundColor: Colors.transparent,
+                                        insetPadding: EdgeInsets.symmetric(
+                                          horizontal: 20,
+                                        ),
+                                        child: SuccessVoteDialogWidget(
+                                          earnedAmount: 2,
+                                          totalAmount: 5,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
                           ),
-                          10.width,
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                CommonText(
-                                  text: AppString.shadow_of_the_violet_moon,
-                                  fontSize: AppFontSizes.extraLarge,
-                                  fontWeight: FontWeight.w500,
-                                  textColor: context.color.headingBoldText,
-                                ),
-                                6.height,
-                                const CommonText(
-                                  text: '• Elena Nightshade',
-                                  fontSize: AppFontSizes.small,
-                                  fontWeight: FontWeight.w400,
-                                  textColor: Color(0xFF333333),
-                                ),
-                                10.height,
-                                const SingleChildScrollView(
-                                  scrollDirection: Axis.horizontal,
-                                  child: Row(
-                                    children: [
-                                      _InfoChip(
-                                        icon: Icons.star,
-                                        iconColor: Color(0xFFFFC107),
-                                        text: '4.8',
-                                      ),
-                                      SizedBox(width: 8),
-                                      _InfoChip(
-                                        icon: Icons.visibility,
-                                        text: '1.2M',
-                                      ),
-                                      SizedBox(width: 8),
-                                      _InfoChip(text: 'Age: 18+'),
-                                    ],
+                          10.height,
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                width: 94.w,
+                                height: 140.h,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(14),
+                                  border: Border.all(
+                                    color: const Color(0xFF1F2937),
+                                    width: 1.1,
                                   ),
                                 ),
-                                10.height,
-                                const Row(
+                                clipBehavior: Clip.antiAlias,
+                                child: CommonImage(
+                                  src: bookDetails.coverImage != null
+                                      ? '${ApiEndpoints.imageBaseUrl}/${bookDetails.coverImage!.replaceAll(r'\', '/')}'
+                                      : Constants.sampleImage,
+                                  fill: BoxFit.fill,
+                                ),
+                              ),
+                              10.width,
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Expanded(
-                                      child: _GenreChip(label: 'Fantasy'),
+                                    CommonText(
+                                      text: bookDetails.title ?? '',
+                                      fontSize: AppFontSizes.extraLarge,
+                                      fontWeight: FontWeight.w500,
+                                      textColor: context.color.headingBoldText,
                                     ),
-                                    SizedBox(width: 8),
-                                    Expanded(
-                                      child: _GenreChip(label: 'Romance'),
+                                    6.height,
+                                    CommonText(
+                                      text:
+                                          '• ${bookDetails.type ?? 'Fantasy'}',
+                                      fontSize: AppFontSizes.small,
+                                      fontWeight: FontWeight.w400,
+                                      textColor: const Color(0xFF333333),
                                     ),
-                                    SizedBox(width: 8),
-                                    Expanded(child: _GenreChip(label: 'Magic')),
+                                    10.height,
+                                    SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      child: Row(
+                                        children: [
+                                          _InfoChip(
+                                            icon: Icons.star,
+                                            iconColor: const Color(0xFFFFC107),
+                                            text:
+                                                bookDetails.ratingCount != null
+                                                ? bookDetails.ratingCount!
+                                                      .toStringAsFixed(1)
+                                                : '0.0',
+                                          ),
+                                          const SizedBox(width: 8),
+                                          _InfoChip(
+                                            icon: Icons.visibility,
+                                            text: bookDetails.readCount != null
+                                                ? (bookDetails.readCount! >=
+                                                          1000000
+                                                      ? '${(bookDetails.readCount! / 1000000).toStringAsFixed(1)}M'
+                                                      : bookDetails
+                                                                .readCount! >=
+                                                            1000
+                                                      ? '${(bookDetails.readCount! / 1000).toStringAsFixed(1)}k'
+                                                      : '${bookDetails.readCount}')
+                                                : '0',
+                                          ),
+                                          const SizedBox(width: 8),
+                                          _InfoChip(
+                                            text:
+                                                'Age: ${bookDetails.age ?? 'All'}',
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    10.height,
+                                    SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      child: Row(
+                                        children: [
+                                          if (bookDetails.genre != null) ...[
+                                            _GenreChip(
+                                              label: bookDetails.genre!,
+                                            ),
+                                            const SizedBox(width: 8),
+                                          ],
+                                          if (bookDetails.tags != null)
+                                            ...bookDetails.tags!.map(
+                                              (tag) => Padding(
+                                                padding: const EdgeInsets.only(
+                                                  right: 8.0,
+                                                ),
+                                                child: _GenreChip(label: tag),
+                                              ),
+                                            ),
+                                        ],
+                                      ),
+                                    ),
                                   ],
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
+                          ),
+                          10.height,
+
+                          _ExpandableDescription(
+                            text: bookDetails.description ?? '',
                           ),
                         ],
                       ),
-                      10.height,
-
-                      _ExpandableDescription(
-                        text: AppString.book_description_sample,
-                      ),
-                    ],
-                  ),
+                    );
+                  },
                 ),
               ),
 
               GestureDetector(
                 onTap: () {
-                  ref.read(readProvider.notifier).selectBook();
-                  context.router.push(  ReadRoute(bookId: bookId));
+                  ref.read(readProvider.notifier).selectBook(bookId);
+                  context.router.push(ReadRoute(bookId: bookId));
                 },
                 child: Container(
                   height: 48.h,
@@ -235,7 +294,8 @@ class BookDetailsScreen extends ConsumerWidget {
                     child: _ActionCard(
                       icon: Icons.star_border_rounded,
                       label: 'Review',
-                      onTap: () => context.router.push( ReviewRoute(bookId: bookId)),
+                      onTap: () =>
+                          context.router.push(ReviewRoute(bookId: bookId)),
                     ),
                   ),
                   8.width,
@@ -256,7 +316,7 @@ class BookDetailsScreen extends ConsumerWidget {
                               maxChildSize: 0.82,
                               expand: false,
                               builder: (_, scrollController) {
-                                return   BookmarkModalWidget(bookId: bookId);
+                                return BookmarkModalWidget(bookId: bookId);
                               },
                             );
                           },
@@ -491,6 +551,7 @@ class _GenreChip extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 34.h,
+      padding: EdgeInsets.symmetric(horizontal: 12.w),
       alignment: Alignment.center,
       decoration: BoxDecoration(
         color: const Color(0xFFF3E8FF),
