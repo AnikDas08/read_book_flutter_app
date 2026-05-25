@@ -24,4 +24,6 @@ class ApiEndpoints {
   static const String voteBook = '$baseUrl/book-vote/create';
 
   static const String refreshToken = '$baseUrl/auth/refresh-token';
+
+  static const String getLibrary = '$baseUrl/favorite/saved';
 }

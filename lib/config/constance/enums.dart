@@ -28,4 +28,17 @@ enum LibrayType {
       : AppString.completed;
 
   const LibrayType(this.title);
+
+  String get apiStatus {
+    switch (this) {
+      case LibrayType.Reading:
+        return 'reading';
+      case LibrayType.Completed:
+        return 'completed';
+      case LibrayType.WantToRead:
+        return 'want_to_read';
+      case LibrayType.Paused:
+        return 'paused';
+    }
+  }
 }
