@@ -23,8 +23,8 @@ class ProfileRepository {
       showMessage: true,
       input: RequestInput(
         endpoint: ApiEndpoints.updateProfile,
-        method: .PUT,
-        jsonBody: data,
+        method: .PATCH,
+        formFields: data,
       ),
       responseBuilder: (data) => data,
     );
