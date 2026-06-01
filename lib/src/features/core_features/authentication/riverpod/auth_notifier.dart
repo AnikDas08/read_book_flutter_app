@@ -31,7 +31,7 @@ class AuthNotifier extends _$AuthNotifier {
       ]);
     }
     else{
-      state = state.copyWith(isLoading: false, isAuthenticated: true);
+      state = state.copyWith(isLoading: false, isAuthenticated: false, error: response.message);
     }
   }
 
@@ -72,16 +72,16 @@ class AuthNotifier extends _$AuthNotifier {
   }
 
   Future<void> sendOtp(String email) async {
-    state = state.copyWith(isLoading: true, error: null);
+    state = state.copyWith(otpLoading: true, error: null);
 
     final response = await _repository.sendOtp(email);
     if (response.isSuccess) {
-      state = state.copyWith(isLoading: false);
+      state = state.copyWith(otpLoading: false);
       final token = response.data?['forgetToken']?.toString();
       if (token != null) {
         appRouter.push(OtpRoute(createToken: token,argument: "forget_password"));
       } else {
-        state = state.copyWith(error: "Token not found in response");
+        state = state.copyWith(error: "Token not found in response",otpLoading: false);
       }
     }
   }

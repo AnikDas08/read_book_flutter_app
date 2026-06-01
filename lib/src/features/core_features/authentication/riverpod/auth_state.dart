@@ -14,12 +14,13 @@ class AuthState {
   AuthState copyWith({
     bool? isAuthenticated,
     bool? isLoading,
+    bool? otpLoading,
     String? error,
   }) {
     return AuthState(
       isAuthenticated: isAuthenticated ?? this.isAuthenticated,
       isLoading: isLoading ?? this.isLoading,
-      otpLoading: isLoading ?? this.isLoading,
+      otpLoading: isLoading ?? this.otpLoading,
       error: error ?? this.error,
     );
   }
