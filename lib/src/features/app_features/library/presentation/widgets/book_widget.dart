@@ -18,6 +18,7 @@ class BookWidget extends StatelessWidget {
     this.isTrending = false,
     this.isNew = false,
     this.book,
+    this.progress = 0.0,
   });
 
   final bool isCompleted;
@@ -25,23 +26,26 @@ class BookWidget extends StatelessWidget {
   final bool isTrending;
   final bool isNew;
   final HomeBookModel? book;
+  final double progress;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        context.router.navigate(const BookDetailsRoute());
+        context.router.navigate(BookDetailsRoute(bookId: book?.id ?? ''));
       },
       child: Container(
         margin: .zero,
-        width: (CoreScreenUtils.deviceSize.width > 0 ? (CoreScreenUtils.deviceSize.width - 32) / 3.2 : 120),
+        width: (CoreScreenUtils.deviceSize.width > 0
+            ? (CoreScreenUtils.deviceSize.width - 32) / 3.2
+            : 120),
         height: 150.h,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(10.r),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: Colors.black.withValues(alpha: 0.1),
               blurRadius: 10,
               spreadRadius: 1,
               offset: const Offset(0, 4),
@@ -63,10 +67,11 @@ class BookWidget extends StatelessWidget {
                         top: Radius.circular(10.r),
                       ),
                       child: CommonImage(
-                      src: book?.coverImage != null
-                          ? '${ApiEndpoints.imageBaseUrl}/${book!.coverImage.replaceAll('\\', '/')}'
-                          : Constants.sampleImage,
-                    ),
+                        src: book?.coverImage != null &&
+                                book!.coverImage.isNotEmpty
+                            ? '${ApiEndpoints.imageBaseUrl}/${book!.coverImage.replaceAll('\\', '/')}'
+                            : Constants.sampleImage,
+                      ),
                     ),
                   ),
                   if (showProgress) ...[
@@ -105,7 +110,7 @@ class BookWidget extends StatelessWidget {
                             text: TextSpan(
                               children: [
                                 TextSpan(
-                                  text: isCompleted ? '10' : '5',
+                                  text: '${(progress * 100).toInt()}%',
                                   style: TextStyle(
                                     fontSize: AppFontSizes.small,
                                     fontWeight: FontWeight.bold,
@@ -115,7 +120,7 @@ class BookWidget extends StatelessWidget {
                                   ),
                                 ),
                                 const TextSpan(
-                                  text: '/10',
+                                  text: ' completed',
                                   style: TextStyle(
                                     fontSize: AppFontSizes.small,
                                     fontWeight: FontWeight.bold,
@@ -139,12 +144,12 @@ class BookWidget extends StatelessWidget {
                             height: 4,
                             width: double.infinity,
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.3),
+                              color: Colors.white.withValues(alpha: 0.3),
                               borderRadius: BorderRadius.circular(10.r),
                             ),
                             child: FractionallySizedBox(
                               alignment: Alignment.centerLeft,
-                              widthFactor: isCompleted ? 1.0 : 0.5,
+                              widthFactor: progress.clamp(0.0, 1.0),
                               child: Container(
                                 decoration: BoxDecoration(
                                   color: isCompleted

@@ -10,14 +10,32 @@ class ApiEndpoints {
   static const String verifyOtp = '$baseUrl/users/verify-otp';
   static const String createPassword = '$baseUrl/auth/forgot-password-reset';
   static const String checkAuth = '$baseUrl/auth/check';
-  
+
   // Profile endpoints
-  static const String getProfile = '$baseUrl/profile';
-  static const String updateProfile = '$baseUrl/profile';
+  static const String getProfile = '$baseUrl/users/my-profile';
+  static const String updateProfile = '$baseUrl/users/update-my-profile';
   static const String changePassword = '$baseUrl/profile/change-password';
 
   // Book endpoints
   static const String getBooks = '$baseUrl/book/user';
+  static String bookDetails = '$baseUrl/book/';
+  static String chapters = '$baseUrl/chapter/book/';
+  static const String chapterReadCount = '$baseUrl/chapter/read-count';
+  static const String voteBook = '$baseUrl/book-vote/create';
 
- static const String refreshToken = '$baseUrl/auth/refresh-token';
+  static const String refreshToken = '$baseUrl/auth/refresh-token';
+
+  static const String getLibrary = '$baseUrl/favorite/saved';
+  static const String addToLibrary = '$baseUrl/favorite/saved';
+
+  //
+
+  // Book endpoints
+  static const String getReviews = '$baseUrl/review-rating/book';
+  static const String createReview = '$baseUrl/review-rating/create';
+
+  // Comment endpoints
+  static const String likeComment = '$baseUrl/comments/like-comment';
+  static const String createCommentOrReply = '$baseUrl/comments/create-comment-or-reply';
+
 }

@@ -14,39 +14,57 @@ class EditProfileScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final profileState = ref.watch(profileNotifierProvider);
+    final profile = profileState.profile;
 
     return Scaffold(
       appBar: CommonAppBar(title: AppString.edit_profile_title),
       body: FormBuilder<Map<String, String>>(
-        entity: const {'name': '', 'phone': '', 'email': ''},
+        entity: {
+          'name': profile?.fullName ?? '',
+          'phone': profile?.phone ?? '',
+          'email': profile?.email ?? '',
+          'photoPath': '',
+        },
         builder: (context, formKey, entity) {
           return SingleChildScrollView(
             padding: EdgeInsets.all(AppUiConstants.main_screen_padding),
             child: Column(
               children: [
-                  Container(
-
-                      decoration: BoxDecoration(
-                        border: Border.all(color: context.color.subtext.withValues(alpha: .5), width: 2),
-                        shape: .circle
-                      ),
-                      child: const CommonImagePicker(
-                    width: 120, height: 120, borderRadius: 60)).center,
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: context.color.subtext.withValues(alpha: .5),
+                      width: 2,
+                    ),
+                    shape: BoxShape.circle,
+                  ),
+                  child: CommonImagePicker(
+                    width: 120,
+                    height: 120,
+                    borderRadius: 60,
+                    src: profile?.profile,
+                    onChange: (file) => entity['photoPath'] = file?.path ?? '',
+                  ),
+                ).center,
                 20.height,
                 CommonTextField(
+                  initialText: entity['name'],
                   hintText: 'Full Name',
                   validationType: ValidationType.validateRequired,
                   onChanged: (val) => entity['name'] = val,
                 ),
                 AppUiConstants.field_spacing.height,
                 CommonTextField(
+                  initialText: entity['phone'],
                   hintText: 'Phone Number',
                   validationType: ValidationType.validatePhone,
                   onChanged: (val) => entity['phone'] = val,
                 ),
                 AppUiConstants.field_spacing.height,
                 CommonTextField(
+                  initialText: entity['email'],
                   hintText: 'Email',
+                  isReadOnly: true, // Email usually shouldn't be edited here if it's the identifier
                   validationType: ValidationType.validateEmail,
                   onChanged: (val) => entity['email'] = val,
                 ),
@@ -56,13 +74,13 @@ class EditProfileScreen extends ConsumerWidget {
                   isLoading: profileState.isLoading,
                   onTap: () {
                     if (formKey.currentState?.validate() ?? false) {
-                      ref
-                          .read(profileNotifierProvider.notifier)
-                          .updateProfile(
-                            name: entity['name'],
-                            phone: entity['phone'],
-                            email: entity['email'],
-                          );
+                      ref.read(profileNotifierProvider.notifier).updateProfile(
+                        name: entity['name'],
+                        phone: entity['phone'],
+                        photoPath: entity['photoPath']!.isNotEmpty
+                            ? entity['photoPath']
+                            : null,
+                      );
                     }
                   },
                 ),

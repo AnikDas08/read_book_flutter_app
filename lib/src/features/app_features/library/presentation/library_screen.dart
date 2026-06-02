@@ -24,22 +24,65 @@ class LibraryScreen extends StatelessWidget {
           final selectedLibraryNotifier = ref.read(
             selectedLibraryProvider.notifier,
           );
+
+          final libraryState = ref.watch(libraryProvider(selectedLibrary));
+
+          // Pre-fetch counts for tabs
+          final readingCount = ref
+              .watch(libraryProvider(LibrayType.Reading))
+              .libraryBooks
+              .length;
+          final completedCount = ref
+              .watch(libraryProvider(LibrayType.Completed))
+              .libraryBooks
+              .length;
+          final wantToReadCount = ref
+              .watch(libraryProvider(LibrayType.WantToRead))
+              .libraryBooks
+              .length;
+
           return Column(
             children: [
-              _header(context, selectedLibraryNotifier, selectedLibrary),
+              _header(
+                context,
+                selectedLibraryNotifier,
+                selectedLibrary,
+                readingCount: readingCount,
+                completedCount: completedCount,
+                wantToReadCount: wantToReadCount,
+              ),
               Expanded(
                 child: SmartTabListLoader(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
-                  tabs: const [
-                    SmartTabConfig(tab: LibrayType.Reading, itemCount: 20),
-                    SmartTabConfig(tab: LibrayType.Completed, itemCount: 0),
-                    SmartTabConfig(tab: LibrayType.WantToRead, itemCount: 40),
-                    SmartTabConfig(tab: LibrayType.Paused, itemCount: 40),
+                  tabs: [
+                    SmartTabConfig(
+                      tab: LibrayType.Reading,
+                      itemCount: libraryState.libraryBooks.length,
+                      isLoading: libraryState.isLoading,
+                    ),
+                    SmartTabConfig(
+                      tab: LibrayType.Completed,
+                      itemCount: libraryState.libraryBooks.length,
+                      isLoading: libraryState.isLoading,
+                    ),
+                    SmartTabConfig(
+                      tab: LibrayType.WantToRead,
+                      itemCount: libraryState.libraryBooks.length,
+                      isLoading: libraryState.isLoading,
+                    ),
+                    // SmartTabConfig(tab: LibrayType.Paused, itemCount: 40),
                   ],
                   itemBuilder: (ctx, index) {
+                    final libraryBook = libraryState.libraryBooks[index];
+                    final progress = libraryBook.totalCharacterCount > 0
+                        ? (libraryBook.readCharacterCount /
+                              libraryBook.totalCharacterCount)
+                        : 0.0;
                     return BookWidget(
+                      book: libraryBook.toHomeBookModel(),
                       isCompleted: selectedLibrary == LibrayType.Completed,
                       showProgress: true,
+                      progress: progress,
                     );
                   },
                   value: selectedLibrary,
@@ -67,8 +110,11 @@ class LibraryScreen extends StatelessWidget {
   Widget _header(
     BuildContext context,
     SelectedLibrary selectedLibraryNotifire,
-    LibrayType selectedLibray,
-  ) {
+    LibrayType selectedLibray, {
+    required int readingCount,
+    required int completedCount,
+    required int wantToReadCount,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
@@ -92,7 +138,14 @@ class LibraryScreen extends StatelessWidget {
             ],
           ),
           16.height,
-          _tabBuilder(selectedLibraryNotifire, selectedLibray, context),
+          _tabBuilder(
+            selectedLibraryNotifire,
+            selectedLibray,
+            context,
+            readingCount: readingCount,
+            completedCount: completedCount,
+            wantToReadCount: wantToReadCount,
+          ),
           12.height,
         ],
       ),
@@ -102,27 +155,37 @@ class LibraryScreen extends StatelessWidget {
   Widget _tabBuilder(
     SelectedLibrary selectedLibraryNotifire,
     LibrayType selectedLibray,
-    BuildContext context,
-  ) {
-    final tabs = LibrayType.values.map((e) {
+    BuildContext context, {
+    required int readingCount,
+    required int completedCount,
+    required int wantToReadCount,
+  }) {
+    final tabs = LibrayType.values.where((e) => e != LibrayType.Paused).map((
+      e,
+    ) {
       IconData icon;
+      int count;
       switch (e) {
         case LibrayType.Reading:
           icon = Icons.menu_book_outlined;
+          count = readingCount;
           break;
         case LibrayType.Completed:
           icon = Icons.check_circle_outline;
+          count = completedCount;
           break;
         case LibrayType.WantToRead:
           icon = Icons.star_outline;
+          count = wantToReadCount;
           break;
         case LibrayType.Paused:
           icon = Icons.access_time_outlined;
+          count = 0;
           break;
       }
       return _tabItem(
         type: e,
-        count: e == LibrayType.Reading ? 4 : 0,
+        count: count,
         context: context,
         prefixIcon: icon,
         onTap: () {
@@ -175,7 +238,7 @@ class LibraryScreen extends StatelessWidget {
           boxShadow: isSelected
               ? [
                   BoxShadow(
-                    color: const Color(0xFF5B34FF).withOpacity(0.2),
+                    color: const Color(0xFF5B34FF).withValues(alpha: 0.2),
                     blurRadius: 8,
                     offset: const Offset(0, 4),
                   ),
@@ -203,7 +266,7 @@ class LibraryScreen extends StatelessWidget {
               constraints: const BoxConstraints(minWidth: 24, minHeight: 24),
               decoration: BoxDecoration(
                 color: isSelected
-                    ? Colors.white.withOpacity(0.3)
+                    ? Colors.white.withValues(alpha: 0.3)
                     : const Color(0xFFF3F4F6),
                 shape: BoxShape.circle,
               ),

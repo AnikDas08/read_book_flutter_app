@@ -1,5 +1,5 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:core_kit/core_kit.dart';
+import 'package:core_kit/core_kit_internal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unkutdrama_kpnovel/config/constance/constants.dart';
@@ -25,15 +25,13 @@ class ShowMoreBooksScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final AsyncValue<List<HomeBookModel>> booksAsync;
+    final provider = isTrending
+        ? trendingBooksProvider
+        : isListType
+        ? newReleasesProvider
+        : recommendedBooksProvider;
 
-    if (isTrending) {
-      booksAsync = ref.watch(trendingBooksProvider);
-    } else if (isListType) {
-      booksAsync = ref.watch(newReleasesProvider);
-    } else {
-      booksAsync = ref.watch(recommendedBooksProvider);
-    }
+    final booksAsync = ref.watch(provider);
 
     return Scaffold(
       appBar: CommonAppBar(
@@ -43,34 +41,34 @@ class ShowMoreBooksScreen extends ConsumerWidget {
       ),
       body: booksAsync.when(
         data: (books) => isListType
-            ? ListView.builder(
-                padding: const EdgeInsets.only(
-                  left: Constants.padding,
-                  right: Constants.padding,
-                  top: Constants.padding,
-                ),
-                itemCount: books.length,
-                itemBuilder: (context, index) {
-                  return BookFeedCardWidget(book: books[index]);
-                },
-              )
+            ? SmartListLoader(
+          padding: const EdgeInsets.only(
+            left: Constants.padding,
+            right: Constants.padding,
+            top: Constants.padding,
+          ),
+          itemCount: books.length,
+          itemBuilder: (context, index) {
+            return BookFeedCardWidget(book: books[index]);
+          },
+        )
             : GridView.builder(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                itemCount: books.length,
-                itemBuilder: (context, index) {
-                  return BookWidget(
-                    book: books[index],
-                    isNew: isNew,
-                    isTrending: isTrending,
-                  );
-                },
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                  crossAxisCount: 3,
-                  childAspectRatio: .70,
-                ),
-              ),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          itemCount: books.length,
+          itemBuilder: (context, index) {
+            return BookWidget(
+              book: books[index],
+              isNew: isNew,
+              isTrending: isTrending,
+            );
+          },
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10,
+            crossAxisCount: 3,
+            childAspectRatio: .60,
+          ),
+        ),
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (err, stack) => Center(child: Text(err.toString())),
       ),

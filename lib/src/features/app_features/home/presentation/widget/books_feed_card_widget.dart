@@ -7,6 +7,9 @@ import 'package:unkutdrama_kpnovel/config/theme/app_theme_data.dart';
 import 'package:unkutdrama_kpnovel/src/constants/api_endpoints.dart';
 import 'package:unkutdrama_kpnovel/src/features/app_features/home/data/model/home_book_model.dart';
 
+import 'package:unkutdrama_kpnovel/src/constants/api_endpoints.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/home/data/model/home_book_model.dart';
+
 class BookFeedCardWidget extends StatelessWidget {
   final HomeBookModel? book;
   const BookFeedCardWidget({super.key, this.book});
@@ -15,7 +18,7 @@ class BookFeedCardWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        context.router.push(const BookDetailsRoute());
+        context.router.push(  BookDetailsRoute(bookId: book?.id ?? ''));
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 16),

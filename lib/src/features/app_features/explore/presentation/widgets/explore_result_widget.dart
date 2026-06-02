@@ -226,7 +226,7 @@ class _ExploreBookCard extends StatelessWidget {
         : const Color(0xFFFF8700);
 
     return GestureDetector(
-      onTap: () => context.router.navigate(const BookDetailsRoute()),
+      onTap: () => context.router.navigate(  BookDetailsRoute(bookId:   '')),
       child: Container(
         height: 100,
         margin: .only(bottom: 6),

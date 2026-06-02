@@ -43,18 +43,22 @@ class ChangePasswordScreen extends ConsumerWidget {
                   _PasswordField(
                     label: 'Current Password',
                     hint: 'Please enter your current  password.',
+                    validationType: ValidationType.validateRequired,
                     onChanged: (val) => entity['old'] = val,
                   ),
                   22.height,
                   _PasswordField(
                     label: 'New Password',
                     hint: 'Please enter your new  password.',
+                    validationType: ValidationType.validatePassword,
                     onChanged: (val) => entity['new'] = val,
                   ),
                   22.height,
                   _PasswordField(
                     label: 'Re-enter New Password',
                     hint: 'Re-enter your new password.',
+                    validationType: ValidationType.validateConfirmPassword,
+                    originalPassword: () => entity['new'] ?? '',
                     onChanged: (val) => entity['confirm'] = val,
                   ),
                   60.height,
@@ -122,11 +126,15 @@ class _PasswordField extends StatelessWidget {
     required this.label,
     required this.hint,
     required this.onChanged,
+    required this.validationType,
+    this.originalPassword,
   });
 
   final String label;
   final String hint;
   final ValueChanged<String> onChanged;
+  final ValidationType validationType;
+  final String Function()? originalPassword;
 
   @override
   Widget build(BuildContext context) {
@@ -144,15 +152,11 @@ class _PasswordField extends StatelessWidget {
           height: 58,
           child: CommonTextField(
             hintText: hint,
-            validationType: .notRequired,
+            validationType: validationType,
+            originalPassword: originalPassword,
             borderRadius: 10,
             borderWidth: 1.2,
             borderColor: const Color(0xFFD6D9DE),
-            suffixIcon: const Icon(
-              Icons.visibility_off_outlined,
-              size: 18,
-              color: Color(0xFF9CA3AF),
-            ),
             hintStyle: const TextStyle(
               fontSize: AppFontSizes.small,
               fontWeight: FontWeight.w400,

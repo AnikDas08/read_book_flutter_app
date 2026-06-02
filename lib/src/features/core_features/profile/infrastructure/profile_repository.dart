@@ -12,21 +12,19 @@ class ProfileRepository {
   Future<ResponseState<dynamic>> updateProfile({
     String? name,
     String? phone,
-    String? email,
     String? photoPath,
   }) async {
     final data = <String, dynamic>{};
-    if (name != null) data['name'] = name;
+    if (name != null) data['fullName'] = name;
     if (phone != null) data['phone'] = phone;
-    if (email != null) data['email'] = email;
-    if (photoPath != null) data['photoPath'] = photoPath;
+    if (photoPath != null) data['profile'] = photoPath;
 
     return DioService.instance.request(
       showMessage: true,
       input: RequestInput(
         endpoint: ApiEndpoints.updateProfile,
-        method: .PUT,
-        jsonBody: data,
+        method: .PATCH,
+        formFields: data,
       ),
       responseBuilder: (data) => data,
     );
@@ -38,9 +36,11 @@ class ProfileRepository {
   ) async {
     return DioService.instance.request(
       showMessage: true,
+
+
       input: RequestInput(
         endpoint: ApiEndpoints.changePassword,
-        method: .PUT,
+        method: .POST,
         jsonBody: {'oldPassword': oldPassword, 'newPassword': newPassword},
       ),
       responseBuilder: (data) => data,

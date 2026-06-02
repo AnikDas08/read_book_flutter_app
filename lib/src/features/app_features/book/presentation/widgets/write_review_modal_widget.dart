@@ -1,18 +1,58 @@
 import 'package:core_kit/core_kit_internal.dart';
+import 'package:core_kit/network/dio_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unkutdrama_kpnovel/config/constance/app_string.dart';
 import 'package:unkutdrama_kpnovel/config/theme/app_theme_data.dart';
 import 'package:unkutdrama_kpnovel/src/constants/app_font_sizes.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/book/application/book_review_provider.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/book/data/repository/book_repository.dart';
 
-class WriteReviewModalWidget extends StatefulWidget {
-  const WriteReviewModalWidget({super.key});
+class WriteReviewModalWidget extends ConsumerStatefulWidget {
+  const WriteReviewModalWidget({super.key, required this.bookId});
+  final String bookId;
 
   @override
-  State<WriteReviewModalWidget> createState() => _WriteReviewModalWidgetState();
+  ConsumerState<WriteReviewModalWidget> createState() => _WriteReviewModalWidgetState();
 }
 
-class _WriteReviewModalWidgetState extends State<WriteReviewModalWidget> {
+class _WriteReviewModalWidgetState extends ConsumerState<WriteReviewModalWidget> {
   int _rating = 0;
+  final TextEditingController _reviewController = TextEditingController();
+  bool _isLoading = false;
+
+  @override
+  void dispose() {
+    _reviewController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _submitReview() async {
+    if (_rating == 0) {
+      DioUtils.showMessage('Please select a rating', isError: true);
+      return;
+    }
+    if (_reviewController.text.isEmpty) {
+      DioUtils.showMessage('Please write a review', isError: true);
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    final repository = ref.read(bookRepositoryProvider);
+    final response = await repository.createReview(
+      bookId: widget.bookId,
+      rating: _rating.toDouble(),
+      review: _reviewController.text,
+    );
+
+    setState(() => _isLoading = false);
+
+    if (response.isSuccess) {
+      ref.invalidate(bookReviewProvider(widget.bookId));
+      if (mounted) Navigator.of(context).pop();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +89,7 @@ class _WriteReviewModalWidgetState extends State<WriteReviewModalWidget> {
                             ),
                             SizedBox(height: 12),
                             CommonText(
-                              text: 'Shadow of the Violet Moon',
+                              text: 'Share your thoughts',
                               fontSize: AppFontSizes.medium,
                               fontWeight: FontWeight.w400,
                               textColor: Color(0xFFE7D6FF),
@@ -128,6 +168,7 @@ class _WriteReviewModalWidgetState extends State<WriteReviewModalWidget> {
                   ),
                   14.height,
                   CommonMultilineTextField(
+                    controller: _reviewController,
                     height: 148.h,
                     hintText: AppString.share_your_thoughts_about_this_book,
                     hintStyle: const TextStyle(
@@ -138,7 +179,7 @@ class _WriteReviewModalWidgetState extends State<WriteReviewModalWidget> {
                   ),
                   24.height,
                   GestureDetector(
-                    onTap: () {},
+                    onTap: _isLoading ? null : _submitReview,
                     child: Container(
                       height: 48.h,
                       decoration: BoxDecoration(
@@ -150,23 +191,29 @@ class _WriteReviewModalWidgetState extends State<WriteReviewModalWidget> {
                         borderRadius: BorderRadius.circular(24),
                       ),
                       alignment: Alignment.center,
-                      child:const Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children:  [
-                          Icon(
-                            Icons.send_outlined,
-                            color: Colors.white,
-                            size: 20,
+                      child: _isLoading 
+                        ? const SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                          )
+                        : const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children:  [
+                              Icon(
+                                Icons.send_outlined,
+                                color: Colors.white,
+                                size: 20,
+                              ),
+                              SizedBox(width: 12),
+                              CommonText(
+                                text: 'Submit Review',
+                                fontSize: AppFontSizes.extraLarge,
+                                fontWeight: FontWeight.w700,
+                                textColor: Colors.white,
+                              ),
+                            ],
                           ),
-                          SizedBox(width: 12),
-                          CommonText(
-                            text: 'Submit Review',
-                            fontSize: AppFontSizes.extraLarge,
-                            fontWeight: FontWeight.w700,
-                            textColor: Colors.white,
-                          ),
-                        ],
-                      ),
                     ),
                   ),
                 ],

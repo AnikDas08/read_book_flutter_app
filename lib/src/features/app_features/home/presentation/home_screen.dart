@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:core_kit/core_kit.dart';
+import 'package:core_kit/text/common_text.dart';
+import 'package:core_kit/utils/core_screen_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unkutdrama_kpnovel/config/constance/app_string.dart';
@@ -8,8 +9,9 @@ import 'package:unkutdrama_kpnovel/config/constance/headline_widget.dart';
 import 'package:unkutdrama_kpnovel/config/route/app_router.dart';
 import 'package:unkutdrama_kpnovel/config/theme/app_theme_data.dart';
 import 'package:unkutdrama_kpnovel/src/features/app_features/book/presentation/widgets/power_stones_button_widget.dart';
-import 'package:unkutdrama_kpnovel/src/features/app_features/home/application/home_book_provider.dart';
 import 'package:unkutdrama_kpnovel/src/features/app_features/home/presentation/widget/books_feed_card_widget.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/home/application/home_book_provider.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/home/data/model/home_book_model.dart';
 import 'package:unkutdrama_kpnovel/src/features/app_features/library/presentation/widgets/book_widget.dart';
 
 @RoutePage()
@@ -18,6 +20,7 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final itemSizeInrow = (CoreScreenUtils.deviceSize.width - 32) / 2.0;
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: Constants.padding),
       child: Column(
@@ -125,10 +128,12 @@ class HomeScreen extends ConsumerWidget {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: books
-                .map((book) => Padding(
-                      padding: const EdgeInsets.only(right: 8),
-                      child: BookWidget(book: book, isNew: true),
-                    ))
+                .map(
+                  (book) => Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: BookWidget(book: book, isNew: true),
+              ),
+            )
                 .toList(),
           ),
         ),
@@ -137,10 +142,8 @@ class HomeScreen extends ConsumerWidget {
         height: 200,
         child: Center(child: CircularProgressIndicator()),
       ),
-      error: (err, stack) => SizedBox(
-        height: 200,
-        child: Center(child: Text(err.toString())),
-      ),
+      error: (err, stack) =>
+          SizedBox(height: 200, child: Center(child: Text(err.toString()))),
     );
   }
 
@@ -154,10 +157,12 @@ class HomeScreen extends ConsumerWidget {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: books
-                .map((book) => Padding(
-                      padding: const EdgeInsets.only(right: 8),
-                      child: BookWidget(book: book, isTrending: true),
-                    ))
+                .map(
+                  (book) => Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: BookWidget(book: book, isTrending: true),
+              ),
+            )
                 .toList(),
           ),
         ),
@@ -166,10 +171,8 @@ class HomeScreen extends ConsumerWidget {
         height: 200,
         child: Center(child: CircularProgressIndicator()),
       ),
-      error: (err, stack) => SizedBox(
-        height: 200,
-        child: Center(child: Text(err.toString())),
-      ),
+      error: (err, stack) =>
+          SizedBox(height: 200, child: Center(child: Text(err.toString()))),
     );
   }
 
@@ -216,7 +219,7 @@ class HomeScreen extends ConsumerWidget {
         child: Column(
           children: [
             Icon(icon, color: color, size: 32),
-            8.height,
+            16.width,
             CommonText(
               text: title,
               textColor: context.color.bodyText,

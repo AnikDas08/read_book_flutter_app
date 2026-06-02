@@ -1,39 +1,66 @@
 import 'package:core_kit/core_kit_internal.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unkutdrama_kpnovel/src/constants/app_font_sizes.dart';
-import 'package:unkutdrama_kpnovel/src/features/app_features/read/data/model/comment_model.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/read/data/model/book_comment_model.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/read/data/repository/comment_repository.dart';
+import 'package:unkutdrama_kpnovel/src/features/app_features/read/riverpod/comment_provider.dart';
 
-class CommentSection extends StatelessWidget {
-  CommentSection({super.key, required this.scrollController});
-
+class CommentSection extends ConsumerStatefulWidget {
+  const CommentSection({super.key, required this.scrollController, required this.bookId});
+  final String bookId;
   final ScrollController scrollController;
 
-  final List<Comment> comments = [
-    Comment(
-      author: 'Sarah Chen',
-      content:
-          'OMG! That plot twist at the end! I did not see it coming at all! The author is absolutely brilliant!',
-      timeAgo: '2 hours ago',
-      likes: 234,
-    ),
-    Comment(
-      author: 'Mike Johnson',
-      content: 'I know right! The foreshadowing was there all along!',
-      timeAgo: '2 hours ago',
-      likes: 234,
-      isReply: true,
-    ),
-    Comment(
-      author: 'Sarah Chen',
-      content:
-          'OMG! That plot twist at the end! I did not see it coming at all! The author is absolutely brilliant!',
-      timeAgo: '2 hours ago',
-      likes: 234,
-    ),
-  ];
+  @override
+  ConsumerState<CommentSection> createState() => _CommentSectionState();
+}
+
+class _CommentSectionState extends ConsumerState<CommentSection> {
+  final TextEditingController _commentController = TextEditingController();
+  String? _parentId;
+  String? _replyingToName;
+  bool _isLoading = false;
+
+  @override
+  void dispose() {
+    _commentController.dispose();
+    super.dispose();
+  }
+
+  void _onReply(BookComment comment) {
+    setState(() {
+      _parentId = comment.id;
+      _replyingToName = comment.userId.fullName;
+    });
+  }
+
+  Future<void> _submitComment() async {
+    if (_commentController.text.trim().isEmpty) return;
+
+    setState(() => _isLoading = true);
+
+    final response = await ref.read(commentRepositoryProvider).createCommentOrReply(
+          bookId: widget.bookId,
+          message: _commentController.text.trim(),
+          parentId: _parentId,
+        );
+
+    setState(() => _isLoading = false);
+
+    if (response.isSuccess) {
+      _commentController.clear();
+      setState(() {
+        _parentId = null;
+        _replyingToName = null;
+      });
+      ref.invalidate(bookCommentsProvider(widget.bookId));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final commentsAsync = ref.watch(bookCommentsProvider(widget.bookId));
+
     return Container(
       padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 16.h),
       decoration: const BoxDecoration(
@@ -68,31 +95,65 @@ class CommentSection extends StatelessWidget {
             ],
           ),
           4.height,
-          const CommonText(
-            text: '3 discussions',
-            left: 40,
-            fontSize: AppFontSizes.medium,
-            fontWeight: FontWeight.w400,
-            textColor: Color(0xFF758195),
-          ).start,
+          commentsAsync.when(
+            data: (comments) => CommonText(
+              text: '${comments.length} discussions',
+              left: 40,
+              fontSize: AppFontSizes.medium,
+              fontWeight: FontWeight.w400,
+              textColor: const Color(0xFF758195),
+            ).start,
+            loading: () => const SizedBox.shrink(),
+            error: (_, __) => const SizedBox.shrink(),
+          ),
           16.height,
           Expanded(
-            child: ListView.builder(
-              controller: scrollController,
-              itemCount: comments.length,
-              itemBuilder: (context, index) =>
-                  _CommentCard(comment: comments[index]),
+            child: commentsAsync.when(
+              data: (comments) {
+                final flattenedComments = _flattenComments(comments);
+                return ListView.builder(
+                  controller: widget.scrollController,
+                  itemCount: flattenedComments.length,
+                  itemBuilder: (context, index) {
+                    final item = flattenedComments[index];
+                    return _CommentCard(
+                      comment: item.comment,
+                      isReply: item.isReply,
+                      bookId: widget.bookId,
+                      onReply: () => _onReply(item.comment),
+                    );
+                  },
+                );
+              },
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (err, stack) => Center(child: Text(err.toString())),
             ),
           ),
-          4.height,
-          const CommonText(
-            text: 'Load More Comments',
-            fontSize: AppFontSizes.medium,
-            fontWeight: FontWeight.w400,
-            textColor: Color(0xFF4D8DFF),
-          ),
+          if (_replyingToName != null) ...[
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: Row(
+                children: [
+                  CommonText(
+                    text: 'Replying to $_replyingToName',
+                    fontSize: AppFontSizes.small,
+                    textColor: const Color(0xFF4D8DFF),
+                  ),
+                  const Spacer(),
+                  GestureDetector(
+                    onTap: () => setState(() {
+                      _parentId = null;
+                      _replyingToName = null;
+                    }),
+                    child: const Icon(Icons.close, size: 16, color: Color(0xFF758195)),
+                  ),
+                ],
+              ),
+            ),
+          ],
           16.height,
           TextField(
+            controller: _commentController,
             decoration: InputDecoration(
               hintText: 'Share your thoughts about this chapter...',
               hintStyle: const TextStyle(
@@ -101,17 +162,28 @@ class CommentSection extends StatelessWidget {
               ),
               suffixIcon: Padding(
                 padding: const EdgeInsets.all(10),
-                child: Container(
-                  width: 30.w,
-                  height: 30.w,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFA98EF7),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: const Icon(
-                    Icons.send_outlined,
-                    color: Colors.white,
-                    size: 14,
+                child: GestureDetector(
+                  onTap: _isLoading ? null : _submitComment,
+                  child: Container(
+                    width: 30.w,
+                    height: 30.w,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFA98EF7),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: _isLoading
+                        ? const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.white,
+                            ),
+                          )
+                        : const Icon(
+                            Icons.send_outlined,
+                            color: Colors.white,
+                            size: 14,
+                          ),
                   ),
                 ),
               ),
@@ -163,26 +235,50 @@ class CommentSection extends StatelessWidget {
       ),
     );
   }
+
+  List<_FlattenedComment> _flattenComments(List<BookComment> comments, {bool isReply = false}) {
+    List<_FlattenedComment> flat = [];
+    for (var comment in comments) {
+      flat.add(_FlattenedComment(comment: comment, isReply: isReply));
+      if (comment.replies.isNotEmpty) {
+        flat.addAll(_flattenComments(comment.replies, isReply: true));
+      }
+    }
+    return flat;
+  }
 }
 
-class _CommentCard extends StatelessWidget {
-  const _CommentCard({required this.comment});
+class _FlattenedComment {
+  final BookComment comment;
+  final bool isReply;
 
-  final Comment comment;
+  _FlattenedComment({required this.comment, required this.isReply});
+}
+
+class _CommentCard extends ConsumerWidget {
+  const _CommentCard({
+    required this.comment,
+    this.isReply = false,
+    required this.bookId,
+    required this.onReply,
+  });
+
+  final BookComment comment;
+  final bool isReply;
+  final String bookId;
+  final VoidCallback onReply;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
-      padding: EdgeInsets.only(left: comment.isReply ? 24.w : 0, bottom: 16.h),
+      padding: EdgeInsets.only(left: isReply ? 24.w : 0, bottom: 16.h),
       child: Container(
         padding: EdgeInsets.all(16.w),
         decoration: BoxDecoration(
-          color: comment.isReply ? const Color(0xFFF0F6FF) : Colors.white,
+          color: isReply ? const Color(0xFFF0F6FF) : Colors.white,
           borderRadius: BorderRadius.circular(24),
           border: Border.all(
-            color: comment.isReply
-                ? const Color(0xFFD9E8FF)
-                : const Color(0xFFEEEEEE),
+            color: isReply ? const Color(0xFFD9E8FF) : const Color(0xFFEEEEEE),
           ),
         ),
         child: Row(
@@ -194,6 +290,12 @@ class _CommentCard extends StatelessWidget {
               decoration: BoxDecoration(
                 color: const Color(0xFFA6B0C0),
                 shape: BoxShape.circle,
+                image: comment.userId.profile.isNotEmpty
+                    ? DecorationImage(
+                        image: NetworkImage(comment.userId.profile),
+                        fit: BoxFit.cover,
+                      )
+                    : null,
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withValues(alpha: 0.16),
@@ -202,11 +304,13 @@ class _CommentCard extends StatelessWidget {
                   ),
                 ],
               ),
-              child: const Icon(
-                Icons.person_outline_rounded,
-                color: Colors.white,
-                size: 24,
-              ),
+              child: comment.userId.profile.isEmpty
+                  ? const Icon(
+                      Icons.person_outline_rounded,
+                      color: Colors.white,
+                      size: 24,
+                    )
+                  : null,
             ),
             14.width,
             Expanded(
@@ -218,7 +322,7 @@ class _CommentCard extends StatelessWidget {
                     children: [
                       Expanded(
                         child: CommonText(
-                          text: comment.author,
+                          text: comment.userId.fullName,
                           fontSize: AppFontSizes.large,
                           fontWeight: FontWeight.w700,
                           textColor: const Color(0xFF111111),
@@ -232,7 +336,7 @@ class _CommentCard extends StatelessWidget {
                       4.width,
                       Flexible(
                         child: CommonText(
-                          text: comment.timeAgo,
+                          text: _formatDate(comment.createdAt),
                           fontSize: AppFontSizes.small,
                           fontWeight: FontWeight.w400,
                           textColor: const Color(0xFF758195),
@@ -242,7 +346,7 @@ class _CommentCard extends StatelessWidget {
                   ),
                   10.height,
                   CommonText(
-                    text: comment.content,
+                    text: comment.message,
                     fontSize: AppFontSizes.medium,
                     fontWeight: FontWeight.w400,
                     isDescription: true,
@@ -256,38 +360,49 @@ class _CommentCard extends StatelessWidget {
                     runSpacing: 8.h,
                     crossAxisAlignment: WrapCrossAlignment.center,
                     children: [
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 16.w,
-                          vertical: 10.h,
-                        ),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFF6F7FB),
-                          borderRadius: BorderRadius.circular(216),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Icon(
-                              Icons.favorite_border_rounded,
-                              size: 14,
-                              color: Color(0xFFA7B0C0),
-                            ),
-                            8.width,
-                            CommonText(
-                              text: '${comment.likes}',
-                              fontSize: AppFontSizes.medium,
-                              fontWeight: FontWeight.w400,
-                              textColor: const Color(0xFF758195),
-                            ),
-                          ],
+                      GestureDetector(
+                        onTap: () async {
+                          final response = await ref.read(commentRepositoryProvider).likeComment(commentId: comment.id);
+                          if (response.isSuccess) {
+                            ref.invalidate(bookCommentsProvider(bookId));
+                          }
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 16.w,
+                            vertical: 10.h,
+                          ),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFF6F7FB),
+                            borderRadius: BorderRadius.circular(216),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(
+                                Icons.favorite_border_rounded,
+                                size: 14,
+                                color: Color(0xFFA7B0C0),
+                              ),
+                              8.width,
+                              CommonText(
+                                text: '${comment.likes.length}',
+                                fontSize: AppFontSizes.medium,
+                                fontWeight: FontWeight.w400,
+                                textColor: const Color(0xFF758195),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                      const CommonText(
-                        text: 'Reply',
-                        fontSize: AppFontSizes.medium,
-                        fontWeight: FontWeight.w400,
-                        textColor: Color(0xFF4D8DFF),
+                      GestureDetector(
+                        onTap: onReply,
+                        child: const CommonText(
+                          text: 'Reply',
+                          fontSize: AppFontSizes.medium,
+                          fontWeight: FontWeight.w400,
+                          textColor: Color(0xFF4D8DFF),
+                        ),
                       ),
                     ],
                   ),
@@ -298,5 +413,25 @@ class _CommentCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String _formatDate(DateTime? date) {
+    if (date == null) return '';
+    final now = DateTime.now();
+    final difference = now.difference(date);
+
+    if (difference.inDays > 365) {
+      return '${(difference.inDays / 365).floor()}y';
+    } else if (difference.inDays > 30) {
+      return '${(difference.inDays / 30).floor()}mo';
+    } else if (difference.inDays > 0) {
+      return '${difference.inDays}d';
+    } else if (difference.inHours > 0) {
+      return '${difference.inHours}h';
+    } else if (difference.inMinutes > 0) {
+      return '${difference.inMinutes}m';
+    } else {
+      return 'just now';
+    }
   }
 }
